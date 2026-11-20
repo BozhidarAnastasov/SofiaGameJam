@@ -1,16 +1,45 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class TopDownMovement : MonoBehaviour
 {
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private InputActionReference moveActionReference;
+
+    private Rigidbody2D rb;
+    private Vector2 moveInput;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Awake()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
+    }
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        rb.MovePosition(rb.position + moveInput.normalized *
+        moveSpeed * Time.fixedDeltaTime);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
-        
+        moveActionReference.action.Enable();
+        moveActionReference.action.performed += onMovePerfomed;
+        moveActionReference.action.canceled += onMoveCanceled;
+    }
+    void OnDisable()
+    {
+        moveActionReference.action.performed -= onMovePerfomed;
+        moveActionReference.action.canceled -= onMoveCanceled;
+        moveActionReference.action.Disable();
+    }
+
+    private void onMovePerfomed(InputAction.CallbackContext ctx)
+    {
+        moveInput = ctx.ReadValue<Vector2>();
+    }
+    private void onMoveCanceled(InputAction.CallbackContext ctx)
+    {
+        moveInput = Vector2.zero;
     }
 }
