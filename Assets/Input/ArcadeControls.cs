@@ -374,7 +374,7 @@ public partial class @ArcadeControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8747ad9a-d279-4617-bc3d-9c48b9e0dc3c"",
-                    ""path"": ""<Keyboard>/i"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -407,7 +407,7 @@ public partial class @ArcadeControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9f09db35-21e4-47f9-9fc1-3fbfdc764c1e"",
-                    ""path"": ""<Keyboard>/o"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

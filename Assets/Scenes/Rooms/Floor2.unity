@@ -1004,6 +1004,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4339623
       objectReference: {fileID: 0}
+    - target: {fileID: 6896127336083446733, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6896127336083446733, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1667435671
+      objectReference: {fileID: 0}
     - target: {fileID: 7018561963001543453, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_Offset.y
       value: 0.4
