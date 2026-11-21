@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: e9f376c24df78ac46860bbfec9567f7c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - settingsPanel: {instanceID: 0}
+  - previousPanel: {instanceID: 0}
+  - backButton: {instanceID: 0}
+  - masterSlider: {instanceID: 0}
+  - musicSlider: {instanceID: 0}
+  - sfxSlider: {instanceID: 0}
+  - mainMixer: {fileID: 24100000, guid: 27239bc001ba0494f9c5295dd319a7cb, type: 2}
+  - uiAudioSource: {instanceID: 0}
+  - clickClip: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenuController : MonoBehaviour
+public class MainMenuControler : MonoBehaviour
 {
     // Replace "HospitalLevel" with the exact name of your gameplay scene!
     [SerializeField] private string firstLevelSceneName = "Lobby";
