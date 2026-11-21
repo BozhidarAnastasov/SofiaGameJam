@@ -132,7 +132,7 @@ public class LeverSwitch : MonoBehaviour
         baseScale = psr.transform.localScale;
 
         // take over from the Animator: she is posed by hand for the whole sequence
-        if (pmove != null) pmove.CanMove = false;
+        if (pmove != null) { pmove.StandUp(); pmove.CanMove = false; }
         if (pdir != null) pdir.enabled = false;
         if (panim != null) panim.enabled = false;
         psr.flipX = false;
@@ -268,10 +268,48 @@ public class LeverSwitch : MonoBehaviour
         t.localPosition = home;
     }
 
+    private float darkIntensity = -1f;
+    private Color darkColor;
+
+    /// The psycho shoves the lever back up: it snaps up and the lights die again.
+    public void PushBackUp(float time = 0.25f) => StartCoroutine(PushBack(time));
+
+    IEnumerator PushBack(float time)
+    {
+        if (leverRenderer != null)
+        {
+            var lt = leverRenderer.transform;
+            Vector3 p0 = lt.localPosition, s0 = lt.localScale; Quaternion r0 = lt.localRotation;
+            for (float e = 0f; e < time; e += Time.deltaTime)
+            {
+                float k = e / time;
+                lt.localPosition = Vector3.Lerp(p0, upPos, k);
+                lt.localRotation = Quaternion.Slerp(r0, upRot, k);
+                lt.localScale = Vector3.Lerp(s0, upScale, k);
+                yield return null;
+            }
+            lt.localPosition = upPos; lt.localRotation = upRot; lt.localScale = upScale;
+            if (pullFrames != null && pullFrames.Length > 0) leverRenderer.sprite = pullFrames[0];
+        }
+        if (globalLight != null && darkIntensity >= 0f)
+        {
+            float lit = globalLight.intensity; Color litColor = globalLight.color;
+            float[] pattern = { 0.2f, 1f, 0.05f, 0.6f, 0f };
+            foreach (float p in pattern)
+            {
+                globalLight.intensity = Mathf.Lerp(darkIntensity, lit, p);
+                globalLight.color = Color.Lerp(darkColor, litColor, p);
+                yield return new WaitForSeconds(Random.Range(0.05f, 0.12f));
+            }
+            globalLight.intensity = darkIntensity; globalLight.color = darkColor;
+        }
+    }
+
     IEnumerator PowerFlicker()
     {
         float off = globalLight.intensity;
         Color offColor = globalLight.color;
+        darkIntensity = off; darkColor = offColor;
         float[] pattern = { 0.6f, 0.05f, 0.9f, 0.1f, 0.15f, 1f, 0.3f, 1f };
         foreach (float p in pattern)
         {

@@ -37,6 +37,8 @@ public class DirectionalSpriteAnimator : MonoBehaviour
     /// (e.g. facing the box while she walks backwards pulling it).
     public Vector2? FacingOverride { get; set; }
     public Vector2 Facing => facing;
+    /// -1 = facing left, +1 = facing right (the side views, e.g. crawling).
+    public float Side => side;
 
     static readonly int DirX = Animator.StringToHash("DirX");
     static readonly int DirY = Animator.StringToHash("DirY");
@@ -85,9 +87,10 @@ public class DirectionalSpriteAnimator : MonoBehaviour
             if (Mathf.Abs(velocity.x) > moveThreshold) side = Mathf.Sign(velocity.x);
         }
 
+        bool crawling = Crawling || (playerMovement != null && playerMovement.IsCrawling);
         Locomotion state;
         float reference;
-        if (Crawling) { state = Locomotion.Crawl; reference = crawlReferenceSpeed; }
+        if (crawling) { state = Locomotion.Crawl; reference = crawlReferenceSpeed; }
         else if (!moving && stoppedFor >= stopGraceTime) { state = Locomotion.Idle; reference = 1f; }
         else if (WantsRun(speed)) { state = Locomotion.Run; reference = runReferenceSpeed; }
         else { state = Locomotion.Walk; reference = walkReferenceSpeed; }
