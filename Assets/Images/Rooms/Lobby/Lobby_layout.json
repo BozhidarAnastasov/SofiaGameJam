@@ -1,0 +1,582 @@
+{
+ "room": "Lobby",
+ "background": "Assets/Images/Backgrounds/Lobby_Bed_Hole.png",
+ "southWall": "Assets/Images/Rooms/Lobby/Lobby_SouthWall.png",
+ "pixelsPerUnit": 28,
+ "cameraSize": 4.5,
+ "spawn": {
+  "x": -0.4286,
+  "y": -0.5
+ },
+ "floor": [
+  {
+   "x": -16.3214,
+   "y": 5.2143
+  },
+  {
+   "x": -13.7143,
+   "y": 5.2143
+  },
+  {
+   "x": -13.7143,
+   "y": 1.5714
+  },
+  {
+   "x": -13.2143,
+   "y": 1.5714
+  },
+  {
+   "x": -13.2143,
+   "y": 3.4286
+  },
+  {
+   "x": -10.6071,
+   "y": 3.5
+  },
+  {
+   "x": -7.5714,
+   "y": 5.2143
+  },
+  {
+   "x": -4.0,
+   "y": 5.3929
+  },
+  {
+   "x": 16.0357,
+   "y": 5.3929
+  },
+  {
+   "x": 16.8929,
+   "y": -9.3214
+  },
+  {
+   "x": -16.9286,
+   "y": -9.3214
+  }
+ ],
+ "blockers": [
+  {
+   "name": "hole",
+   "points": [
+    {
+     "x": 14.75,
+     "y": 0.5
+    },
+    {
+     "x": 14.4917,
+     "y": -0.3474
+    },
+    {
+     "x": 13.7563,
+     "y": -1.0657
+    },
+    {
+     "x": 12.6555,
+     "y": -1.5457
+    },
+    {
+     "x": 11.3571,
+     "y": -1.7143
+    },
+    {
+     "x": 10.0587,
+     "y": -1.5457
+    },
+    {
+     "x": 8.958,
+     "y": -1.0657
+    },
+    {
+     "x": 8.2225,
+     "y": -0.3474
+    },
+    {
+     "x": 7.9643,
+     "y": 0.5
+    },
+    {
+     "x": 8.2226,
+     "y": 1.3474
+    },
+    {
+     "x": 8.9581,
+     "y": 2.0658
+    },
+    {
+     "x": 10.0588,
+     "y": 2.5457
+    },
+    {
+     "x": 11.3572,
+     "y": 2.7143
+    },
+    {
+     "x": 12.6556,
+     "y": 2.5457
+    },
+    {
+     "x": 13.7563,
+     "y": 2.0657
+    },
+    {
+     "x": 14.4918,
+     "y": 1.3473
+    }
+   ]
+  }
+ ],
+ "fadeZones": [
+  {
+   "x": -18.2857,
+   "y": -9.3214,
+   "width": 36.5714,
+   "height": 0.8929
+  }
+ ],
+ "markers": [
+  {
+   "name": "MainDoor",
+   "position": {
+    "x": -1.2143,
+    "y": 5.3571
+   }
+  }
+ ],
+ "props": [
+  {
+   "name": "Boxes",
+   "sprite": "Assets/Images/Rooms/Lobby/Boxes.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0417
+   },
+   "position": {
+    "x": -6.0,
+    "y": 4.1429
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.4464
+     },
+     "size": {
+      "x": 3.1429,
+      "y": 0.8929
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "TrashCan",
+   "sprite": "Assets/Images/Rooms/Lobby/TrashCan.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0455
+   },
+   "position": {
+    "x": -9.5357,
+    "y": 2.8929
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.4464
+     },
+     "size": {
+      "x": 1.7857,
+      "y": 0.8929
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "InfoDesk",
+   "sprite": "Assets/Images/Rooms/Lobby/InfoDesk.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0102
+   },
+   "position": {
+    "x": 5.5179,
+    "y": 3.1786
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0178,
+      "y": 1.2857
+     },
+     "size": {
+      "x": 7.9286,
+      "y": 2.5714
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "SideDesk",
+   "sprite": "Assets/Images/Rooms/Lobby/SideDesk.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0179
+   },
+   "position": {
+    "x": 13.5179,
+    "y": 3.1786
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.6607
+     },
+     "size": {
+      "x": 3.8929,
+      "y": 1.3214
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "WaitingChairsA",
+   "sprite": "Assets/Images/Rooms/Lobby/WaitingChairsA.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0138
+   },
+   "position": {
+    "x": -9.0357,
+    "y": -3.8929
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 2.375
+     },
+     "size": {
+      "x": 2.9286,
+      "y": 4.75
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "WaitingChairsB",
+   "sprite": "Assets/Images/Rooms/Lobby/WaitingChairsB.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0138
+   },
+   "position": {
+    "x": -4.2679,
+    "y": -3.8929
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 2.375
+     },
+     "size": {
+      "x": 2.8214,
+      "y": 4.75
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "Planter",
+   "sprite": "Assets/Images/Rooms/Lobby/Planter.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0162
+   },
+   "position": {
+    "x": -13.7857,
+    "y": -9.25
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": -2.0,
+      "y": 3.125
+     },
+     "size": {
+      "x": 2.5,
+      "y": 6.25
+     }
+    },
+    {
+     "offset": {
+      "x": 0.0178,
+      "y": 1.1607
+     },
+     "size": {
+      "x": 6.5357,
+      "y": 2.3214
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "WaitingChairsC",
+   "sprite": "Assets/Images/Rooms/Lobby/WaitingChairsC.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0235
+   },
+   "position": {
+    "x": -13.75,
+    "y": -6.1429
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0179,
+      "y": 1.3036
+     },
+     "size": {
+      "x": 1.25,
+      "y": 2.6071
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "SeatsSouth",
+   "sprite": "Assets/Images/Rooms/Lobby/SeatsSouth.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0222
+   },
+   "position": {
+    "x": -6.5714,
+    "y": -9.3214
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.5714
+     },
+     "size": {
+      "x": 7.2857,
+      "y": 1.1429
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "PlantPotA",
+   "sprite": "Assets/Images/Rooms/Lobby/PlantPotA.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0286
+   },
+   "position": {
+    "x": 5.4286,
+    "y": -9.25
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.5357
+     },
+     "size": {
+      "x": 1.1429,
+      "y": 1.0714
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "ArmchairA",
+   "sprite": "Assets/Images/Rooms/Lobby/ArmchairA.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0282
+   },
+   "position": {
+    "x": 7.8571,
+    "y": -9.2857
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0179,
+      "y": 0.8214
+     },
+     "size": {
+      "x": 2.1071,
+      "y": 1.6429
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "CoffeeTableA",
+   "sprite": "Assets/Images/Rooms/Lobby/CoffeeTableA.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0588
+   },
+   "position": {
+    "x": 9.8036,
+    "y": -9.25
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.7143
+     },
+     "size": {
+      "x": 1.25,
+      "y": 1.4286
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "Sofa",
+   "sprite": "Assets/Images/Rooms/Lobby/Sofa.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0345
+   },
+   "position": {
+    "x": 12.875,
+    "y": -9.2857
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.7321
+     },
+     "size": {
+      "x": 4.3214,
+      "y": 1.4643
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "PlantPotB",
+   "sprite": "Assets/Images/Rooms/Lobby/PlantPotB.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.025
+   },
+   "position": {
+    "x": 15.6071,
+    "y": -5.5
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.4464
+     },
+     "size": {
+      "x": 1.1429,
+      "y": 0.8929
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "CoffeeTableB",
+   "sprite": "Assets/Images/Rooms/Lobby/CoffeeTableB.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0455
+   },
+   "position": {
+    "x": 13.8571,
+    "y": -7.2857
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.625
+     },
+     "size": {
+      "x": 1.2857,
+      "y": 1.25
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "ArmchairB",
+   "sprite": "Assets/Images/Rooms/Lobby/ArmchairB.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.029
+   },
+   "position": {
+    "x": 16.0,
+    "y": -7.75
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.9464
+     },
+     "size": {
+      "x": 1.7857,
+      "y": 1.8929
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "PlantPotC",
+   "sprite": "Assets/Images/Rooms/Lobby/PlantPotC.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0455
+   },
+   "position": {
+    "x": 16.25,
+    "y": -9.25
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0179,
+      "y": 0.4464
+     },
+     "size": {
+      "x": 1.25,
+      "y": 0.8929
+     }
+    }
+   ],
+   "lowCover": false
+  }
+ ]
+}

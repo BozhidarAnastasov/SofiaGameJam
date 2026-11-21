@@ -1,0 +1,360 @@
+{
+ "room": "CorridorOffice",
+ "background": "Assets/Images/Backgrounds/CorridorOffice.png",
+ "southWall": "Assets/Images/Rooms/CorridorOffice/CorridorOffice_SouthWall.png",
+ "pixelsPerUnit": 45,
+ "cameraSize": 4.5,
+ "spawn": {
+  "x": -16.5778,
+  "y": 0.0
+ },
+ "floor": [
+  {
+   "x": -18.5333,
+   "y": 1.2222
+  },
+  {
+   "x": 8.2667,
+   "y": 1.2222
+  },
+  {
+   "x": 8.2667,
+   "y": 5.2222
+  },
+  {
+   "x": 18.2,
+   "y": 5.2222
+  },
+  {
+   "x": 18.2,
+   "y": -7.0
+  },
+  {
+   "x": 8.2667,
+   "y": -7.0
+  },
+  {
+   "x": 8.2667,
+   "y": -1.4444
+  },
+  {
+   "x": -18.5333,
+   "y": -1.4444
+  }
+ ],
+ "blockers": [
+  {
+   "name": "rubble_door",
+   "points": [
+    {
+     "x": -11.1333,
+     "y": 1.2222
+    },
+    {
+     "x": -7.5778,
+     "y": 1.2222
+    },
+    {
+     "x": -7.5778,
+     "y": 0.1111
+    },
+    {
+     "x": -11.1333,
+     "y": 0.1111
+    }
+   ]
+  },
+  {
+   "name": "rubble_mid",
+   "points": [
+    {
+     "x": -4.0222,
+     "y": 1.1111
+    },
+    {
+     "x": -1.4667,
+     "y": 1.1111
+    },
+    {
+     "x": -1.4667,
+     "y": -0.4444
+    },
+    {
+     "x": -4.0222,
+     "y": -0.4444
+    }
+   ]
+  },
+  {
+   "name": "rubble_office",
+   "points": [
+    {
+     "x": 11.3111,
+     "y": 5.2222
+    },
+    {
+     "x": 14.3111,
+     "y": 5.2222
+    },
+    {
+     "x": 14.3111,
+     "y": 4.1778
+    },
+    {
+     "x": 11.3111,
+     "y": 4.1778
+    }
+   ]
+  }
+ ],
+ "fadeZones": [
+  {
+   "x": -19.9111,
+   "y": -1.4444,
+   "width": 27.7778,
+   "height": 0.5556
+  },
+  {
+   "x": 7.7556,
+   "y": -7.0,
+   "width": 11.0,
+   "height": 0.5556
+  }
+ ],
+ "markers": [
+  {
+   "name": "OfficeDoorway",
+   "position": {
+    "x": 8.1333,
+    "y": 0.0
+   }
+  }
+ ],
+ "props": [
+  {
+   "name": "FilingCabinets",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/FilingCabinets.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0133
+   },
+   "position": {
+    "x": 9.8889,
+    "y": 2.9778
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": -0.1667,
+      "y": 1.0666
+     },
+     "size": {
+      "x": 2.1556,
+      "y": 2.1333
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "OfficeChair",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/OfficeChair.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0299
+   },
+   "position": {
+    "x": 13.8111,
+    "y": 2.0
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0556,
+      "y": 0.2222
+     },
+     "size": {
+      "x": 0.8889,
+      "y": 0.4444
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "Gurney",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/Gurney.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0407
+   },
+   "position": {
+    "x": 16.3,
+    "y": -1.0
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.1222,
+      "y": 1.2778
+     },
+     "size": {
+      "x": 2.8889,
+      "y": 2.5556
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "Desk",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/Desk.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0181
+   },
+   "position": {
+    "x": 11.7333,
+    "y": -3.8889
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0223,
+      "y": 1.5
+     },
+     "size": {
+      "x": 3.5556,
+      "y": 3.0
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "DeskChair",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/DeskChair.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0247
+   },
+   "position": {
+    "x": 13.2778,
+    "y": -2.2667
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0111,
+      "y": 0.3556
+     },
+     "size": {
+      "x": 1.1556,
+      "y": 0.7111
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "Sink",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/Sink.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0177
+   },
+   "position": {
+    "x": 9.0889,
+    "y": -6.0444
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0111,
+      "y": 0.3555
+     },
+     "size": {
+      "x": 0.8667,
+      "y": 0.7111
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "CurtainScreen",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/CurtainScreen.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.015
+   },
+   "position": {
+    "x": 10.4,
+    "y": -6.6889
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0222,
+      "y": 0.2333
+     },
+     "size": {
+      "x": 1.5556,
+      "y": 0.4667
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "PlantOffice",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/PlantOffice.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0303
+   },
+   "position": {
+    "x": 9.4667,
+    "y": -6.7556
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0222,
+      "y": 0.1556
+     },
+     "size": {
+      "x": 0.6667,
+      "y": 0.3111
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "Counter",
+   "sprite": "Assets/Images/Rooms/CorridorOffice/Counter.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0142
+   },
+   "position": {
+    "x": 17.0,
+    "y": -5.9111
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 1.1778
+     },
+     "size": {
+      "x": 2.4889,
+      "y": 2.3556
+     }
+    }
+   ],
+   "lowCover": true
+  }
+ ]
+}

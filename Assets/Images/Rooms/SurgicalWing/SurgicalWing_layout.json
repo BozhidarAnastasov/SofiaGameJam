@@ -1,0 +1,595 @@
+{
+ "room": "SurgicalWing",
+ "background": "Assets/Images/Backgrounds/SurgicalWing.png",
+ "southWall": "Assets/Images/Rooms/SurgicalWing/SurgicalWing_SouthWall.png",
+ "pixelsPerUnit": 40,
+ "cameraSize": 4.5,
+ "spawn": {
+  "x": -0.3,
+  "y": -4.6
+ },
+ "floor": [
+  {
+   "x": -11.25,
+   "y": 4.025
+  },
+  {
+   "x": 11.2,
+   "y": 4.025
+  },
+  {
+   "x": 11.575,
+   "y": -0.35
+  },
+  {
+   "x": 9.825,
+   "y": -0.35
+  },
+  {
+   "x": 9.825,
+   "y": -3.35
+  },
+  {
+   "x": 11.95,
+   "y": -3.35
+  },
+  {
+   "x": 12.075,
+   "y": -5.475
+  },
+  {
+   "x": -11.8,
+   "y": -5.475
+  },
+  {
+   "x": -11.8,
+   "y": -3.35
+  },
+  {
+   "x": 6.95,
+   "y": -3.35
+  },
+  {
+   "x": 6.95,
+   "y": -0.35
+  },
+  {
+   "x": -11.55,
+   "y": -0.35
+  }
+ ],
+ "blockers": [],
+ "fadeZones": [
+  {
+   "x": -2.85,
+   "y": -5.475,
+   "width": 5.5,
+   "height": 1.925
+  }
+ ],
+ "markers": [
+  {
+   "name": "KeycardSpot",
+   "position": {
+    "x": 3.45,
+    "y": 1.1
+   }
+  },
+  {
+   "name": "EntranceDoor",
+   "position": {
+    "x": -0.1,
+    "y": -5.35
+   }
+  },
+  {
+   "name": "OperatingRoomDoor",
+   "position": {
+    "x": 8.4,
+    "y": -3.475
+   }
+  }
+ ],
+ "props": [
+  {
+   "name": "SinkCounter",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/SinkCounter.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0364
+   },
+   "position": {
+    "x": -9.4,
+    "y": 3.95
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0125,
+      "y": 0.35
+     },
+     "size": {
+      "x": 3.425,
+      "y": 0.7
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "GlassCabinetL",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/GlassCabinetL.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0105
+   },
+   "position": {
+    "x": -6.025,
+    "y": 4.05
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.2
+     },
+     "size": {
+      "x": 2.45,
+      "y": 0.4
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "GasTanks",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/GasTanks.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0128
+   },
+   "position": {
+    "x": -3.925,
+    "y": 3.975
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.2125
+     },
+     "size": {
+      "x": 1.15,
+      "y": 0.425
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "AnesthesiaMachine",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/AnesthesiaMachine.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0217
+   },
+   "position": {
+    "x": -1.925,
+    "y": 2.7
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0375,
+      "y": 0.475
+     },
+     "size": {
+      "x": 2.075,
+      "y": 0.95
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "StoolL",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/StoolL.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.08
+   },
+   "position": {
+    "x": -10.2375,
+    "y": 2.675
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0125,
+      "y": 0.175
+     },
+     "size": {
+      "x": 0.65,
+      "y": 0.35
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "ShelfCartL",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/ShelfCartL.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0179
+   },
+   "position": {
+    "x": -10.975,
+    "y": -0.1
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": -0.0125,
+      "y": 0.5
+     },
+     "size": {
+      "x": 1.025,
+      "y": 1.0
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "InstrumentCart",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/InstrumentCart.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0211
+   },
+   "position": {
+    "x": -1.9875,
+    "y": -0.05
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0125,
+      "y": 0.35
+     },
+     "size": {
+      "x": 1.75,
+      "y": 0.7
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "OperatingTable",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/OperatingTable.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.02
+   },
+   "position": {
+    "x": 1.4875,
+    "y": 0.825
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.025,
+      "y": 0.6625
+     },
+     "size": {
+      "x": 4.625,
+      "y": 1.325
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "IVStand",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/IVStand.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0265
+   },
+   "position": {
+    "x": 4.25,
+    "y": 2.0
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": -0.05,
+      "y": 0.175
+     },
+     "size": {
+      "x": 0.6,
+      "y": 0.35
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "StoolR",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/StoolR.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.037
+   },
+   "position": {
+    "x": 3.45,
+    "y": 0.15
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.1875
+     },
+     "size": {
+      "x": 0.75,
+      "y": 0.375
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "MonitorCart",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/MonitorCart.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.019
+   },
+   "position": {
+    "x": 6.0125,
+    "y": 1.7
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.35
+     },
+     "size": {
+      "x": 1.525,
+      "y": 0.7
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "GlassCabinetR",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/GlassCabinetR.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.01
+   },
+   "position": {
+    "x": 6.45,
+    "y": 4.05
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.2
+     },
+     "size": {
+      "x": 2.5,
+      "y": 0.4
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "PlantOR",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/PlantOR.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0143
+   },
+   "position": {
+    "x": 10.6375,
+    "y": 2.8
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0375,
+      "y": 0.175
+     },
+     "size": {
+      "x": 0.95,
+      "y": 0.35
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "SupplyCart",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/SupplyCart.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0192
+   },
+   "position": {
+    "x": 9.825,
+    "y": 0.15
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0125,
+      "y": 0.375
+     },
+     "size": {
+      "x": 1.625,
+      "y": 0.75
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "Lockers",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/Lockers.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0182
+   },
+   "position": {
+    "x": -9.5875,
+    "y": -3.8
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.35
+     },
+     "size": {
+      "x": 3.075,
+      "y": 0.7
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "Bench",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/Bench.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0426
+   },
+   "position": {
+    "x": -9.6,
+    "y": -5.05
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": -0.0125,
+      "y": 0.375
+     },
+     "size": {
+      "x": 3.275,
+      "y": 0.75
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "ScrubSink",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/ScrubSink.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0385
+   },
+   "position": {
+    "x": -3.3,
+    "y": -3.1
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.225
+     },
+     "size": {
+      "x": 5.7,
+      "y": 0.45
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "SupplyShelf",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/SupplyShelf.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.025
+   },
+   "position": {
+    "x": 3.7375,
+    "y": -3.175
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0,
+      "y": 0.225
+     },
+     "size": {
+      "x": 2.825,
+      "y": 0.45
+     }
+    }
+   ],
+   "lowCover": false
+  },
+  {
+   "name": "LaundryBasket",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/LaundryBasket.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.0455
+   },
+   "position": {
+    "x": 5.475,
+    "y": -4.2
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0125,
+      "y": 0.425
+     },
+     "size": {
+      "x": 1.325,
+      "y": 0.85
+     }
+    }
+   ],
+   "lowCover": true
+  },
+  {
+   "name": "PrepCart",
+   "sprite": "Assets/Images/Rooms/SurgicalWing/PrepCart.png",
+   "pivot": {
+    "x": 0.5,
+    "y": 0.02
+   },
+   "position": {
+    "x": 11.325,
+    "y": -4.55
+   },
+   "colliders": [
+    {
+     "offset": {
+      "x": 0.0125,
+      "y": 0.2875
+     },
+     "size": {
+      "x": 1.125,
+      "y": 0.575
+     }
+    }
+   ],
+   "lowCover": true
+  }
+ ]
+}

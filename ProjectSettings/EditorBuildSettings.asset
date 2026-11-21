@@ -26,6 +26,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Electrical.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Rooms/Lobby.unity
+    guid: 010d43e194880114dbc1e72d80f826da
+  - enabled: 1
+    path: Assets/Scenes/Rooms/SurgicalWing.unity
+    guid: d47a2143908a67946b65f7633559f892
+  - enabled: 1
+    path: Assets/Scenes/Rooms/CorridorOffice.unity
+    guid: a5184ab9107292a4491649007a83a7eb
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 2991743c8e1a14442940dab369a7d81a, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
