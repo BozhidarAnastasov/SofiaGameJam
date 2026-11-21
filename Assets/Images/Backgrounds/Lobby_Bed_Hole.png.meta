@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a12a18b2afb36064b8e661f63694975a
+guid: 4b8ab43e9db6fc54e91350575cf72a32
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2873701281803729944
-    second: girl_run_down_12f_transparent_0
+      213: 545897510067206594
+    second: Lobby_Bed_Hole_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: girl_run_down_12f_transparent_0
+      name: Lobby_Bed_Hole_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1884
-        height: 290
+        width: 1024
+        height: 572
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8e30183e8ef8e18d0800000000000000
-      internalID: -2873701281803729944
+      spriteID: 2c97353a4ea639700800000000000000
+      internalID: 545897510067206594
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      girl_run_down_12f_transparent_0: -2873701281803729944
+      Lobby_Bed_Hole_0: 545897510067206594
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
