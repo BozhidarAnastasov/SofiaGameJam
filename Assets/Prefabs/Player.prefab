@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 7519874482168858285}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -425,12 +425,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TopDownMovement
   walkSpeed: 2
   runSpeed: 3
+  crawlSpeed: 0.8
   inputDeadZone: 0.2
   moveAction: {fileID: 8210608491476628109, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   sprintAction: {fileID: -2140485466925686867, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   crawlAction: {fileID: 1040916751974094725, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
-  crawlToggles: 1
-  crawlSpeedMultiplier: 0.4
 --- !u!61 &7018561963001543453
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -613,8 +612,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.2
