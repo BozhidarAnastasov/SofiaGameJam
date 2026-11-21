@@ -24,20 +24,31 @@ public static class HorrorSpriteAnimationSetup
 
     class Sheet
     {
+        public (int start, int stride)[] rowOffsets;
         public string path; public int cellW, cellH; public (string name, int count)[] rows;
         public float ppu, pivotX = 0.5f, pivotY; public int maxSize = 4096; public int gridWidth, gridHeight, gridColumns = 4;
     }
 
     // The girl was drawn at a different size in every sheet; these ratios make her the same
     // height on screen in all of them (girl's standing height in px / 102 px of the walk sheet).
+    static readonly string[] GirlDirections = { "Down", "Up", "Left", "Right", "DownRight", "DownLeft", "UpLeft", "UpRight" };
+
     static readonly Sheet[] Sheets =
     {
+        new Sheet { path = Girl + "NewSpreadSheets/Walking/Girl_Diagonal_Walk.png",
+            cellW = 190, gridHeight = 887, ppu = 101f, pivotY = 0.04f,
+            rows = new[] { ("girl_walk_downright", 7), ("girl_walk_downleft", 7), ("girl_walk_upleft", 7), ("girl_walk_upright", 7) },
+            rowOffsets = new[] { (72, 222), (129, 219), (78, 222), (125, 220) } },
         NewWalk("Down"), NewWalk("Up"), NewWalk("Left"), NewWalk("Right"),
+        NewRun("DownRight", 2172, 724, 12, 135f, 0.33f), NewRun("DownLeft", 1774, 887, 4, 135f),
+        NewRun("UpRight", 1774, 887, 4, 135f), NewRun("UpLeft", 1774, 887, 4, 135f),
         NewRun("Down"), NewRun("Up"), NewRun("Left"), NewRun("Right"),
         NewIdle("Down"), NewIdle("Up"), NewIdle("Left"), NewIdle("Right"),
         Crawl("Down", 4, 200f, 0.09f), Crawl("Up", 4, 200f, 0.06f),
+        Crawl("DownLeft", 4, 200f, 0.09f), Crawl("DownRight", 4, 200f, 0.09f),
+        Crawl("UpLeft", 4, 200f, 0.06f), Crawl("UpRight", 4, 200f, 0.06f),
         Crawl("Left", 4, 175f, 0.16f), Crawl("Right", 3, 198f, 0.08f),
-        new Sheet { path = Girl + "girl_pickup_10f.png", cellW = 228, cellH = 440,
+        new Sheet { path = Girl + "girl_pickup_10f_transparent.png", cellW = 228, cellH = 440,
             rows = new[] { ("girl_pickup_right", 10) }, ppu = WalkPPU * 421f / 102f, pivotY = 8f / 440f },
 
         new Sheet { path = Psycho + "psycho-walking-sprite-sheet-transparent.png", cellW = 160, cellH = 160,
@@ -70,11 +81,11 @@ public static class HorrorSpriteAnimationSetup
         gridWidth = 1254, gridHeight = 1254, ppu = 145f, pivotY = 0.04f,
     };
 
-    static Sheet NewRun(string direction) => new Sheet
+    static Sheet NewRun(string direction, int width = 1448, int height = 1086, int columns = 4, float ppu = 170f, float pivot = 0.04f) => new Sheet
     {
         path = Girl + "NewSpreadSheets/Running/Girl_Run_" + direction + "_SS.png",
         rows = new[] { ("girl_run_" + direction.ToLowerInvariant(), 12) },
-        gridWidth = 1448, gridHeight = 1086, ppu = 170f, pivotY = 0.04f,
+        gridWidth = width, gridHeight = height, gridColumns = columns, ppu = ppu, pivotY = pivot,
     };
 
     [MenuItem("Tools/Horror Animation/Setup Everything")]
@@ -84,7 +95,8 @@ public static class HorrorSpriteAnimationSetup
         var clips = BuildClips();
         string[] dirs = { "Down", "Up", "Left", "Right" };
         if (HasAll(clips, dirs.SelectMany(d => new[] { "Girl_Idle_" + d, "Girl_Walk_" + d, "Girl_Run_" + d, "Girl_Crawl_" + d })
-                .Concat(new[] { "Girl_PickUp_Left", "Girl_PickUp_Right" })))
+                .Concat(GirlDirections.SelectMany(d => new[] { "Girl_Walk_" + d, "Girl_Run_" + d }))
+                .Concat(new[] { "Girl_PickUp_Left", "Girl_PickUp_Right", "Girl_Crawl_DownLeft", "Girl_Crawl_DownRight", "Girl_Crawl_UpLeft", "Girl_Crawl_UpRight" })))
             BuildGirlController(clips);
         if (HasAll(clips, dirs.SelectMany(d => new[] { "Psycho_Idle_" + d, "Psycho_Walk_" + d })
                 .Concat(new[] { "Psycho_Grab_Left", "Psycho_Grab_Right" })))
@@ -141,7 +153,8 @@ public static class HorrorSpriteAnimationSetup
                 rects.Add(new SpriteRect
                 {
                     name = name,
-                    rect = s.gridWidth > 0 ? GirlGridRect(c, s, s.rows[r].count) : new Rect(c * s.cellW, texH - (r + 1) * s.cellH, s.cellW, s.cellH),
+                    rect = s.rowOffsets != null ? OffsetRowRect(s, r, c)
+                        : s.gridWidth > 0 ? GirlGridRect(c, s, s.rows[r].count) : new Rect(c * s.cellW, texH - (r + 1) * s.cellH, s.cellW, s.cellH),
                     alignment = SpriteAlignment.Custom,
                     pivot = new Vector2(s.pivotX, s.pivotY),
                     spriteID = oldIds.TryGetValue(name, out var id) ? id : GUID.Generate(),
@@ -156,6 +169,14 @@ public static class HorrorSpriteAnimationSetup
     }
 
     // Split fractional-width cells at integer pixel boundaries, reading each row left to right.
+    static Rect OffsetRowRect(Sheet sheet, int row, int column)
+    {
+        int top = row * sheet.gridHeight / sheet.rows.Length;
+        int bottom = (row + 1) * sheet.gridHeight / sheet.rows.Length;
+        var offsets = sheet.rowOffsets[row];
+        return new Rect(offsets.start + column * offsets.stride, sheet.gridHeight - bottom, sheet.cellW, bottom - top);
+    }
+
     static Rect GirlGridRect(int index, Sheet sheet, int frameCount)
     {
         int columns = sheet.gridColumns, rows = frameCount / columns;
@@ -174,7 +195,7 @@ public static class HorrorSpriteAnimationSetup
         foreach (var sheet in Sheets.Where(s => s.path.StartsWith(Girl + "NewSpreadSheets/Walking/")))
             foreach (var sprite in AssetDatabase.LoadAllAssetsAtPath(sheet.path).OfType<Sprite>())
                 sprites[sprite.name] = sprite;
-        foreach (string direction in new[] { "Down", "Up", "Left", "Right" })
+        foreach (string direction in GirlDirections)
             MakeClip("Girl", "Girl_Walk_" + direction, Frames("girl_walk_" + direction.ToLowerInvariant()), 1f, true, false, false);
         AssetDatabase.SaveAssets();
     }
@@ -209,15 +230,12 @@ public static class HorrorSpriteAnimationSetup
         Add("Girl", "Girl_Idle_Up", Frames("girl_idle_up"), 2.4f, true);
         Add("Girl", "Girl_Idle_Left", Frames("girl_idle_left"), 2.4f, true);               // one slow breath
         Add("Girl", "Girl_Idle_Right", Frames("girl_idle_right"), 2.4f, true);
-        Add("Girl", "Girl_Walk_Down", Frames("girl_walk_down"), 1.0f, true);   // 12 f -> 12 fps
-        Add("Girl", "Girl_Walk_Up", Frames("girl_walk_up"), 1.0f, true);
-        Add("Girl", "Girl_Walk_Left", Frames("girl_walk_left"), 1.0f, true);   // 16 f -> 16 fps, same rhythm
-        Add("Girl", "Girl_Walk_Right", Frames("girl_walk_right"), 1.0f, true);
-        Add("Girl", "Girl_Run_Down", Frames("girl_run_down"), 0.66f, true);
-        Add("Girl", "Girl_Run_Up", Frames("girl_run_up"), 0.66f, true);
-        Add("Girl", "Girl_Run_Right", Frames("girl_run_right"), 0.7f, true);
-        Add("Girl", "Girl_Run_Left", Frames("girl_run_left"), 0.7f, true);
-        foreach (string direction in new[] { "Down", "Up", "Left", "Right" })
+        foreach (string direction in GirlDirections)
+            Add("Girl", "Girl_Walk_" + direction, Frames("girl_walk_" + direction.ToLowerInvariant()), 1f, true);
+        foreach (string direction in GirlDirections)
+            Add("Girl", "Girl_Run_" + direction, Frames("girl_run_" + direction.ToLowerInvariant()),
+                direction == "Left" || direction == "Right" ? 0.7f : 0.66f, true);
+        foreach (string direction in new[] { "Down", "Up", "Left", "Right", "DownLeft", "DownRight", "UpLeft", "UpRight" })
             Add("Girl", "Girl_Crawl_" + direction, Frames("girl_crawl_" + direction.ToLowerInvariant()), 1.1f, true);
         Add("Girl", "Girl_PickUp_Right", Frames("girl_pickup_right"), 0.85f, false);
         Add("Girl", "Girl_PickUp_Left", Frames("girl_pickup_right"), 0.85f, false, flip: true);
@@ -338,6 +356,13 @@ public static class HorrorSpriteAnimationSetup
         tree.AddChild(c[prefix + "_Up"], new Vector2(0, 1));
         tree.AddChild(c[prefix + "_Left"], new Vector2(-1, 0));
         tree.AddChild(c[prefix + "_Right"], new Vector2(1, 0));
+        if (prefix == "Girl_Crawl" || prefix == "Girl_Walk" || prefix == "Girl_Run")
+        {
+            tree.AddChild(c[prefix + "_DownLeft"], new Vector2(-1, -1));
+            tree.AddChild(c[prefix + "_DownRight"], new Vector2(1, -1));
+            tree.AddChild(c[prefix + "_UpLeft"], new Vector2(-1, 1));
+            tree.AddChild(c[prefix + "_UpRight"], new Vector2(1, 1));
+        }
         return StateFor(sm, name, pos, tree, speedParam);
     }
 
