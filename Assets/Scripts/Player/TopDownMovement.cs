@@ -25,6 +25,12 @@ public class TopDownMovement : MonoBehaviour
     /// Freeze movement, e.g. during the pick-up animation or a cutscene.
     public bool CanMove { get; set; } = true;
 
+    /// Slows her down, e.g. while she drags the heavy box (1 = normal).
+    public float SpeedMultiplier { get; set; } = 1f;
+
+    /// Turn running off temporarily (while she holds the box).
+    public bool AllowRun { get; set; } = true;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -54,14 +60,14 @@ public class TopDownMovement : MonoBehaviour
         if (moveInput.magnitude < inputDeadZone) moveInput = Vector2.zero;
 
         bool hasInput = moveInput != Vector2.zero;
-        IsRunning = hasInput && sprintAction.action.IsPressed();
+        IsRunning = hasInput && AllowRun && sprintAction.action.IsPressed();
     }
 
     void FixedUpdate()
     {
         if (moveInput == Vector2.zero) return;
 
-        float speed = IsRunning ? runSpeed : walkSpeed;
+        float speed = (IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
         rb.MovePosition(rb.position + moveInput.normalized * speed * Time.fixedDeltaTime);
     }
 }
