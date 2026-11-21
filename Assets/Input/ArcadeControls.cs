@@ -341,7 +341,7 @@ public partial class @ArcadeControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b901537e-2d2e-46ad-8aef-038f74ea68ab"",
-                    ""path"": ""<Keyboard>/u"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
