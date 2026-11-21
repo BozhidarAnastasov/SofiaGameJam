@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8750ea82fd487c540babe20e7989b9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionDetector
-  interactActionReference: {fileID: 11400000, guid: cc86e68146c04716b8dccb566298da131, type: 2}
+  interactActionReference: {fileID: 11400000, guid: cc86e68146c04716b8dccb566298da13, type: 2}
   interactionIcon: {fileID: 5516811104770838644}
 --- !u!1 &7363867419542223452
 GameObject:
