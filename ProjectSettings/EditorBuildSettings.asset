@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Rooms/Lobby.unity
     guid: 010d43e194880114dbc1e72d80f826da
   - enabled: 1
+    path: Assets/Scenes/Rooms/Electrical.unity
+    guid: 1177b130190386a4fbd21c61b1922289
+  - enabled: 1
     path: Assets/Scenes/Rooms/SurgicalWing.unity
     guid: d47a2143908a67946b65f7633559f892
   - enabled: 1

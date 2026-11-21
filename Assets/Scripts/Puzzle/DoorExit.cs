@@ -39,7 +39,7 @@ public class DoorExit : MonoBehaviour
     private bool wasInRange, warnedNoAction;
 
     bool DoorIsOpen =>
-        (!requireLeverPulled || (lever != null && lever.IsPulled)) &&
+        (!requireLeverPulled || LeverSwitch.PowerRestored || (lever != null && lever.IsPulled)) &&
         (!requireKickedOpen || (doorOpen != null && doorOpen.enabled));
 
     void Awake()

@@ -74,19 +74,59 @@ public class BedBridge : MonoBehaviour
 
     void OnDisable() { if (fallback != null) { fallback.Disable(); fallback.Dispose(); fallback = null; } }
 
+    // the bed's footprint in its own space (its collider): x -halfW..halfW, y 0..length
+    [Header("Range (in the bed's own space)")]
+    [SerializeField] private float halfWidth = 1.375f;
+    [SerializeField] private float length = 4.5f;
+    [Tooltip("How far below the foot / above the head her feet may be (her body stops ~1 unit away from the bed).")]
+    [SerializeField] private float sideReach = 1.8f;
+
+    private string lastZone = "";
+    private Ctx current;
+    private float busySince;
+
+    Vector2 Local(Vector2 world) => transform.InverseTransformPoint(world);
+
     void Update()
     {
-        if (player == null || busy) return;
+        if (player == null) return;
+        if (busy)
+        {
+            if (Time.time - busySince > 12f)
+            {
+                Debug.LogWarning("[BedBridge] Sequence got stuck: resetting.", this);
+                StopAllCoroutines();
+                if (current != null) End(current, player.position);
+                busy = false;
+            }
+            return;
+        }
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
         var move = player.GetComponent<TopDownMovement>();
         bool canAct = move == null || (move.enabled && move.CanMove);
-        Vector2 feet = player.position;
-        bool atFoot = canAct && Vector2.Distance(feet, footSpot) <= reach;
-        bool atTop = canAct && Vector2.Distance(feet, topSpot) <= reach;
-        if (prompt != null) prompt.Request(this, atFoot || atTop);
-        if (!(atFoot || atTop) || !Interact.WasPressedThisFrame()) return;
 
-        Debug.Log($"[BedBridge] A pressed on the {(atFoot ? "lobby side: climbing up" : "desk side: " + (IsTipped ? "sliding down" : "kicking the bed"))}.", this);
+        Vector2 lp = Local(player.position);
+        bool alongBed = Mathf.Abs(lp.x) <= halfWidth + 0.4f;
+        bool atFoot = canAct && alongBed && lp.y < 0.3f && lp.y > -sideReach;
+        bool atTop = canAct && alongBed && lp.y > length - 0.3f && lp.y < length + sideReach;
+        string zone = atFoot ? "foot" : atTop ? "head" : "";
+        if (zone != lastZone)
+        {
+            Debug.Log(zone == "" ? $"[BedBridge] She left the bed (bed-space {lp.x:0.00}, {lp.y:0.00})."
+                                 : $"[BedBridge] She is at the bed's {zone} (bed-space {lp.x:0.00}, {lp.y:0.00}): press A.", this);
+            lastZone = zone;
+        }
+        if (prompt != null) prompt.Request(this, zone != "");
+        if (!Interact.WasPressedThisFrame()) return;
+        if (zone == "")
+        {
+            if (Mathf.Abs(lp.x) < halfWidth + 2f && lp.y > -3f && lp.y < length + 3f)
+                Debug.Log($"[BedBridge] A pressed near the bed but not at its foot or head (bed-space {lp.x:0.00}, {lp.y:0.00}; " +
+                          $"needs |x| <= {halfWidth + 0.4f:0.00} and y in [{-sideReach}, 0.3] or [{length - 0.3f}, {length + sideReach}]).", this);
+            return;
+        }
+        Debug.Log($"[BedBridge] A pressed at the {zone}: {(atFoot ? "climbing up" : IsTipped ? "sliding down" : "kicking the bed")}.", this);
+        busySince = Time.time;
         StartCoroutine(atFoot ? GoUp() : GoDown());
     }
 
@@ -152,19 +192,22 @@ public class BedBridge : MonoBehaviour
         // jump onto the slope, slide down braced, hop off onto the lobby floor
         Pose(c, slidePose);
         yield return Squash(1f, 1f, 1.06f, 0.9f, 0.1f);
-        yield return Hop(Bed(HeadY() - 0.45f), 0.3f, 0.35f, true);
+        yield return Hop(Bed(HeadY() - 0.5f), 0.3f, 0.35f, true);
         yield return Squash(1.06f, 0.9f, 1f, 1f, 0.08f);
         yield return Slide(Bed(bedFootY), slideSpeed);
-        yield return Hop(footSpot, 0.28f, 0.25f, false);
+        yield return Hop(FootLanding, 0.28f, 0.25f, false);
         Unpose(c);
         yield return Squash(1.06f, 0.92f, 1f, 1f, 0.12f);
-        End(c, footSpot);
-        Debug.Log($"[BedBridge] She slid down and is back in the lobby at {footSpot}.", this);
+        End(c, FootLanding);
+        Debug.Log($"[BedBridge] She slid down and is back in the lobby at {FootLanding}.", this);
     }
 
     // ---------------------------------------------------------------- helpers
-    float HeadY() => bedHeadY * (transform.localScale.y / baseScale.y);
-    Vector2 Bed(float y) => new Vector2(transform.position.x, transform.position.y + y * (transform.localScale.y / baseScale.y));
+    float HeadY() => bedHeadY;
+    // below the hole's edge: her body collider must not overlap the hole or the bed when she lands
+    Vector2 FootLanding => Bed(0f) - (Vector2)transform.up * 1.75f;   // world units, also right when the bed is tipped
+
+    Vector2 Bed(float y) => transform.TransformPoint(new Vector3(0f, y, 0f));   // along the bed, follows rotation and tipping
 
     class Ctx { public TopDownMovement move; public Rigidbody2D rb; public SpriteRenderer sr; public DirectionalSpriteAnimator anim; public Animator animator; public int order; public Vector3 scale; }
 
@@ -221,6 +264,7 @@ public class BedBridge : MonoBehaviour
             sr = player.GetComponentInChildren<SpriteRenderer>(), anim = player.GetComponentInChildren<DirectionalSpriteAnimator>(),
             animator = player.GetComponentInChildren<Animator>()
         };
+        current = c;
         if (c.move != null) { c.move.StandUp(); c.move.CanMove = false; }
         if (c.rb != null) { c.rb.linearVelocity = Vector2.zero; c.rb.simulated = false; }
         if (c.sr != null) { c.order = c.sr.sortingOrder; c.scale = c.sr.transform.localScale; playerScale = c.scale; }
@@ -236,6 +280,7 @@ public class BedBridge : MonoBehaviour
         if (c.rb != null) { c.rb.position = at; c.rb.simulated = true; }
         Physics2D.SyncTransforms();
         if (c.move != null) c.move.CanMove = true;
+        current = null;
         busy = false;
     }
 

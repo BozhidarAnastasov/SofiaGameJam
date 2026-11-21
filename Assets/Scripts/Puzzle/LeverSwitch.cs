@@ -65,6 +65,11 @@ public class LeverSwitch : MonoBehaviour
 
     public bool IsPulled { get; private set; }
 
+    /// Electricity restored (the lever was pulled once). Kept across room changes; reset on game start.
+    public static bool PowerRestored { get; private set; }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetOnGameStart() => PowerRestored = false;
+
     bool InReach => player != null && Vector2.Distance(player.position, transform.position) <= reachDistance;
     bool BoxInPlace => box != null && boxSpot != null &&
                        Vector2.Distance(box.transform.position, boxSpot.position) <= boxTolerance;
@@ -155,6 +160,7 @@ public class LeverSwitch : MonoBehaviour
         yield return new WaitForSeconds(0.12f);                        // grab
         yield return PullLever();                                      // lever goes down step by step
         IsPulled = true;
+        PowerRestored = true;
         onPulled.Invoke();
         if (globalLight != null) StartCoroutine(PowerFlicker());
         StartCoroutine(Shake(leverRenderer != null ? leverRenderer.transform : null, 0.15f, 0.02f));

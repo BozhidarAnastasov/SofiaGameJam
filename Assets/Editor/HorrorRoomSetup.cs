@@ -15,6 +15,7 @@
 // 15. Connect Hospital Rooms      : Lobby top door <-> SurgicalWing, Lobby right door <-> CorridorOffice (both ways).
 // 16. Lobby Bed Bridge            : climb over the bed to the info desk side; kick it to tip it and slide back.
 // 17. Lobby Flashlight on Chair    : she starts without it; pick it up from the red chair behind the info desk.
+// 18. Lobby -> Electrical Door     : boarded-up left side door; pry the planks off with the crowbar selected.
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Events;
@@ -1125,7 +1126,7 @@ public static class HorrorRoomSetup
     // walls that close the info desk area, so the bed is the only way in (Lobby background units)
     static readonly Rect[] DeskZoneWalls =
     {
-        new Rect(1.20f, 4.75f, 0.42f, 0.85f),    // left end of the strip behind the info desk
+        new Rect(1.20f, 4.05f, 0.42f, 2.30f),    // left end of the strip behind the info desk
         new Rect(9.45f, 2.00f, 0.80f, 1.50f),    // gap between the info desk and the bed
         new Rect(15.40f, 4.40f, 0.90f, 1.20f),   // right end, behind the side desk
     };
@@ -1146,8 +1147,25 @@ public static class HorrorRoomSetup
         var desk = all.FirstOrDefault(t => t.name == "InfoDesk");
         SpriteRenderer deskSr = desk != null ? desk.GetComponent<SpriteRenderer>() : null;
         var deskBox = desk != null ? desk.GetComponent<BoxCollider2D>() : null;
-        if (deskBox != null) { deskBox.offset = new Vector2(deskBox.offset.x, 0.81f); deskBox.size = new Vector2(deskBox.size.x, 1.62f); }
+        if (deskBox != null) { deskBox.offset = new Vector2(deskBox.offset.x, 0.45f); deskBox.size = new Vector2(deskBox.size.x, 0.9f); }
         else Debug.LogWarning("[HorrorRoom] InfoDesk collider not found: the chair may be unreachable.");
+
+        // the outer wall ran right along the back of the counter (y 5.39): push it back there so she fits behind it
+        var wallsEdge = all.Select(t => t.GetComponent<EdgeCollider2D>()).FirstOrDefault(e => e != null && e.name == "Walls");
+        if (wallsEdge != null)
+        {
+            var pts = wallsEdge.points.ToList();
+            pts.RemoveAll(p => p.y > 5.5f && p.x > 1.0f && p.x < 9.8f);            // previous run's notch
+            int i = pts.FindIndex(p => Mathf.Abs(p.x - (-4f)) < 0.05f && p.y > 5f);
+            if (i >= 0 && i + 1 < pts.Count)
+            {
+                float y = pts[i].y;
+                pts.InsertRange(i + 1, new[] { new Vector2(1.2f, y), new Vector2(1.2f, 6.25f), new Vector2(9.6f, 6.25f), new Vector2(9.6f, y) });
+                wallsEdge.points = pts.ToArray();
+            }
+            else Debug.LogWarning("[HorrorRoom] Couldn't find the wall segment behind the info desk.");
+        }
+        else Debug.LogWarning("[HorrorRoom] 'Walls' edge collider not found.");
 
         // 2) close the info desk area so only the bed leads there
         var wallsT = all.FirstOrDefault(t => t.name == "DeskZoneWalls");
@@ -1157,21 +1175,54 @@ public static class HorrorRoomSetup
         foreach (var old in walls.GetComponents<BoxCollider2D>()) Object.DestroyImmediate(old);
         foreach (var r in DeskZoneWalls) { var b = walls.AddComponent<BoxCollider2D>(); b.offset = r.center; b.size = r.size; }
 
+        // 2b) the red chair becomes its own prop (sorted from its own base), so she can stand in front of it
+        System.Action<string, Vector2> importProp = (path, pivot) =>
+        {
+            var t2 = AssetImporter.GetAtPath(path) as TextureImporter; if (t2 == null) { Debug.LogWarning("[HorrorRoom] Missing " + path); return; }
+            t2.textureType = TextureImporterType.Sprite; t2.spriteImportMode = SpriteImportMode.Single; t2.spritePixelsPerUnit = 28f;
+            t2.alphaIsTransparency = true; t2.mipmapEnabled = false; t2.filterMode = FilterMode.Bilinear;
+            t2.textureCompression = TextureImporterCompression.Uncompressed; t2.wrapMode = TextureWrapMode.Clamp;
+            var st2 = new TextureImporterSettings(); t2.ReadTextureSettings(st2);
+            st2.spriteAlignment = (int)SpriteAlignment.Custom; st2.spritePivot = pivot; st2.spriteMeshType = SpriteMeshType.Tight;
+            t2.SetTextureSettings(st2); t2.SaveAndReimport();
+        };
+        importProp("Assets/Images/Rooms/Lobby/InfoDesk_NoChair.png", new Vector2(0.5f, 0.0102f));   // same pivot as InfoDesk.png
+        importProp("Assets/Images/Rooms/Lobby/InfoChair.png", new Vector2(0.5f, 0f));
+        GameObject chairGo = null;
+        if (deskSr != null)
+        {
+            deskSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Images/Rooms/Lobby/InfoDesk_NoChair.png");
+            var chairT = all.FirstOrDefault(t => t.name == "InfoChair");
+            chairGo = chairT != null ? chairT.gameObject : new GameObject("InfoChair");
+            chairGo.transform.SetParent(desk.parent, false);
+            chairGo.transform.localPosition = new Vector3(5.8215f, 5.0f, 0f);
+            var csr = chairGo.GetComponent<SpriteRenderer>(); if (csr == null) csr = chairGo.AddComponent<SpriteRenderer>();
+            csr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Images/Rooms/Lobby/InfoChair.png");
+            csr.sortingLayerID = deskSr.sortingLayerID; csr.sortingOrder = deskSr.sortingOrder;
+            csr.spriteSortPoint = SpriteSortPoint.Pivot; csr.sharedMaterial = deskSr.sharedMaterial;
+        }
+
         // 3) the flashlight on the red chair's seat
         var ti = AssetImporter.GetAtPath(iconPath) as TextureImporter;
         if (ti != null)
         {
             ti.textureType = TextureImporterType.Sprite; ti.spriteImportMode = SpriteImportMode.Single; ti.spritePixelsPerUnit = 160f;
             ti.alphaIsTransparency = true; ti.mipmapEnabled = false; ti.textureCompression = TextureImporterCompression.Uncompressed;
+            var fst = new TextureImporterSettings(); ti.ReadTextureSettings(fst);
+            fst.spriteAlignment = (int)SpriteAlignment.Custom;
+            fst.spritePivot = new Vector2(0.5f, 0.5f - (5.464f - 4.99f) / (60f / 160f));   // pivot 0.47 units below the picture's centre
+            ti.SetTextureSettings(fst);
             ti.SaveAndReimport();
         }
         var pickT = all.FirstOrDefault(t => t.name == "Flashlight_Pickup");
         var pick = pickT != null ? pickT.gameObject : new GameObject("Flashlight_Pickup");
         pick.transform.SetParent(bgT.parent, false);
-        pick.transform.position = bgT.TransformPoint(new Vector2(5.821f, 5.464f));
         var psr = pick.GetComponent<SpriteRenderer>(); if (psr == null) psr = pick.AddComponent<SpriteRenderer>();
         psr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath);
-        if (deskSr != null) { psr.sortingLayerID = deskSr.sortingLayerID; psr.sortingOrder = deskSr.sortingOrder + 1; psr.sharedMaterial = deskSr.sharedMaterial; }
+        // sorted like the chair: the pivot sits just in front of the chair's base, the picture stays on the seat
+        pick.transform.position = bgT.TransformPoint(new Vector2(5.821f, 4.99f));
+        psr.spriteSortPoint = SpriteSortPoint.Pivot;
+        if (deskSr != null) { psr.sortingLayerID = deskSr.sortingLayerID; psr.sortingOrder = deskSr.sortingOrder; psr.sharedMaterial = deskSr.sharedMaterial; }
         var fp = pick.GetComponent<FlashlightPickup>(); if (fp == null) fp = pick.AddComponent<FlashlightPickup>();
         var player = Object.FindFirstObjectByType<TopDownMovement>();
         var so = new SerializedObject(fp);
@@ -1182,7 +1233,83 @@ public static class HorrorRoomSetup
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         if (!string.IsNullOrEmpty(returnTo) && returnTo != lobbyPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
-        Debug.Log("[HorrorRoom] Flashlight placed on the red chair; info desk area closed (bed is the only way in); she starts without the flashlight. Lobby saved.");
+        Debug.Log("[HorrorRoom] Red chair split into its own prop (InfoChair); flashlight placed on it; info desk area closed (bed is the only way in); she starts without the flashlight. Lobby saved.");
+    }
+
+    [MenuItem("Tools/Horror Room/18. Lobby: Boarded Door to Electrical (crowbar)")]
+    public static void LobbyDoorToElectrical()
+    {
+        const string lobbyPath = "Assets/Scenes/Rooms/Lobby.unity", elecPath = "Assets/Scenes/Rooms/Electrical.unity";
+        const string planksPath = "Assets/Images/lobby_side_door_planks.png";
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+
+        // ---- Lobby: the boarded-up left side door
+        var lobby = EditorSceneManager.OpenScene(lobbyPath, OpenSceneMode.Single);
+        var all = lobby.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true)).ToList();
+        var bgSr = all.Select(t => t.GetComponent<SpriteRenderer>()).FirstOrDefault(r => r != null && r.sprite != null && r.sprite.name.StartsWith("Lobby_"));
+        if (bgSr == null) { Debug.LogWarning("[HorrorRoom] Lobby background not found."); return; }
+        var bgT = bgSr.transform;
+        var ti = AssetImporter.GetAtPath(planksPath) as TextureImporter;
+        if (ti != null)
+        {
+            ti.textureType = TextureImporterType.Sprite; ti.spriteImportMode = SpriteImportMode.Single; ti.spritePixelsPerUnit = 112f;
+            ti.alphaIsTransparency = true; ti.mipmapEnabled = false; ti.textureCompression = TextureImporterCompression.Uncompressed;
+            ti.SaveAndReimport();
+        }
+        var doorT = all.FirstOrDefault(t => t.name == "Door_ToElectrical");
+        var doorGo = doorT != null ? doorT.gameObject : new GameObject("Door_ToElectrical");
+        doorGo.transform.SetParent(bgT.parent, false);
+        doorGo.transform.position = bgT.TransformPoint(new Vector2(-15.9f, 0.0f));
+        var exit = doorGo.GetComponent<DoorExit>(); if (exit == null) exit = doorGo.AddComponent<DoorExit>();
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        var interact = ArcadeAction("ButtonA");
+        var so = new SerializedObject(exit);
+        so.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
+        so.FindProperty("interactAction").objectReferenceValue = interact;
+        so.FindProperty("reachDistance").floatValue = 1.3f;
+        so.FindProperty("sceneName").stringValue = "Electrical";
+        so.FindProperty("entryId").stringValue = "FromLobby";
+        so.FindProperty("requireLeverPulled").boolValue = false;
+        so.FindProperty("requireKickedOpen").boolValue = false;
+        so.ApplyModifiedProperties();
+        exit.enabled = false;                                     // until the planks are off
+
+        var plT = doorGo.transform.Find("Planks");
+        var plGo = plT != null ? plT.gameObject : new GameObject("Planks");
+        plGo.transform.SetParent(doorGo.transform, false);
+        plGo.transform.position = bgT.TransformPoint(new Vector2(-16.643f, 0.536f));
+        var plSr = plGo.GetComponent<SpriteRenderer>(); if (plSr == null) plSr = plGo.AddComponent<SpriteRenderer>();
+        plSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(planksPath);
+        plSr.sortingLayerID = bgSr.sortingLayerID; plSr.sortingOrder = bgSr.sortingOrder + 2; plSr.sharedMaterial = bgSr.sharedMaterial;
+
+        var bar = doorGo.GetComponent<BarricadedDoor>(); if (bar == null) bar = doorGo.AddComponent<BarricadedDoor>();
+        var bso = new SerializedObject(bar);
+        bso.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
+        bso.FindProperty("interactAction").objectReferenceValue = interact;
+        bso.FindProperty("planks").objectReferenceValue = plSr;
+        bso.FindProperty("door").objectReferenceValue = exit;
+        bso.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(lobby);
+        EditorSceneManager.SaveScene(lobby);
+
+        // ---- Electrical: where she arrives from the Lobby (just inside its door)
+        var elec = EditorSceneManager.OpenScene(elecPath, OpenSceneMode.Single);
+        var eAll = elec.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true)).ToList();
+        var eBg = eAll.Select(t => t.GetComponent<SpriteRenderer>()).FirstOrDefault(r => r != null && r.sprite != null && r.sprite.name.StartsWith("electrical_room"));
+        var eSpawnT = eAll.FirstOrDefault(t => t.name == "Spawn_FromLobby");
+        var eSpawn = eSpawnT != null ? eSpawnT.gameObject : new GameObject("Spawn_FromLobby");
+        if (eBg != null) { eSpawn.transform.SetParent(eBg.transform.parent, false); eSpawn.transform.position = eBg.transform.TransformPoint(new Vector2(4.4f, -1.2f)); }
+        var sp = eSpawn.GetComponent<RoomSpawnPoint>(); if (sp == null) sp = eSpawn.AddComponent<RoomSpawnPoint>();
+        var sso = new SerializedObject(sp);
+        sso.FindProperty("entryId").stringValue = "FromLobby";
+        sso.FindProperty("faceDirection").vector2Value = Vector2.left;
+        sso.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(elec);
+        EditorSceneManager.SaveScene(elec);
+
+        if (!string.IsNullOrEmpty(returnTo)) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[HorrorRoom] Lobby left side door -> Electrical added, boarded up (crowbar selected + A to pry the planks off). Electrical has Spawn_FromLobby. Both scenes saved.");
     }
 
     [MenuItem("Tools/Horror Room/3. Make Scene Dark (cold global light)")]
