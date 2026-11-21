@@ -12,10 +12,12 @@ public class ItemPickup : MonoBehaviour
 
     public void Pickup(Item item)
     {
-        if (item == null || !item.isActiveAndEnabled || InventoryController == null) return;
+        if (item == null || !item.CanInteract() || InventoryController == null) return;
         if (!InventoryController.AddItem(item.gameObject)) return;
 
-        // Hide immediately so another interaction cannot collect it again before Destroy runs.
+        if (TryGetComponent(out DirectionalSpriteAnimator animationDriver))
+            animationDriver.PlayPickUp();
+
         item.gameObject.SetActive(false);
         Destroy(item.gameObject);
     }

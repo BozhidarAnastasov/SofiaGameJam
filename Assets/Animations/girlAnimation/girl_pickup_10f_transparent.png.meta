@@ -3,35 +3,35 @@ guid: 50cfd43b00c78414e9c6bb81910964d1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1202546700452567657
-    second: girl_pickup_10f_transparent_0
+      213: 2108841002376055246
+    second: girl_pickup_10f_0
   - first:
-      213: -1612720520219023275
-    second: girl_pickup_10f_transparent_1
+      213: 5516315875379653533
+    second: girl_pickup_10f_1
   - first:
-      213: 4934437281574162182
-    second: girl_pickup_10f_transparent_2
+      213: -1864292091157093508
+    second: girl_pickup_10f_2
   - first:
-      213: -5907741911191830094
-    second: girl_pickup_10f_transparent_3
+      213: 8071282835712182038
+    second: girl_pickup_10f_3
   - first:
-      213: 7455882585318977575
-    second: girl_pickup_10f_transparent_4
+      213: -3328720093810500101
+    second: girl_pickup_10f_4
   - first:
-      213: 2497833806924989295
-    second: girl_pickup_10f_transparent_5
+      213: 6949830712685352384
+    second: girl_pickup_10f_5
   - first:
-      213: -9036430213184115047
-    second: girl_pickup_10f_transparent_6
+      213: 5709733876357220221
+    second: girl_pickup_10f_6
   - first:
-      213: -7452999137192092663
-    second: girl_pickup_10f_transparent_7
+      213: 1899848003208625997
+    second: girl_pickup_10f_7
   - first:
-      213: -6049873525551090895
-    second: girl_pickup_10f_transparent_8
+      213: 5686077257958878637
+    second: girl_pickup_10f_8
   - first:
-      213: -182657512200435209
-    second: girl_pickup_10f_transparent_9
+      213: 3697170849744745502
+    second: girl_pickup_10f_9
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -78,7 +78,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 210.5
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -99,10 +99,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -127,221 +127,221 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_0
+      name: girl_pickup_right_00
       rect:
         serializedVersion: 2
-        x: 35
-        y: 2
-        width: 127
-        height: 423
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 96a1b4a4add40b010800000000000000
-      internalID: 1202546700452567657
+      spriteID: 3b6101a1389682e4ea5712d44e45801d
+      internalID: 1647816518
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_1
+      name: girl_pickup_right_01
       rect:
         serializedVersion: 2
-        x: 219
-        y: 2
-        width: 152
-        height: 389
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 228
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 558ac5e3b377e99e0800000000000000
-      internalID: -1612720520219023275
+      spriteID: 2ad4788404c3edd46b3df8f2a6fe91b1
+      internalID: -1847093794
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_2
+      name: girl_pickup_right_02
       rect:
         serializedVersion: 2
-        x: 410
-        y: 2
-        width: 165
-        height: 347
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 456
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 60f0ca65094aa7440800000000000000
-      internalID: 4934437281574162182
+      spriteID: 834997d6ff6d653459437fd70ad50ae6
+      internalID: -1853607754
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_3
+      name: girl_pickup_right_03
       rect:
         serializedVersion: 2
-        x: 602
-        y: 2
-        width: 175
-        height: 304
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 684
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 2b149b6480c730ea0800000000000000
-      internalID: -5907741911191830094
+      spriteID: c0ff198f56db5514d8c4f92797111a2f
+      internalID: -15191055
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_4
+      name: girl_pickup_right_04
       rect:
         serializedVersion: 2
-        x: 796
-        y: 2
-        width: 181
-        height: 253
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 912
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 72075f855bd987760800000000000000
-      internalID: 7455882585318977575
+      spriteID: 0671f6f116b9a844ea7064d3546d0562
+      internalID: 1750076802
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_5
+      name: girl_pickup_right_05
       rect:
         serializedVersion: 2
-        x: 992
-        y: 2
-        width: 183
-        height: 214
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1140
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f63c9b10d961aa220800000000000000
-      internalID: 2497833806924989295
+      spriteID: ccac114464262504dad6c9df28340cc3
+      internalID: 1010037745
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_6
+      name: girl_pickup_right_06
       rect:
         serializedVersion: 2
-        x: 1189
-        y: 2
-        width: 182
-        height: 214
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1368
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 99ead812996289280800000000000000
-      internalID: -9036430213184115047
+      spriteID: 20e8c3b1ea48ada499b5ee41c4a80d48
+      internalID: -1900175787
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_7
+      name: girl_pickup_right_07
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 2
-        width: 174
-        height: 317
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1596
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 90c5f5cb5c0a19890800000000000000
-      internalID: -7452999137192092663
+      spriteID: 1a9c169d8e2367e4ea17a55929a485dd
+      internalID: 818591729
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_8
+      name: girl_pickup_right_08
       rect:
         serializedVersion: 2
-        x: 1595
-        y: 2
-        width: 159
-        height: 395
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1824
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 133bc7505188a0ca0800000000000000
-      internalID: -6049873525551090895
+      spriteID: d1111cc8d74db1c42865ad45f300017c
+      internalID: -1387525503
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: girl_pickup_10f_transparent_9
+      name: girl_pickup_right_09
       rect:
         serializedVersion: 2
-        x: 1796
-        y: 2
-        width: 150
-        height: 423
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2052
+        y: 0
+        width: 228
+        height: 440
+      alignment: 9
+      pivot: {x: 0.5, y: 0.018181818}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7f98cbdd5f1177df0800000000000000
-      internalID: -182657512200435209
+      spriteID: 5eb2ce15ee188a34ea7b0d9c85b5b66b
+      internalID: -237202415
       vertices: []
       indices: 
       edges: []
@@ -350,7 +350,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 62aa22d9464c1db4baed404d075d4c23
     internalID: 0
     vertices: []
     indices: 
@@ -360,16 +360,16 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      girl_pickup_10f_transparent_0: 1202546700452567657
-      girl_pickup_10f_transparent_1: -1612720520219023275
-      girl_pickup_10f_transparent_2: 4934437281574162182
-      girl_pickup_10f_transparent_3: -5907741911191830094
-      girl_pickup_10f_transparent_4: 7455882585318977575
-      girl_pickup_10f_transparent_5: 2497833806924989295
-      girl_pickup_10f_transparent_6: -9036430213184115047
-      girl_pickup_10f_transparent_7: -7452999137192092663
-      girl_pickup_10f_transparent_8: -6049873525551090895
-      girl_pickup_10f_transparent_9: -182657512200435209
+      girl_pickup_right_00: 1647816518
+      girl_pickup_right_01: -1847093794
+      girl_pickup_right_02: -1853607754
+      girl_pickup_right_03: -15191055
+      girl_pickup_right_04: 1750076802
+      girl_pickup_right_05: 1010037745
+      girl_pickup_right_06: -1900175787
+      girl_pickup_right_07: 818591729
+      girl_pickup_right_08: -1387525503
+      girl_pickup_right_09: -237202415
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
