@@ -621,6 +621,7 @@ MonoBehaviour:
   inputDeadZone: 0.2
   moveAction: {fileID: 8210608491476628109, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   sprintAction: {fileID: -7471211009204490832, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  crawlAction: {fileID: 0}
 --- !u!61 &7018561963001543453
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -705,6 +706,7 @@ MonoBehaviour:
   toggleAction: {fileID: 7731580167017253974, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   flashlight: {fileID: 1188695246524932322}
   startOn: 1
+  startWithFlashlight: 0
   aimWithFacing: 1
   coneOuterAngle: 80
   coneInnerAngle: 35

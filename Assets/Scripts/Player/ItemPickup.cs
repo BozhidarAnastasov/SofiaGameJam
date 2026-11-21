@@ -16,8 +16,9 @@ public class ItemPickup : MonoBehaviour
         if (!InventoryController.AddItem(item.gameObject)) return;
 
         if (TryGetComponent(out DirectionalSpriteAnimator animationDriver))
+        {
             animationDriver.PlayPickUp();
-
+        }
         item.gameObject.SetActive(false);
         Destroy(item.gameObject);
     }

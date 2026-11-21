@@ -21,6 +21,9 @@ public class TopDownMovement : MonoBehaviour
 
     private InputAction crouchAction;
     private Rigidbody2D rb;
+    private Animator animator;
+    private static readonly int PickupState = Animator.StringToHash("Base Layer.PickUp");
+    private bool movementAllowed = true;
     private Vector2 moveInput;
 
     /// True only while the run button is held AND there is movement input.
@@ -29,7 +32,19 @@ public class TopDownMovement : MonoBehaviour
     public bool IsCrawling { get; private set; }
 
     /// Freeze movement, e.g. during the pick-up animation or a cutscene.
-    public bool CanMove { get; set; } = true;
+    public bool CanMove
+    {
+        get => movementAllowed && !IsPlayingPickup();
+        set => movementAllowed = value;
+    }
+
+    private bool IsPlayingPickup()
+    {
+        if (animator == null || !animator.isActiveAndEnabled || animator.runtimeAnimatorController == null)
+            return false;
+        return animator.GetCurrentAnimatorStateInfo(0).fullPathHash == PickupState ||
+               (animator.IsInTransition(0) && animator.GetNextAnimatorStateInfo(0).fullPathHash == PickupState);
+    }
 
     /// Slows her down, e.g. while she drags the heavy box (1 = normal).
     public float SpeedMultiplier { get; set; } = 1f;
@@ -52,6 +67,7 @@ public class TopDownMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void OnEnable()
@@ -94,7 +110,7 @@ public class TopDownMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
+        if (!CanMove || moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
 
         float speed = (IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
         CurrentSpeed = speed;
