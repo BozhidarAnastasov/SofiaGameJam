@@ -32,6 +32,10 @@ public class DirectionalSpriteAnimator : MonoBehaviour
     [SerializeField] private float facingHysteresis = 1.25f;
 
     public bool Crawling { get; set; }
+
+    /// While set, she keeps facing this direction whatever way she moves
+    /// (e.g. facing the box while she walks backwards pulling it).
+    public Vector2? FacingOverride { get; set; }
     public Vector2 Facing => facing;
 
     static readonly int DirX = Animator.StringToHash("DirX");
@@ -69,7 +73,13 @@ public class DirectionalSpriteAnimator : MonoBehaviour
         bool moving = speed > moveThreshold;
         stoppedFor = moving ? 0f : stoppedFor + Time.deltaTime;
 
-        if (moving)
+        if (FacingOverride.HasValue)
+        {
+            Vector2 f = FacingOverride.Value;
+            facing = Mathf.Abs(f.x) >= Mathf.Abs(f.y) ? new Vector2(Mathf.Sign(f.x), 0f) : new Vector2(0f, Mathf.Sign(f.y));
+            if (Mathf.Abs(f.x) > 0.01f) side = Mathf.Sign(f.x);
+        }
+        else if (moving)
         {
             facing = ToCardinal(velocity);
             if (Mathf.Abs(velocity.x) > moveThreshold) side = Mathf.Sign(velocity.x);
