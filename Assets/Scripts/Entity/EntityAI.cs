@@ -80,6 +80,7 @@ public class EntityAI : MonoBehaviour
     private float lostTimer;
     private int patrolIndex;
     private bool pausing;
+    private bool spottedWhileEntering;
     private Coroutine routine;
 
     void Awake()
@@ -144,9 +145,11 @@ public class EntityAI : MonoBehaviour
             case State.Entering:
                 if (MoveKinematic(doorInside.position, walkSpeed))
                 {
+                    // only now, fully inside the room, does he get his collider back
                     rb.bodyType = RigidbodyType2D.Dynamic;
                     if (col != null) col.enabled = true;
-                    state = State.GoingToLever;
+                    if (spottedWhileEntering) StartChase();
+                    else state = State.GoingToLever;
                 }
                 break;
             case State.GoingToLever:
@@ -179,15 +182,10 @@ public class EntityAI : MonoBehaviour
         {
             lastSeen = girl.position;
             lostTimer = 0f;
-            if (state != State.Chasing)
-            {
-                if (routine != null) StopCoroutine(routine);
-                pausing = false;
-                if (state == State.Entering) { rb.bodyType = RigidbodyType2D.Dynamic; if (col != null) col.enabled = true; }
-                state = State.Chasing;
-                if (audioSource != null && spottedClip != null) audioSource.PlayOneShot(spottedClip);
-                onSpotted.Invoke();
-            }
+            // He starts outside the room's wall collider. Turning his collider back on while he is
+            // still in the doorway leaves him stuck outside the wall, so finish walking in first.
+            if (state == State.Entering) spottedWhileEntering = true;
+            else if (state != State.Chasing) StartChase();
         }
         else if (state == State.Chasing)
         {
@@ -205,6 +203,17 @@ public class EntityAI : MonoBehaviour
             float z = Mathf.MoveTowardsAngle(visionLight.transform.eulerAngles.z, target, turnSpeed * Time.deltaTime);
             visionLight.transform.rotation = Quaternion.Euler(0f, 0f, z);
         }
+    }
+
+    void StartChase()
+    {
+        if (routine != null) StopCoroutine(routine);
+        pausing = false;
+        spottedWhileEntering = false;
+        lostTimer = 0f;
+        state = State.Chasing;
+        if (audioSource != null && spottedClip != null) audioSource.PlayOneShot(spottedClip);
+        onSpotted.Invoke();
     }
 
     bool CanSeeGirl()
