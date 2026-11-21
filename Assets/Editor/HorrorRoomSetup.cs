@@ -6,12 +6,17 @@
 // 6. Add Door Lamp Scare          : lamp over the door flickers after the lever; last flash shows his face in the window.
 // 7. Use Current Lever Pose as Pulled : pose the Lever by hand, run this, it becomes the pulled state.
 // 8. Add Interact Prompt (U)      : key icon over the girl's head when she can use something.
+// 9. Set Arcade Controls          : A = interact, B = run, C = crawl, D = flashlight (Player prefab + open scene).
+// 10. Build Psycho Ambush         : desk cover, door kick, the psycho (vision cone, chase, grab) and the death screen.
+// 11. Add Door Exit               : press A at the open door to go to the information room.
+// 12. Fix Character Lighting      : faint glow so the girl and the psycho read in the dark room.
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public static class HorrorRoomSetup
 {
@@ -449,6 +454,335 @@ public static class HorrorRoomSetup
         EditorUtility.SetDirty(player.gameObject);
         Selection.activeGameObject = go;
         Debug.Log("[HorrorRoom] Interact prompt added to the Player. If it's a prefab instance, use Overrides > Apply All.");
+    }
+
+    // ---------------------------------------------------------------- arcade buttons
+    static InputActionReference ArcadeAction(string name) =>
+        AssetDatabase.LoadAllAssetsAtPath("Assets/Input/ArcadeControls.inputactions")
+            .OfType<InputActionReference>().FirstOrDefault(r => r.action != null && r.action.name == name);
+
+    static void WirePlayer(GameObject root, InputActionReference b, InputActionReference c, InputActionReference d)
+    {
+        var move = root.GetComponentInChildren<TopDownMovement>(true);
+        if (move != null)
+        {
+            var so = new SerializedObject(move);
+            so.FindProperty("sprintAction").objectReferenceValue = b;
+            so.FindProperty("crawlAction").objectReferenceValue = c;
+            so.ApplyModifiedProperties();
+        }
+        var light = root.GetComponentsInChildren<Light2D>(true).FirstOrDefault(l => l.lightType != Light2D.LightType.Global);
+        if (light == null)
+        {
+            var fl = new GameObject("Flashlight");
+            fl.transform.SetParent(root.transform, false);
+            fl.transform.localPosition = new Vector3(0f, 1f, 0f);
+            light = fl.AddComponent<Light2D>();
+            light.lightType = Light2D.LightType.Point;
+            light.color = new Color(1f, 0.9f, 0.75f);
+            light.intensity = 1.1f;
+            light.pointLightInnerRadius = 0.3f;
+            light.pointLightOuterRadius = 5f;
+            light.falloffIntensity = 0.7f;
+        }
+        var flash = root.GetComponent<PlayerFlashlight>();
+        if (flash == null) flash = root.AddComponent<PlayerFlashlight>();
+        var fso = new SerializedObject(flash);
+        fso.FindProperty("toggleAction").objectReferenceValue = d;
+        fso.FindProperty("flashlight").objectReferenceValue = light;
+        fso.ApplyModifiedProperties();
+    }
+
+    [MenuItem("Tools/Horror Room/9. Set Arcade Controls (A interact, B run, C crawl, D flashlight)")]
+    public static void SetArcadeControls()
+    {
+        var a = ArcadeAction("ButtonA"); var b = ArcadeAction("ButtonB");
+        var c = ArcadeAction("ButtonC"); var d = ArcadeAction("ButtonD");
+        if (a == null || b == null || c == null || d == null)
+        {
+            EditorUtility.DisplayDialog("Horror Room", "Couldn't find ButtonA-D in Assets/Input/ArcadeControls.inputactions.", "OK");
+            return;
+        }
+        // 1) the Player prefab itself, so every scene gets it
+        const string prefabPath = "Assets/Prefabs/Player.prefab";
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
+        {
+            var root = PrefabUtility.LoadPrefabContents(prefabPath);
+            WirePlayer(root, b, c, d);
+            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+        // 2) the Player in the open scene (in case it overrides the prefab)
+        foreach (var move in Object.FindObjectsByType<TopDownMovement>(FindObjectsSortMode.None))
+        {
+            Undo.RegisterFullObjectHierarchyUndo(move.gameObject, "Arcade controls");
+            WirePlayer(move.gameObject, b, c, d);
+            EditorUtility.SetDirty(move.gameObject);
+        }
+        // 3) A = interact for the lever and the box
+        foreach (var lever in Object.FindObjectsByType<LeverSwitch>(FindObjectsSortMode.None))
+        { var so = new SerializedObject(lever); so.FindProperty("interactAction").objectReferenceValue = a; so.ApplyModifiedProperties(); }
+        foreach (var box in Object.FindObjectsByType<PushableBox>(FindObjectsSortMode.None))
+        { var so = new SerializedObject(box); so.FindProperty("interactAction").objectReferenceValue = a; so.ApplyModifiedProperties(); }
+
+        Debug.Log("[HorrorRoom] Arcade controls set: A = interact (U), B = run (I), C = crawl (O), D = flashlight (J). Save the scene.");
+    }
+
+    // ---------------------------------------------------------------- psycho ambush
+    static Transform Marker(string name, Transform parent, Vector3 worldPos)
+    {
+        var g = new GameObject(name);
+        g.transform.SetParent(parent, false);
+        g.transform.position = worldPos;
+        return g.transform;
+    }
+
+    static SpriteRenderer SpriteObject(string name, Transform parent, string spritePath, Vector3 worldPos, int layerId, int order, Material mat)
+    {
+        var g = new GameObject(name);
+        g.transform.SetParent(parent, false);
+        g.transform.position = worldPos;
+        var r = g.AddComponent<SpriteRenderer>();
+        if (!string.IsNullOrEmpty(spritePath)) r.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+        r.sortingLayerID = layerId; r.sortingOrder = order;
+        if (mat != null) r.sharedMaterial = mat;
+        return r;
+    }
+
+    static Sprite SheetSprite(string sheet, string name) =>
+        AssetDatabase.LoadAllAssetsAtPath(sheet).OfType<Sprite>().FirstOrDefault(sp => sp.name == name);
+
+    [MenuItem("Tools/Horror Room/10. Build Psycho Ambush (desk, door kick, chase, death screen)")]
+    public static void BuildPsychoAmbush()
+    {
+        var bg = Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None)
+            .FirstOrDefault(r => r.sprite != null && r.sprite.name.StartsWith("electrical_room"));
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        var scare = Object.FindFirstObjectByType<DoorScare>();
+        if (bg == null || player == null) { EditorUtility.DisplayDialog("Horror Room", "Needs the Background (electrical_room_1080p) and the Player in the open scene.", "OK"); return; }
+        if (Object.FindFirstObjectByType<EntityAI>() != null) { EditorUtility.DisplayDialog("Horror Room", "The psycho is already in this scene. Delete 'PsychoAmbush' to rebuild.", "OK"); return; }
+
+        ImportSprite("Assets/Images/desk.png", new Vector2(0.5f, 18f / 262f));        // pivot = front floor line
+        ImportSprite("Assets/Images/door_open.png", new Vector2(0.5f, 0.5f));
+        ImportSprite("Assets/Images/door_broken.png", new Vector2(0.5f, 0.5f));
+        var t = bg.transform;
+        var psr = player.GetComponentInChildren<SpriteRenderer>();
+        int charLayer = psr != null ? psr.sortingLayerID : 0;
+        Material lit = psr != null ? psr.sharedMaterial : bg.sharedMaterial;
+
+        var root = new GameObject("PsychoAmbush");
+        Undo.RegisterCreatedObjectUndo(root, "Build psycho ambush");
+
+        // ---- desk in the middle of the room: solid, and low cover (hides her only while crawling)
+        var desk = SpriteObject("Desk", root.transform, "Assets/Images/desk.png", t.TransformPoint(new Vector2(0f, -2.75f)), charLayer, 0, lit);
+        desk.spriteSortPoint = SpriteSortPoint.Pivot;
+        var deskCol = desk.gameObject.AddComponent<BoxCollider2D>();
+        deskCol.size = new Vector2(2.55f, 0.5f);       // the desk's footprint on the floor
+        deskCol.offset = new Vector2(0f, 0.28f);
+        desk.gameObject.AddComponent<VisionCover>().lowCover = true;
+
+        // ---- the door after the kick (hidden until then): dark doorway + the door lying on the floor
+        var doorOpen = SpriteObject("DoorOpen", root.transform, "Assets/Images/door_open.png", t.TransformPoint(RoomPx(1765f, 510f)), bg.sortingLayerID, bg.sortingOrder + 1, bg.sharedMaterial);
+        var broken = SpriteObject("BrokenDoor", root.transform, "Assets/Images/door_broken.png", t.TransformPoint(RoomPx(1563f, 689.5f)), bg.sortingLayerID, bg.sortingOrder + 1, bg.sharedMaterial);
+        doorOpen.enabled = false; broken.enabled = false;   // decoration only: no collider
+
+        // ---- path markers
+        var markers = new GameObject("PsychoPath").transform; markers.SetParent(root.transform, false);
+        var outside = Marker("DoorOutside", markers, t.TransformPoint(new Vector2(6.35f, -0.95f)));
+        var inside = Marker("DoorInside", markers, t.TransformPoint(new Vector2(4.7f, -1.05f)));
+        var leverStand = Marker("LeverStand", markers, t.TransformPoint(new Vector2(-3.85f, 0.3f)));
+        Vector2[] patrol = { new Vector2(-3.4f, 0.9f), new Vector2(0f, 1.1f), new Vector2(4.0f, 0.5f),
+                             new Vector2(4.3f, -3.0f), new Vector2(0f, -0.45f), new Vector2(-4.0f, -3.0f) };
+        var patrolT = patrol.Select((p, i) => Marker("Patrol" + i, markers, t.TransformPoint(p))).ToArray();
+
+        // ---- the psycho
+        const string walkSheet = "Assets/Animations/entityAnimation/psycho-walking-sprite-sheet-transparent.png";
+        var psycho = SpriteObject("Psycho", root.transform, null, outside.position, charLayer, 0, lit);
+        psycho.sprite = SheetSprite(walkSheet, "psycho_walk_left_00");
+        psycho.spriteSortPoint = SpriteSortPoint.Pivot;
+        var pgo = psycho.gameObject;
+        var animator = pgo.AddComponent<Animator>();
+        animator.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Animations/Controllers/Psycho.controller");
+        pgo.AddComponent<Rigidbody2D>();
+        var pcol = pgo.AddComponent<BoxCollider2D>();
+        pcol.size = new Vector2(0.7f, 0.3f); pcol.offset = new Vector2(0f, 0.15f);   // his feet
+        var dsa = pgo.AddComponent<DirectionalSpriteAnimator>();
+        var dso = new SerializedObject(dsa); dso.FindProperty("runThreshold").floatValue = 999f; dso.ApplyModifiedProperties();
+        var shadow = AssetDatabase.LoadAssetAtPath<Sprite>(ShadowPath);
+        if (shadow != null)
+        {
+            var sh = SpriteObject("Shadow", pgo.transform, ShadowPath, outside.position + new Vector3(0f, 0.02f, 0f), charLayer, -1, null);
+            sh.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+        }
+        // vision cone: a red light that shows where he is looking
+        var lightGo = new GameObject("VisionLight");
+        lightGo.transform.SetParent(pgo.transform, false);
+        lightGo.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+        var vl = lightGo.AddComponent<Light2D>();
+        vl.lightType = Light2D.LightType.Point;
+        vl.color = new Color(1f, 0.32f, 0.22f);
+        vl.intensity = 0.9f;
+        vl.pointLightInnerRadius = 0.3f;
+        vl.pointLightOuterRadius = 5f;
+        vl.pointLightOuterAngle = 70f;
+        vl.pointLightInnerAngle = 30f;
+        vl.falloffIntensity = 0.6f;
+        var audio = pgo.AddComponent<AudioSource>(); audio.playOnAwake = false;
+
+        // ---- death screen (UI)
+        var canvasGo = new GameObject("DeathScreen");
+        canvasGo.transform.SetParent(root.transform, false);
+        var canvas = canvasGo.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 500;
+        var scaler = canvasGo.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920, 1080);
+        var group = canvasGo.AddComponent<CanvasGroup>();
+        Image MakeImage(string n)
+        {
+            var g = new GameObject(n, typeof(RectTransform));
+            g.transform.SetParent(canvasGo.transform, false);
+            var rt = (RectTransform)g.transform;
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
+            return g.AddComponent<Image>();
+        }
+        var black = MakeImage("Black"); black.color = Color.black;
+        var faceImg = MakeImage("Face"); faceImg.preserveAspect = true;
+        const string deathSheet = "Assets/Animations/entityAnimation/psycho-death-screen-sprite-sheet.png";
+        var frames = Enumerable.Range(0, 4).Select(i => SheetSprite(deathSheet, $"psycho_death_screen_{i:00}")).ToArray();
+        if (frames.Any(f => f == null)) Debug.LogWarning("[HorrorRoom] Death screen frames not found: run Tools > Horror Animation > Setup Everything, then this step again.");
+        var death = canvasGo.AddComponent<DeathScreen>();
+        var deathAudio = canvasGo.AddComponent<AudioSource>(); deathAudio.playOnAwake = false;
+        var ds = new SerializedObject(death);
+        ds.FindProperty("group").objectReferenceValue = group;
+        ds.FindProperty("background").objectReferenceValue = black;
+        ds.FindProperty("face").objectReferenceValue = faceImg;
+        var fp = ds.FindProperty("frames"); fp.arraySize = frames.Length;
+        for (int i = 0; i < frames.Length; i++) fp.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
+        ds.FindProperty("retryAction").objectReferenceValue = ArcadeAction("ButtonA");
+        ds.FindProperty("audioSource").objectReferenceValue = deathAudio;
+        ds.ApplyModifiedProperties();
+        // hidden while editing (it shows itself when he catches her)
+        group.alpha = 0f;
+        group.blocksRaycasts = false;
+        faceImg.sprite = frames.FirstOrDefault(f => f != null);
+        faceImg.enabled = false;
+
+        // ---- the AI
+        var ai = pgo.AddComponent<EntityAI>();
+        var so = new SerializedObject(ai);
+        so.FindProperty("girl").objectReferenceValue = player.transform;
+        so.FindProperty("lever").objectReferenceValue = Object.FindFirstObjectByType<LeverSwitch>();
+        so.FindProperty("leverStandPoint").objectReferenceValue = leverStand;
+        so.FindProperty("doorOutside").objectReferenceValue = outside;
+        so.FindProperty("doorInside").objectReferenceValue = inside;
+        so.FindProperty("doorOpen").objectReferenceValue = doorOpen;
+        so.FindProperty("brokenDoor").objectReferenceValue = broken;
+        var pp = so.FindProperty("patrolPoints"); pp.arraySize = patrolT.Length;
+        for (int i = 0; i < patrolT.Length; i++) pp.GetArrayElementAtIndex(i).objectReferenceValue = patrolT[i];
+        so.FindProperty("deathScreen").objectReferenceValue = death;
+        so.FindProperty("visionLight").objectReferenceValue = vl;
+        so.FindProperty("audioSource").objectReferenceValue = audio;
+        so.ApplyModifiedProperties();
+
+        // ---- start it when the door lamp scare ends
+        if (scare != null)
+        {
+            Undo.RecordObject(scare, "Hook psycho");
+            UnityEventTools.AddVoidPersistentListener(scare.onFinished, ai.BeginEntrance);
+            EditorUtility.SetDirty(scare);
+        }
+        Selection.activeGameObject = pgo;
+        Debug.Log("[HorrorRoom] Psycho ambush built" + (scare != null ? " and hooked to the door lamp scare." : ". No DoorScare found: call EntityAI.BeginEntrance() yourself.") +
+                  " Save the scene. Drag 'Desk' to move the cover; the PsychoPath markers set his route.");
+    }
+
+    [MenuItem("Tools/Horror Room/11. Add Door Exit (A at the door -> information room)")]
+    public static void AddDoorExit()
+    {
+        var bg = Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None)
+            .FirstOrDefault(r => r.sprite != null && r.sprite.name.StartsWith("electrical_room"));
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        if (bg == null || player == null) { EditorUtility.DisplayDialog("Horror Room", "Needs the Background and the Player in the open scene.", "OK"); return; }
+        if (Object.FindFirstObjectByType<DoorExit>() != null) { EditorUtility.DisplayDialog("Horror Room", "A DoorExit is already in this scene.", "OK"); return; }
+
+        var go = new GameObject("DoorExit");
+        Undo.RegisterCreatedObjectUndo(go, "Add door exit");
+        go.transform.position = bg.transform.TransformPoint(new Vector2(5.2f, -1.0f));   // just inside the doorway
+        var exit = go.AddComponent<DoorExit>();
+        var doorOpenGo = GameObject.Find("DoorOpen");
+        var so = new SerializedObject(exit);
+        so.FindProperty("player").objectReferenceValue = player.transform;
+        so.FindProperty("interactAction").objectReferenceValue = ArcadeAction("ButtonA");
+        so.FindProperty("doorOpen").objectReferenceValue = doorOpenGo != null ? doorOpenGo.GetComponent<SpriteRenderer>() : null;
+        if (doorOpenGo == null) so.FindProperty("requireDoorOpen").boolValue = false;     // no kicked door in this scene: always open
+        so.ApplyModifiedProperties();
+        Selection.activeGameObject = go;
+        Debug.Log("[HorrorRoom] Door exit added: press A (U) next to the door once it's open. Set 'Scene Name' to the information room's scene.");
+    }
+
+    // a soft light around a character so its sprite isn't a black silhouette in the dark room
+    static void AddPresenceLight(GameObject character, Color color, float intensity, float radius)
+    {
+        var existing = character.transform.Find("PresenceLight");
+        var go = existing != null ? existing.gameObject : new GameObject("PresenceLight");
+        if (existing == null) go.transform.SetParent(character.transform, false);
+        go.transform.localPosition = new Vector3(0f, 1f, 0f);
+        var l = go.GetComponent<Light2D>();
+        if (l == null) l = go.AddComponent<Light2D>();
+        l.lightType = Light2D.LightType.Point;
+        l.color = color;
+        l.intensity = intensity;
+        l.pointLightInnerRadius = 0.2f;
+        l.pointLightOuterRadius = radius;
+        l.pointLightInnerAngle = 360f;
+        l.pointLightOuterAngle = 360f;
+        l.falloffIntensity = 0.8f;
+    }
+
+    [MenuItem("Tools/Horror Room/12. Fix Character Lighting (girl + psycho glow, desk light)")]
+    public static void FixCharacterLighting()
+    {
+        var girlGlow = new Color(0.75f, 0.82f, 1f);      // cool, like moonlight on her
+        // the Player prefab (all scenes) ...
+        const string prefabPath = "Assets/Prefabs/Player.prefab";
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
+        {
+            var root = PrefabUtility.LoadPrefabContents(prefabPath);
+            AddPresenceLight(root, girlGlow, 0.55f, 1.5f);
+            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+        // ... and the scene instance (in case it overrides the prefab)
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        if (player != null) { Undo.RegisterFullObjectHierarchyUndo(player.gameObject, "Character light"); AddPresenceLight(player.gameObject, girlGlow, 0.55f, 1.5f); }
+        // the psycho: dimmer, so he stays a dark shape
+        var psycho = Object.FindFirstObjectByType<EntityAI>();
+        if (psycho != null) { Undo.RegisterFullObjectHierarchyUndo(psycho.gameObject, "Character light"); AddPresenceLight(psycho.gameObject, new Color(0.85f, 0.8f, 0.8f), 0.3f, 1.3f); }
+        // the desk: a soft wash of the same cool light so it reads in the dark
+        var desk = Object.FindObjectsByType<VisionCover>(FindObjectsSortMode.None).Select(c => c.gameObject).FirstOrDefault(g => g.name == "Desk");
+        if (desk != null)
+        {
+            Undo.RegisterFullObjectHierarchyUndo(desk, "Desk light");
+            var existing = desk.transform.Find("DeskLight");
+            var go = existing != null ? existing.gameObject : new GameObject("DeskLight");
+            if (existing == null) go.transform.SetParent(desk.transform, false);
+            go.transform.localPosition = new Vector3(0f, 0.8f, 0f);      // middle of the desk
+            var l = go.GetComponent<Light2D>();
+            if (l == null) l = go.AddComponent<Light2D>();
+            l.lightType = Light2D.LightType.Point;
+            l.color = girlGlow;
+            l.intensity = 0.5f;
+            l.pointLightInnerRadius = 0.6f;
+            l.pointLightOuterRadius = 2.1f;                               // covers the whole desk, fades on the floor
+            l.pointLightInnerAngle = 360f;
+            l.pointLightOuterAngle = 360f;
+            l.falloffIntensity = 0.7f;
+        }
+        Debug.Log("[HorrorRoom] Character glow added" + (psycho != null ? " to the girl and the psycho" : " to the girl (no psycho in the scene)") +
+                  (desk != null ? ", plus a soft light on the desk." : ".") +
+                  " Tweak 'PresenceLight' / 'DeskLight' intensity if they read too bright or too dark. Save the scene.");
     }
 
     [MenuItem("Tools/Horror Room/3. Make Scene Dark (cold global light)")]

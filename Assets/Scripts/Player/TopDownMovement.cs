@@ -13,8 +13,14 @@ public class TopDownMovement : MonoBehaviour
     [SerializeField] private float inputDeadZone = 0.2f;
 
     [SerializeField] private InputActionReference moveAction;
-    [Tooltip("Hold this button to run. Without it she always walks.")]
+    [Tooltip("Hold this button to run (Arcade B). Without it she always walks.")]
     [SerializeField] private InputActionReference sprintAction;
+    [Tooltip("Crawl button (Arcade C).")]
+    [SerializeField] private InputActionReference crawlAction;
+    [Tooltip("On: press to start crawling, press again to stand up. Off: crawl only while held.")]
+    [SerializeField] private bool crawlToggles = true;
+    [Tooltip("Speed while crawling, as a fraction of the walk speed.")]
+    [SerializeField] private float crawlSpeedMultiplier = 0.4f;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
@@ -31,6 +37,21 @@ public class TopDownMovement : MonoBehaviour
     /// Turn running off temporarily (while she holds the box).
     public bool AllowRun { get; set; } = true;
 
+    /// True while she crawls on all fours.
+    public bool IsCrawling { get; private set; }
+
+    /// Turn crawling off temporarily (while she holds the box, climbs...).
+    public bool AllowCrawl { get; set; } = true;
+
+    /// Her normal walking speed.
+    public float WalkSpeed => walkSpeed;
+
+    /// How fast she is moving right now (0 when standing still).
+    public float CurrentSpeed { get; private set; }
+
+    /// Make her stand up right away.
+    public void StandUp() => IsCrawling = false;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -46,6 +67,7 @@ public class TopDownMovement : MonoBehaviour
         }
         moveAction.action.Enable();
         sprintAction.action.Enable();
+        if (crawlAction != null) crawlAction.action.Enable();
     }
 
     void OnDisable()
@@ -60,14 +82,23 @@ public class TopDownMovement : MonoBehaviour
         if (moveInput.magnitude < inputDeadZone) moveInput = Vector2.zero;
 
         bool hasInput = moveInput != Vector2.zero;
-        IsRunning = hasInput && AllowRun && sprintAction.action.IsPressed();
+
+        if (!AllowCrawl || !CanMove) { if (!AllowCrawl) IsCrawling = false; }
+        else if (crawlAction != null)
+        {
+            if (crawlToggles) { if (crawlAction.action.WasPressedThisFrame()) IsCrawling = !IsCrawling; }
+            else IsCrawling = crawlAction.action.IsPressed();
+        }
+
+        IsRunning = hasInput && AllowRun && !IsCrawling && sprintAction.action.IsPressed();
     }
 
     void FixedUpdate()
     {
-        if (moveInput == Vector2.zero) return;
+        if (moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
 
-        float speed = (IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
+        float speed = (IsCrawling ? walkSpeed * crawlSpeedMultiplier : IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
+        CurrentSpeed = speed;
         rb.MovePosition(rb.position + moveInput.normalized * speed * Time.fixedDeltaTime);
     }
 }

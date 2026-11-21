@@ -100,7 +100,7 @@ public class PushableBox : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;          // dynamic so walls stop it
         rb.linearDamping = 0f;
         if (playerCol != null && boxCol != null) Physics2D.IgnoreCollision(playerCol, boxCol, true);
-        if (playerMove != null) { playerMove.SpeedMultiplier = dragSpeed; playerMove.AllowRun = false; }
+        if (playerMove != null) { playerMove.StandUp(); playerMove.AllowCrawl = false; playerMove.SpeedMultiplier = dragSpeed; playerMove.AllowRun = false; }
         if (playerAnim != null) playerAnim.FacingOverride = grabOffset;   // keep facing the box
     }
 
@@ -110,7 +110,7 @@ public class PushableBox : MonoBehaviour
         IsGrabbed = false;
         if (rb != null) { rb.linearVelocity = Vector2.zero; rb.bodyType = RigidbodyType2D.Kinematic; }
         if (playerCol != null && boxCol != null) Physics2D.IgnoreCollision(playerCol, boxCol, false);
-        if (playerMove != null) { playerMove.SpeedMultiplier = 1f; playerMove.AllowRun = true; }
+        if (playerMove != null) { playerMove.SpeedMultiplier = 1f; playerMove.AllowRun = true; playerMove.AllowCrawl = true; }
         if (playerAnim != null) playerAnim.FacingOverride = null;
     }
 
