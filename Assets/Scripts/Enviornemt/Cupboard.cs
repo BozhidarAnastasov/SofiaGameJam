@@ -5,6 +5,7 @@ public class Cupboard : MonoBehaviour, Interactable
     public bool IsOpened { get; private set; }
     public string CupboardID { get; private set; }
     public GameObject itemPrefab;
+    [SerializeField] private Sprite openedSprite;
     void Start()
     {
         CupboardID ??= GlobalHelper.GenerateUniqueID(gameObject);
@@ -37,5 +38,9 @@ public class Cupboard : MonoBehaviour, Interactable
     public void SetOpened(bool opened)
     {
         IsOpened = opened;
+        if (opened && openedSprite != null && TryGetComponent(out SpriteRenderer spriteRenderer))
+        {
+            spriteRenderer.sprite = openedSprite;
+        }
     }
 }
