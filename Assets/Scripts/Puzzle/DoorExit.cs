@@ -15,7 +15,11 @@ public class DoorExit : MonoBehaviour
 
     [Header("Next scene")]
     [Tooltip("Exact scene name; it must be added to File > Build Profiles (Build Settings) to load.")]
-    [SerializeField] private string sceneName = "InformationRoom";
+    [SerializeField] private string sceneName = "Lobby";
+    [Tooltip("Fade to black and back between the rooms.")]
+    [SerializeField] private bool fainting = true;
+    [Tooltip("Which arrival point she uses in the next scene (a RoomSpawnPoint with the same Entry Id).")]
+    [SerializeField] private string entryId = "FromElectrical";
 
     [Header("Door state")]
     [Tooltip("The door's lock needs power: she can only leave after pulling the lever.")]
@@ -32,6 +36,7 @@ public class DoorExit : MonoBehaviour
     private TopDownMovement move;
     private InteractPrompt prompt;
     private bool leaving;
+    private bool wasInRange, warnedNoAction;
 
     bool DoorIsOpen =>
         (!requireLeverPulled || (lever != null && lever.IsPulled)) &&
@@ -39,10 +44,30 @@ public class DoorExit : MonoBehaviour
 
     void Awake()
     {
+        if (player == null) { var p = FindFirstObjectByType<TopDownMovement>(); if (p != null) player = p.transform; }
+        Debug.Log($"[DoorExit] '{name}' ready -> '{sceneName}' (entry '{entryId}'), player {(player != null ? "found" : "MISSING")}, " +
+                  $"in Build Settings: {Application.CanStreamedLevelBeLoaded(sceneName)}.", this);
         if (player != null) move = player.GetComponent<TopDownMovement>();
         if (lever == null) lever = FindFirstObjectByType<LeverSwitch>();
     }
-    void OnEnable() { if (interactAction != null) interactAction.action.Enable(); }
+    // used when no Interact Action is assigned: the same bindings as the arcade's Button A
+    private InputAction fallbackAction;
+    InputAction Interact => interactAction != null && interactAction.action != null ? interactAction.action : fallbackAction;
+
+    void OnEnable()
+    {
+        if (interactAction == null || interactAction.action == null)
+        {
+            fallbackAction = new InputAction("DoorInteract", InputActionType.Button);
+            fallbackAction.AddBinding("<Keyboard>/u");
+            fallbackAction.AddBinding("<Gamepad>/buttonNorth");
+            fallbackAction.AddBinding("<Joystick>/trigger");
+            Debug.LogWarning($"[DoorExit] '{name}': no Interact Action assigned, using built-in A bindings (U / gamepad Y / joystick trigger).", this);
+        }
+        Interact.Enable();
+    }
+
+    void OnDisable() { if (fallbackAction != null) { fallbackAction.Disable(); fallbackAction.Dispose(); fallbackAction = null; } }
 
     void Update()
     {
@@ -50,9 +75,23 @@ public class DoorExit : MonoBehaviour
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
 
         bool canAct = move == null || (move.enabled && move.CanMove);   // not while climbing or caught
-        bool inRange = canAct && Vector2.Distance(player.position, transform.position) <= reachDistance;
+        float dist = Vector2.Distance(player.position, transform.position);
+        bool inRange = canAct && dist <= reachDistance;
+        if (inRange != wasInRange)
+        {
+            Debug.Log($"[DoorExit] '{name}' -> '{sceneName}': she {(inRange ? "is at the door, press A" : "walked away")} (distance {dist:0.00}, reach {reachDistance}).", this);
+            wasInRange = inRange;
+        }
         if (prompt != null) prompt.Request(this, inRange);
-        if (!inRange || interactAction == null || !interactAction.action.WasPressedThisFrame()) return;
+        if (Interact == null) { if (!warnedNoAction) { Debug.LogWarning($"[DoorExit] '{name}': no Interact input at all!", this); warnedNoAction = true; } return; }
+        if (!Interact.WasPressedThisFrame()) return;
+        if (!inRange)
+        {
+            if (dist <= reachDistance * 2.5f)
+                Debug.Log($"[DoorExit] '{name}': A pressed but she's too far (distance {dist:0.00} > reach {reachDistance})" + (canAct ? "." : " or can't act right now."), this);
+            return;
+        }
+        Debug.Log($"[DoorExit] '{name}': A pressed at the door.", this);
 
         if (!DoorIsOpen)
         {
@@ -72,13 +111,15 @@ public class DoorExit : MonoBehaviour
 
         if (Application.CanStreamedLevelBeLoaded(sceneName))
         {
-            Debug.Log($"[DoorExit] She left the room -> loading scene '{sceneName}'.", this);
-            SceneManager.LoadScene(sceneName);
+            RoomSpawnPoint.NextEntry = entryId;
+            Debug.Log($"[DoorExit] She left the room -> loading scene '{sceneName}' (arrives at '{entryId}').", this);
+            if (fainting) RoomTransition.FaintAndLoad(sceneName, player);   // fade out, load, fade in
+            else SceneManager.LoadScene(sceneName);
         }
         else
         {
             Debug.Log($"[DoorExit] She left the room -> would load scene '{sceneName}', but it isn't in the Build Settings yet " +
-                      "(the information room is still in production). Exit works.", this);
+                      "(File > Build Profiles > Scenes). Exit works.", this);
             if (move != null) move.CanMove = true;     // let her keep playing while the scene doesn't exist
             leaving = false;
         }

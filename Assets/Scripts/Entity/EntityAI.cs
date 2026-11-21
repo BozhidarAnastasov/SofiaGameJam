@@ -46,8 +46,6 @@ public class EntityAI : MonoBehaviour
     [Tooltip("The cone starts this far in front of him, so his own light doesn't paint him red.")]
     [SerializeField] private float coneForward = 0.55f;
     [SerializeField] private float coneHeight = 0.45f;
-    [Tooltip("He always notices her this close unless she is crawling.")]
-    [SerializeField] private float closeSenseRadius = 0.9f;
     [Tooltip("Seconds without seeing her before he gives up the chase and searches.")]
     [SerializeField] private float loseSightTime = 3f;
     [SerializeField] private float turnSpeed = 300f;

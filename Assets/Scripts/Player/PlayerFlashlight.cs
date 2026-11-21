@@ -9,6 +9,22 @@ public class PlayerFlashlight : MonoBehaviour
     [SerializeField] private InputActionReference toggleAction;
     [SerializeField] private Light2D flashlight;
     [SerializeField] private bool startOn = true;
+    [Tooltip("Off: she has to find the flashlight first (the pickup on the Lobby's red chair).")]
+    [SerializeField] private bool startWithFlashlight = false;
+
+    /// Whether she has picked up the flashlight. Kept across room changes; reset when the game starts.
+    public static bool HasFlashlight { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetOnGameStart() => HasFlashlight = false;
+
+    /// Called by the flashlight pickup.
+    public void Give()
+    {
+        HasFlashlight = true;
+        if (flashlight != null) flashlight.enabled = true;
+        Debug.Log("[PlayerFlashlight] She has the flashlight now: D switches it on/off.", this);
+    }
 
     [Header("Beam")]
     [Tooltip("Shine as a cone where she looks (off = a round glow around her).")]
@@ -44,7 +60,9 @@ public class PlayerFlashlight : MonoBehaviour
         movement = GetComponentInParent<TopDownMovement>();
         standPos = flashlight.transform.localPosition;
 
-        flashlight.enabled = startOn;
+        if (startWithFlashlight) HasFlashlight = true;
+        flashlight.enabled = startOn && HasFlashlight;
+        Debug.Log($"[PlayerFlashlight] Has flashlight: {HasFlashlight}.", this);
         if (aimWithFacing)
         {
             flashlight.lightType = Light2D.LightType.Point;
@@ -61,7 +79,7 @@ public class PlayerFlashlight : MonoBehaviour
     {
         if (flashlight == null) return;
 
-        if (toggleAction != null && toggleAction.action.WasPressedThisFrame())
+        if (HasFlashlight && toggleAction != null && toggleAction.action.WasPressedThisFrame())
         {
             flashlight.enabled = !flashlight.enabled;
             if (audioSource != null && clickClip != null) audioSource.PlayOneShot(clickClip);
