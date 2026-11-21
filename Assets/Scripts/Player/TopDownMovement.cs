@@ -9,6 +9,7 @@ public class TopDownMovement : MonoBehaviour
     [SerializeField] private float walkSpeed = 2f;
     [Tooltip("Speed while the run button is held. Matches the Run Reference Speed of the animator.")]
     [SerializeField] private float runSpeed = 5f;
+    [SerializeField] private float crawlSpeed = 0.8f;
     [Tooltip("Stick values below this count as no input.")]
     [SerializeField] private float inputDeadZone = 0.2f;
 
@@ -16,11 +17,14 @@ public class TopDownMovement : MonoBehaviour
     [Tooltip("Hold this button to run. Without it she always walks.")]
     [SerializeField] private InputActionReference sprintAction;
 
+    private InputAction crouchAction;
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
     /// True only while the run button is held AND there is movement input.
     public bool IsRunning { get; private set; }
+
+    public bool IsCrawling { get; private set; }
 
     /// Freeze movement, e.g. during the pick-up animation or a cutscene.
     public bool CanMove { get; set; } = true;
@@ -40,12 +44,18 @@ public class TopDownMovement : MonoBehaviour
         }
         moveAction.action.Enable();
         sprintAction.action.Enable();
+        crouchAction = sprintAction.action.actionMap.FindAction("Crouch");
+        crouchAction?.Enable();
     }
 
     void OnDisable()
     {
         moveAction?.action.Disable();
         sprintAction?.action.Disable();
+        crouchAction?.Disable();
+        IsCrawling = false;
+        IsRunning = false;
+        moveInput = Vector2.zero;
     }
 
     void Update()
@@ -54,14 +64,15 @@ public class TopDownMovement : MonoBehaviour
         if (moveInput.magnitude < inputDeadZone) moveInput = Vector2.zero;
 
         bool hasInput = moveInput != Vector2.zero;
-        IsRunning = hasInput && sprintAction.action.IsPressed();
+        IsCrawling = CanMove && crouchAction != null && crouchAction.IsPressed();
+        IsRunning = hasInput && !IsCrawling && sprintAction.action.IsPressed();
     }
 
     void FixedUpdate()
     {
         if (moveInput == Vector2.zero) return;
 
-        float speed = IsRunning ? runSpeed : walkSpeed;
+        float speed = IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed;
         rb.MovePosition(rb.position + moveInput.normalized * speed * Time.fixedDeltaTime);
     }
 }

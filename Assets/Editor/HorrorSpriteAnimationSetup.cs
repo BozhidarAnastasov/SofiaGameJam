@@ -25,25 +25,18 @@ public static class HorrorSpriteAnimationSetup
     class Sheet
     {
         public string path; public int cellW, cellH; public (string name, int count)[] rows;
-        public float ppu, pivotX = 0.5f, pivotY; public int maxSize = 4096;
+        public float ppu, pivotX = 0.5f, pivotY; public int maxSize = 4096; public int gridWidth, gridHeight, gridColumns = 4;
     }
 
     // The girl was drawn at a different size in every sheet; these ratios make her the same
     // height on screen in all of them (girl's standing height in px / 102 px of the walk sheet).
     static readonly Sheet[] Sheets =
     {
-        // Matched walk/run set (girl_sprites_128.zip): 128x128 cells, feet 8 px from the bottom, same height everywhere.
-        // run_down was 4% taller than the walk and has been scaled to match.
-        G128("girl128_walk_down.png", "girl_walk_down", 12), G128("girl128_walk_up.png", "girl_walk_up", 12),
-        G128("girl128_walk_left.png", "girl_walk_left", 16, 58.5f / 128f), G128("girl128_walk_right.png", "girl_walk_right", 16, 68.5f / 128f),
-        G128("girl128_run_down.png", "girl_run_down", 12), G128("girl128_run_up.png", "girl_run_up", 12),
-        G128("girl128_run_left.png", "girl_run_left", 14, 57f / 128f), G128("girl128_run_right.png", "girl_run_right", 14, 69f / 128f),
-        // Idles cut from the walk sprites (same art): down = frame 0 with mirrored planted leg, up = frame 4,
-        // sides = frame 6 (legs together). 8 frames: upper body rises 1 px = one slow breath.
-        G128("girl128_idle_down.png", "girl_idle_down", 8), G128("girl128_idle_up.png", "girl_idle_up", 8),
-        G128("girl128_idle_left.png", "girl_idle_left", 8, 58.5f / 128f), G128("girl128_idle_right.png", "girl_idle_right", 8, 68.5f / 128f),
-        new Sheet { path = Girl + "girl_crawl_11f.png", cellW = 228, cellH = 144,
-            rows = new[] { ("girl_crawl_right", 11) }, ppu = WalkPPU * 224f / 102f, pivotY = 8f / 144f },
+        NewWalk("Down"), NewWalk("Up"), NewWalk("Left"), NewWalk("Right"),
+        NewRun("Down"), NewRun("Up"), NewRun("Left"), NewRun("Right"),
+        NewIdle("Down"), NewIdle("Up"), NewIdle("Left"), NewIdle("Right"),
+        Crawl("Down", 4, 200f, 0.09f), Crawl("Up", 4, 200f, 0.06f),
+        Crawl("Left", 4, 175f, 0.16f), Crawl("Right", 3, 198f, 0.08f),
         new Sheet { path = Girl + "girl_pickup_10f.png", cellW = 228, cellH = 440,
             rows = new[] { ("girl_pickup_right", 10) }, ppu = WalkPPU * 421f / 102f, pivotY = 8f / 440f },
 
@@ -56,11 +49,32 @@ public static class HorrorSpriteAnimationSetup
             rows = new[] { ("psycho_death_screen", 4) }, ppu = 100f, pivotY = 0.5f, maxSize = 8192 },
     };
 
-    // pivotX: side views are not centred in their cells, so the pivot sits under her body instead
-    static Sheet G128(string file, string spriteName, int frames, float pivotX = 0.5f) => new Sheet
+    static Sheet Crawl(string direction, int columns, float pixelsPerUnit, float footPivot) => new Sheet
     {
-        path = Girl + "Sprites128/" + file, cellW = 128, cellH = 128,
-        rows = new[] { (spriteName, frames) }, ppu = WalkPPU, pivotX = pivotX, pivotY = 8f / 128f,
+        path = Girl + "NewSpreadSheets/Crawl/Girl_Crawl_" + direction + "_SS.png",
+        rows = new[] { ("girl_crawl_" + direction.ToLowerInvariant(), 12) },
+        gridWidth = 1448, gridHeight = 1086, gridColumns = columns, ppu = pixelsPerUnit, pivotY = footPivot,
+    };
+
+    static Sheet NewIdle(string direction) => new Sheet
+    {
+        path = Girl + "NewSpreadSheets/Breathing/Girl_Breathe_" + direction + ".png",
+        rows = new[] { ("girl_idle_" + direction.ToLowerInvariant(), 8) },
+        cellW = 313, cellH = 313, ppu = 145f, pivotY = 0.04f,
+    };
+
+    static Sheet NewWalk(string direction) => new Sheet
+    {
+        path = Girl + "NewSpreadSheets/Walking/Girl_Walk_" + direction + "_SS.png",
+        rows = new[] { ("girl_walk_" + direction.ToLowerInvariant(), 16) },
+        gridWidth = 1254, gridHeight = 1254, ppu = 145f, pivotY = 0.04f,
+    };
+
+    static Sheet NewRun(string direction) => new Sheet
+    {
+        path = Girl + "NewSpreadSheets/Running/Girl_Run_" + direction + "_SS.png",
+        rows = new[] { ("girl_run_" + direction.ToLowerInvariant(), 12) },
+        gridWidth = 1448, gridHeight = 1086, ppu = 170f, pivotY = 0.04f,
     };
 
     [MenuItem("Tools/Horror Animation/Setup Everything")]
@@ -69,8 +83,8 @@ public static class HorrorSpriteAnimationSetup
         SliceAllSheets();
         var clips = BuildClips();
         string[] dirs = { "Down", "Up", "Left", "Right" };
-        if (HasAll(clips, dirs.SelectMany(d => new[] { "Girl_Idle_" + d, "Girl_Walk_" + d, "Girl_Run_" + d })
-                .Concat(new[] { "Girl_Crawl_Left", "Girl_Crawl_Right", "Girl_PickUp_Left", "Girl_PickUp_Right" })))
+        if (HasAll(clips, dirs.SelectMany(d => new[] { "Girl_Idle_" + d, "Girl_Walk_" + d, "Girl_Run_" + d, "Girl_Crawl_" + d })
+                .Concat(new[] { "Girl_PickUp_Left", "Girl_PickUp_Right" })))
             BuildGirlController(clips);
         if (HasAll(clips, dirs.SelectMany(d => new[] { "Psycho_Idle_" + d, "Psycho_Walk_" + d })
                 .Concat(new[] { "Psycho_Grab_Left", "Psycho_Grab_Right" })))
@@ -127,7 +141,7 @@ public static class HorrorSpriteAnimationSetup
                 rects.Add(new SpriteRect
                 {
                     name = name,
-                    rect = new Rect(c * s.cellW, texH - (r + 1) * s.cellH, s.cellW, s.cellH),
+                    rect = s.gridWidth > 0 ? GirlGridRect(c, s, s.rows[r].count) : new Rect(c * s.cellW, texH - (r + 1) * s.cellH, s.cellW, s.cellH),
                     alignment = SpriteAlignment.Custom,
                     pivot = new Vector2(s.pivotX, s.pivotY),
                     spriteID = oldIds.TryGetValue(name, out var id) ? id : GUID.Generate(),
@@ -139,6 +153,30 @@ public static class HorrorSpriteAnimationSetup
         names?.SetNameFileIdPairs(rects.Select(x => new SpriteNameFileIdPair(x.name, x.spriteID)));
         dp.Apply();
         importer.SaveAndReimport();
+    }
+
+    // Split fractional-width cells at integer pixel boundaries, reading each row left to right.
+    static Rect GirlGridRect(int index, Sheet sheet, int frameCount)
+    {
+        int columns = sheet.gridColumns, rows = frameCount / columns;
+        int width = sheet.gridWidth, height = sheet.gridHeight;
+        int col = index % columns, row = index / columns;
+        int left = col * width / columns, right = (col + 1) * width / columns;
+        int top = row * height / rows, bottom = (row + 1) * height / rows;
+        return new Rect(left, height - bottom, right - left, bottom - top);
+    }
+
+    [MenuItem("Tools/Horror Animation/Update Girl Walk")]
+    public static void UpdateGirlWalk()
+    {
+        foreach (var sheet in Sheets.Where(s => s.path.StartsWith(Girl + "NewSpreadSheets/Walking/"))) Slice(sheet);
+        sprites = new Dictionary<string, Sprite>();
+        foreach (var sheet in Sheets.Where(s => s.path.StartsWith(Girl + "NewSpreadSheets/Walking/")))
+            foreach (var sprite in AssetDatabase.LoadAllAssetsAtPath(sheet.path).OfType<Sprite>())
+                sprites[sprite.name] = sprite;
+        foreach (string direction in new[] { "Down", "Up", "Left", "Right" })
+            MakeClip("Girl", "Girl_Walk_" + direction, Frames("girl_walk_" + direction.ToLowerInvariant()), 1f, true, false, false);
+        AssetDatabase.SaveAssets();
     }
 
     // ---------------------------------------------------------------- clips
@@ -179,8 +217,8 @@ public static class HorrorSpriteAnimationSetup
         Add("Girl", "Girl_Run_Up", Frames("girl_run_up"), 0.66f, true);
         Add("Girl", "Girl_Run_Right", Frames("girl_run_right"), 0.7f, true);
         Add("Girl", "Girl_Run_Left", Frames("girl_run_left"), 0.7f, true);
-        Add("Girl", "Girl_Crawl_Right", Frames("girl_crawl_right"), 1.1f, true);
-        Add("Girl", "Girl_Crawl_Left", Frames("girl_crawl_right"), 1.1f, true, flip: true);
+        foreach (string direction in new[] { "Down", "Up", "Left", "Right" })
+            Add("Girl", "Girl_Crawl_" + direction, Frames("girl_crawl_" + direction.ToLowerInvariant()), 1.1f, true);
         Add("Girl", "Girl_PickUp_Right", Frames("girl_pickup_right"), 0.85f, false);
         Add("Girl", "Girl_PickUp_Left", Frames("girl_pickup_right"), 0.85f, false, flip: true);
 
@@ -241,7 +279,7 @@ public static class HorrorSpriteAnimationSetup
         var idle = Directional(ctrl, sm, "Idle", new Vector3(300, 0), c, "Girl_Idle", false);
         var walk = Directional(ctrl, sm, "Walk", new Vector3(300, 100), c, "Girl_Walk", true);
         var run = Directional(ctrl, sm, "Run", new Vector3(300, 200), c, "Girl_Run", true);
-        var crawl = Sideways(ctrl, sm, "Crawl", new Vector3(300, 300), c["Girl_Crawl_Left"], c["Girl_Crawl_Right"], true);
+        var crawl = Directional(ctrl, sm, "Crawl", new Vector3(300, 300), c, "Girl_Crawl", true);
         sm.defaultState = idle;
         LinkAll(new[] { idle, walk, run, crawl });
 

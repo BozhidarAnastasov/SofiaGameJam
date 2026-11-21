@@ -110,9 +110,25 @@ BlendTree:
   m_Name: Crawl
   m_Childs:
   - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 6e195dceb3f145ac94a5a54f7422329a, type: 2}
+    m_Threshold: 0
+    m_Position: {x: 0, y: -1}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: Blend
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 5cb4080edc914b15bd4d74f20c38c92e, type: 2}
+    m_Threshold: 0.33333334
+    m_Position: {x: 0, y: 1}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: Blend
+    m_Mirror: 0
+  - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: ee65e574732ed6a418b3c6c0859e95d2, type: 2}
-    m_Threshold: -1
-    m_Position: {x: 0, y: 0}
+    m_Threshold: 0.6666667
+    m_Position: {x: -1, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
@@ -120,18 +136,18 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 2719e95648a68d74e8b149cd7b941f08, type: 2}
     m_Threshold: 1
-    m_Position: {x: 0, y: 0}
+    m_Position: {x: 1, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: SideX
-  m_BlendParameterY: Blend
+  m_BlendParameter: DirX
+  m_BlendParameterY: DirY
   m_MinThreshold: 0
   m_MaxThreshold: 1
-  m_UseAutomaticThresholds: 0
+  m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
-  m_BlendType: 0
+  m_BlendType: 1
 --- !u!1107 &-7490078586160692462
 AnimatorStateMachine:
   serializedVersion: 6

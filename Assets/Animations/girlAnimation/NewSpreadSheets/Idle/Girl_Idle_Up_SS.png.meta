@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a12a18b2afb36064b8e661f63694975a
+guid: 7eed6df03858b1a4ebb7f60f2f19cf17
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2873701281803729944
-    second: girl_run_down_12f_transparent_0
+      213: 6640545617430644066
+    second: Girl_Idle_Up_SS_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: girl_run_down_12f_transparent_0
+      name: Girl_Idle_Up_SS_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1884
-        height: 290
+        width: 1774
+        height: 887
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8e30183e8ef8e18d0800000000000000
-      internalID: -2873701281803729944
+      spriteID: 2650bb15e05f72c50800000000000000
+      internalID: 6640545617430644066
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      girl_run_down_12f_transparent_0: -2873701281803729944
+      Girl_Idle_Up_SS_0: 6640545617430644066
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

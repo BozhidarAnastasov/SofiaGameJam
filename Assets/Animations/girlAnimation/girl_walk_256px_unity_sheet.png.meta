@@ -1,0 +1,1781 @@
+fileFormatVersion: 2
+guid: 430c9ee65770af543954b6a52f78c360
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -445334927211853244
+    second: girl_walk_256px_unity_sheet_0
+  - first:
+      213: 8410965027895803163
+    second: girl_walk_256px_unity_sheet_1
+  - first:
+      213: -4493778835103446520
+    second: girl_walk_256px_unity_sheet_2
+  - first:
+      213: -5641307809770517911
+    second: girl_walk_256px_unity_sheet_3
+  - first:
+      213: 2861189529281679693
+    second: girl_walk_256px_unity_sheet_4
+  - first:
+      213: -1493633944636737633
+    second: girl_walk_256px_unity_sheet_5
+  - first:
+      213: -72477733252147633
+    second: girl_walk_256px_unity_sheet_6
+  - first:
+      213: -6141219211312099346
+    second: girl_walk_256px_unity_sheet_7
+  - first:
+      213: -8325540416597008018
+    second: girl_walk_256px_unity_sheet_8
+  - first:
+      213: -8594785897557641924
+    second: girl_walk_256px_unity_sheet_9
+  - first:
+      213: 3502554913604124662
+    second: girl_walk_256px_unity_sheet_10
+  - first:
+      213: 7583767169356711306
+    second: girl_walk_256px_unity_sheet_11
+  - first:
+      213: 3780996892071231266
+    second: girl_walk_256px_unity_sheet_12
+  - first:
+      213: 8601237694235515847
+    second: girl_walk_256px_unity_sheet_13
+  - first:
+      213: -3995148645364208753
+    second: girl_walk_256px_unity_sheet_14
+  - first:
+      213: 5557257277679519195
+    second: girl_walk_256px_unity_sheet_15
+  - first:
+      213: 5650807431050178066
+    second: girl_walk_256px_unity_sheet_16
+  - first:
+      213: 4762118359163276252
+    second: girl_walk_256px_unity_sheet_17
+  - first:
+      213: -4099403025895980508
+    second: girl_walk_256px_unity_sheet_18
+  - first:
+      213: -3470484402131242214
+    second: girl_walk_256px_unity_sheet_19
+  - first:
+      213: -5048008878474430361
+    second: girl_walk_256px_unity_sheet_20
+  - first:
+      213: 7463798618790022868
+    second: girl_walk_256px_unity_sheet_21
+  - first:
+      213: -5634338482681620590
+    second: girl_walk_256px_unity_sheet_22
+  - first:
+      213: -7834349606437384821
+    second: girl_walk_256px_unity_sheet_23
+  - first:
+      213: -8210143242379257870
+    second: girl_walk_256px_unity_sheet_24
+  - first:
+      213: 2724580709654011586
+    second: girl_walk_256px_unity_sheet_25
+  - first:
+      213: 515816717684454411
+    second: girl_walk_256px_unity_sheet_26
+  - first:
+      213: -5213608327885438647
+    second: girl_walk_256px_unity_sheet_27
+  - first:
+      213: 5476749559213630259
+    second: girl_walk_256px_unity_sheet_28
+  - first:
+      213: 5717544912364623811
+    second: girl_walk_256px_unity_sheet_29
+  - first:
+      213: -1428625371254175914
+    second: girl_walk_256px_unity_sheet_30
+  - first:
+      213: -2059139822375911149
+    second: girl_walk_256px_unity_sheet_31
+  - first:
+      213: 4339418917554563623
+    second: girl_walk_256px_unity_sheet_32
+  - first:
+      213: -1043429604359532325
+    second: girl_walk_256px_unity_sheet_33
+  - first:
+      213: 8104541173325837374
+    second: girl_walk_256px_unity_sheet_34
+  - first:
+      213: -1879823788769849036
+    second: girl_walk_256px_unity_sheet_35
+  - first:
+      213: -183030755415364750
+    second: girl_walk_256px_unity_sheet_36
+  - first:
+      213: 7777127508488276023
+    second: girl_walk_256px_unity_sheet_37
+  - first:
+      213: 2880462671153664914
+    second: girl_walk_256px_unity_sheet_38
+  - first:
+      213: 8713014962448251673
+    second: girl_walk_256px_unity_sheet_39
+  - first:
+      213: 4466766716563688433
+    second: girl_walk_256px_unity_sheet_40
+  - first:
+      213: 5508007596455952577
+    second: girl_walk_256px_unity_sheet_41
+  - first:
+      213: -350808700877371655
+    second: girl_walk_256px_unity_sheet_42
+  - first:
+      213: 2332536275280236204
+    second: girl_walk_256px_unity_sheet_43
+  - first:
+      213: -7784828773453554054
+    second: girl_walk_256px_unity_sheet_44
+  - first:
+      213: 3271144822756266844
+    second: girl_walk_256px_unity_sheet_45
+  - first:
+      213: -5646816710827766786
+    second: girl_walk_256px_unity_sheet_46
+  - first:
+      213: -2625172341454126645
+    second: girl_walk_256px_unity_sheet_47
+  - first:
+      213: 9004563346829043351
+    second: girl_walk_256px_unity_sheet_48
+  - first:
+      213: 2689466208417437375
+    second: girl_walk_256px_unity_sheet_49
+  - first:
+      213: -5747913721301112234
+    second: girl_walk_256px_unity_sheet_50
+  - first:
+      213: 8580093971653171310
+    second: girl_walk_256px_unity_sheet_51
+  - first:
+      213: 2245135297271846954
+    second: girl_walk_256px_unity_sheet_52
+  - first:
+      213: 3073846326455524283
+    second: girl_walk_256px_unity_sheet_53
+  - first:
+      213: -4120864982165555980
+    second: girl_walk_256px_unity_sheet_54
+  - first:
+      213: -169171417554337969
+    second: girl_walk_256px_unity_sheet_55
+  - first:
+      213: -6410874867399968485
+    second: girl_walk_256px_unity_sheet_56
+  - first:
+      213: 728022402808695712
+    second: girl_walk_256px_unity_sheet_57
+  - first:
+      213: -4332471475126052404
+    second: girl_walk_256px_unity_sheet_58
+  - first:
+      213: 4069159416241077309
+    second: girl_walk_256px_unity_sheet_59
+  - first:
+      213: 5324233296316588898
+    second: girl_walk_256px_unity_sheet_60
+  - first:
+      213: 8562709280370369431
+    second: girl_walk_256px_unity_sheet_61
+  - first:
+      213: -5606962373549414161
+    second: girl_walk_256px_unity_sheet_62
+  - first:
+      213: 893937626995331121
+    second: girl_walk_256px_unity_sheet_63
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 256
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_0
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 776
+        width: 113
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44a86714e3ad1d9f0800000000000000
+      internalID: -445334927211853244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_1
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 778
+        width: 111
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1d76f13120c9b470800000000000000
+      internalID: 8410965027895803163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_2
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 778
+        width: 109
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80a8d7265f3e2a1c0800000000000000
+      internalID: -4493778835103446520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_3
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 778
+        width: 109
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96acdf99f6c06b1b0800000000000000
+      internalID: -5641307809770517911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_4
+      rect:
+        serializedVersion: 2
+        x: 1097
+        y: 778
+        width: 108
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d41d6e7b7bcf4b720800000000000000
+      internalID: 2861189529281679693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_5
+      rect:
+        serializedVersion: 2
+        x: 1354
+        y: 778
+        width: 107
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f97367947db854be0800000000000000
+      internalID: -1493633944636737633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_6
+      rect:
+        serializedVersion: 2
+        x: 1609
+        y: 778
+        width: 108
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f465167b2e18efef0800000000000000
+      internalID: -72477733252147633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_7
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 778
+        width: 106
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eef00f53aa106caa0800000000000000
+      internalID: -6141219211312099346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_8
+      rect:
+        serializedVersion: 2
+        x: 2123
+        y: 778
+        width: 107
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e61e3990a1db57c80800000000000000
+      internalID: -8325540416597008018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_9
+      rect:
+        serializedVersion: 2
+        x: 2378
+        y: 777
+        width: 109
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c353a8763cf29b880800000000000000
+      internalID: -8594785897557641924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_10
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 778
+        width: 109
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ff3ca7f2239b9030800000000000000
+      internalID: 3502554913604124662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_11
+      rect:
+        serializedVersion: 2
+        x: 2889
+        y: 778
+        width: 111
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a85c6cc5f04fe3960800000000000000
+      internalID: 7583767169356711306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_12
+      rect:
+        serializedVersion: 2
+        x: 3147
+        y: 778
+        width: 108
+        height: 223
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22ff2c804acc87430800000000000000
+      internalID: 3780996892071231266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_13
+      rect:
+        serializedVersion: 2
+        x: 3403
+        y: 778
+        width: 107
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cb9b919c1cbd5770800000000000000
+      internalID: 8601237694235515847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_14
+      rect:
+        serializedVersion: 2
+        x: 3659
+        y: 776
+        width: 107
+        height: 223
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8bee2869716e88c0800000000000000
+      internalID: -3995148645364208753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_15
+      rect:
+        serializedVersion: 2
+        x: 3915
+        y: 778
+        width: 108
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd5ca89ec085f1d40800000000000000
+      internalID: 5557257277679519195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_16
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 522
+        width: 107
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21e22e55b63bb6e40800000000000000
+      internalID: 5650807431050178066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_17
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 522
+        width: 101
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdb0b48ba61761240800000000000000
+      internalID: 4762118359163276252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_18
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 522
+        width: 102
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4220f42eaaefb17c0800000000000000
+      internalID: -4099403025895980508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_19
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 522
+        width: 102
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a13fe6cd2dc56dfc0800000000000000
+      internalID: -3470484402131242214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_20
+      rect:
+        serializedVersion: 2
+        x: 1098
+        y: 522
+        width: 102
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7687387abaed1f9b0800000000000000
+      internalID: -5048008878474430361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_21
+      rect:
+        serializedVersion: 2
+        x: 1351
+        y: 522
+        width: 106
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dec7048c4db49760800000000000000
+      internalID: 7463798618790022868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_22
+      rect:
+        serializedVersion: 2
+        x: 1603
+        y: 521
+        width: 110
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 297d273800fcec1b0800000000000000
+      internalID: -5634338482681620590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_23
+      rect:
+        serializedVersion: 2
+        x: 1862
+        y: 521
+        width: 108
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8d04168a8cc64390800000000000000
+      internalID: -7834349606437384821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_24
+      rect:
+        serializedVersion: 2
+        x: 2120
+        y: 522
+        width: 103
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f719e26836bf0e80800000000000000
+      internalID: -8210143242379257870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_25
+      rect:
+        serializedVersion: 2
+        x: 2376
+        y: 522
+        width: 103
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ce1fc058b7afc520800000000000000
+      internalID: 2724580709654011586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_26
+      rect:
+        serializedVersion: 2
+        x: 2632
+        y: 522
+        width: 103
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b043ac2629c882700800000000000000
+      internalID: 515816717684454411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_27
+      rect:
+        serializedVersion: 2
+        x: 2889
+        y: 522
+        width: 103
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 941ce5249da85a7b0800000000000000
+      internalID: -5213608327885438647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_28
+      rect:
+        serializedVersion: 2
+        x: 3139
+        y: 522
+        width: 108
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 333a4b005b2510c40800000000000000
+      internalID: 5476749559213630259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_29
+      rect:
+        serializedVersion: 2
+        x: 3396
+        y: 522
+        width: 108
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c7d5d01eccc85f40800000000000000
+      internalID: 5717544912364623811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_30
+      rect:
+        serializedVersion: 2
+        x: 3657
+        y: 522
+        width: 104
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 657c8454bc08c2ce0800000000000000
+      internalID: -1428625371254175914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_31
+      rect:
+        serializedVersion: 2
+        x: 3912
+        y: 522
+        width: 103
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3114c68cd377c63e0800000000000000
+      internalID: -2059139822375911149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_32
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 265
+        width: 103
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72a2378a386b83c30800000000000000
+      internalID: 4339418917554563623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_33
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 265
+        width: 105
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd0160c9d4ef481f0800000000000000
+      internalID: -1043429604359532325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_34
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 266
+        width: 105
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e343d97e14d197070800000000000000
+      internalID: 8104541173325837374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_35
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 265
+        width: 104
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4315b0e493689e5e0800000000000000
+      internalID: -1879823788769849036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_36
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 266
+        width: 109
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27bee786f7eb57df0800000000000000
+      internalID: -183030755415364750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_37
+      rect:
+        serializedVersion: 2
+        x: 1358
+        y: 265
+        width: 116
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 738cc549348edeb60800000000000000
+      internalID: 7777127508488276023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_38
+      rect:
+        serializedVersion: 2
+        x: 1613
+        y: 265
+        width: 110
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29313eeb98579f720800000000000000
+      internalID: 2880462671153664914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_39
+      rect:
+        serializedVersion: 2
+        x: 1871
+        y: 264
+        width: 108
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91b346fd1f8dae870800000000000000
+      internalID: 8713014962448251673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_40
+      rect:
+        serializedVersion: 2
+        x: 2128
+        y: 265
+        width: 104
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fb015ba9a42dfd30800000000000000
+      internalID: 4466766716563688433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_41
+      rect:
+        serializedVersion: 2
+        x: 2384
+        y: 265
+        width: 105
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c009eee9bf507c40800000000000000
+      internalID: 5508007596455952577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_42
+      rect:
+        serializedVersion: 2
+        x: 2639
+        y: 265
+        width: 105
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f68610685da12bf0800000000000000
+      internalID: -350808700877371655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_43
+      rect:
+        serializedVersion: 2
+        x: 2895
+        y: 265
+        width: 104
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cae8ac15265de5020800000000000000
+      internalID: 2332536275280236204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_44
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 265
+        width: 108
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7e9f01f97bb6f390800000000000000
+      internalID: -7784828773453554054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_45
+      rect:
+        serializedVersion: 2
+        x: 3406
+        y: 265
+        width: 111
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c53de3192e0756d20800000000000000
+      internalID: 3271144822756266844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_46
+      rect:
+        serializedVersion: 2
+        x: 3663
+        y: 265
+        width: 104
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efb0f5f9e1a72a1b0800000000000000
+      internalID: -5646816710827766786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_47
+      rect:
+        serializedVersion: 2
+        x: 3919
+        y: 265
+        width: 105
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc142790aa3819bd0800000000000000
+      internalID: -2625172341454126645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_48
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 10
+        width: 104
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7966f3dd7a2a6fc70800000000000000
+      internalID: 9004563346829043351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_49
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 9
+        width: 104
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb653246447e25520800000000000000
+      internalID: 2689466208417437375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_50
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 9
+        width: 107
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65ae04a9cee4b30b0800000000000000
+      internalID: -5747913721301112234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_51
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 9
+        width: 104
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e689bd7020e921770800000000000000
+      internalID: 8580093971653171310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_52
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 10
+        width: 106
+        height: 213
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a28549a58a2582f10800000000000000
+      internalID: 2245135297271846954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_53
+      rect:
+        serializedVersion: 2
+        x: 1353
+        y: 10
+        width: 109
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbb558ea2fe78aa20800000000000000
+      internalID: 3073846326455524283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_54
+      rect:
+        serializedVersion: 2
+        x: 1610
+        y: 10
+        width: 106
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f4fcaac12fbfc6c0800000000000000
+      internalID: -4120864982165555980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_55
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 9
+        width: 106
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4f3686fd7bf6adf0800000000000000
+      internalID: -169171417554337969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_56
+      rect:
+        serializedVersion: 2
+        x: 2122
+        y: 9
+        width: 106
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b19352d364ff707a0800000000000000
+      internalID: -6410874867399968485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_57
+      rect:
+        serializedVersion: 2
+        x: 2378
+        y: 10
+        width: 106
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ab40f3a4847a1a00800000000000000
+      internalID: 728022402808695712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_58
+      rect:
+        serializedVersion: 2
+        x: 2635
+        y: 9
+        width: 106
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc95995d528ffd3c0800000000000000
+      internalID: -4332471475126052404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_59
+      rect:
+        serializedVersion: 2
+        x: 2890
+        y: 10
+        width: 106
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3c3c730eee887830800000000000000
+      internalID: 4069159416241077309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_60
+      rect:
+        serializedVersion: 2
+        x: 3147
+        y: 10
+        width: 104
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 263e14859f973e940800000000000000
+      internalID: 5324233296316588898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_61
+      rect:
+        serializedVersion: 2
+        x: 3403
+        y: 8
+        width: 105
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 793aa6b29bad4d670800000000000000
+      internalID: 8562709280370369431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_62
+      rect:
+        serializedVersion: 2
+        x: 3659
+        y: 9
+        width: 104
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe82b9f9d611032b0800000000000000
+      internalID: -5606962373549414161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_256px_unity_sheet_63
+      rect:
+        serializedVersion: 2
+        x: 3915
+        y: 10
+        width: 103
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13099641987e76c00800000000000000
+      internalID: 893937626995331121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      girl_walk_256px_unity_sheet_0: -445334927211853244
+      girl_walk_256px_unity_sheet_1: 8410965027895803163
+      girl_walk_256px_unity_sheet_10: 3502554913604124662
+      girl_walk_256px_unity_sheet_11: 7583767169356711306
+      girl_walk_256px_unity_sheet_12: 3780996892071231266
+      girl_walk_256px_unity_sheet_13: 8601237694235515847
+      girl_walk_256px_unity_sheet_14: -3995148645364208753
+      girl_walk_256px_unity_sheet_15: 5557257277679519195
+      girl_walk_256px_unity_sheet_16: 5650807431050178066
+      girl_walk_256px_unity_sheet_17: 4762118359163276252
+      girl_walk_256px_unity_sheet_18: -4099403025895980508
+      girl_walk_256px_unity_sheet_19: -3470484402131242214
+      girl_walk_256px_unity_sheet_2: -4493778835103446520
+      girl_walk_256px_unity_sheet_20: -5048008878474430361
+      girl_walk_256px_unity_sheet_21: 7463798618790022868
+      girl_walk_256px_unity_sheet_22: -5634338482681620590
+      girl_walk_256px_unity_sheet_23: -7834349606437384821
+      girl_walk_256px_unity_sheet_24: -8210143242379257870
+      girl_walk_256px_unity_sheet_25: 2724580709654011586
+      girl_walk_256px_unity_sheet_26: 515816717684454411
+      girl_walk_256px_unity_sheet_27: -5213608327885438647
+      girl_walk_256px_unity_sheet_28: 5476749559213630259
+      girl_walk_256px_unity_sheet_29: 5717544912364623811
+      girl_walk_256px_unity_sheet_3: -5641307809770517911
+      girl_walk_256px_unity_sheet_30: -1428625371254175914
+      girl_walk_256px_unity_sheet_31: -2059139822375911149
+      girl_walk_256px_unity_sheet_32: 4339418917554563623
+      girl_walk_256px_unity_sheet_33: -1043429604359532325
+      girl_walk_256px_unity_sheet_34: 8104541173325837374
+      girl_walk_256px_unity_sheet_35: -1879823788769849036
+      girl_walk_256px_unity_sheet_36: -183030755415364750
+      girl_walk_256px_unity_sheet_37: 7777127508488276023
+      girl_walk_256px_unity_sheet_38: 2880462671153664914
+      girl_walk_256px_unity_sheet_39: 8713014962448251673
+      girl_walk_256px_unity_sheet_4: 2861189529281679693
+      girl_walk_256px_unity_sheet_40: 4466766716563688433
+      girl_walk_256px_unity_sheet_41: 5508007596455952577
+      girl_walk_256px_unity_sheet_42: -350808700877371655
+      girl_walk_256px_unity_sheet_43: 2332536275280236204
+      girl_walk_256px_unity_sheet_44: -7784828773453554054
+      girl_walk_256px_unity_sheet_45: 3271144822756266844
+      girl_walk_256px_unity_sheet_46: -5646816710827766786
+      girl_walk_256px_unity_sheet_47: -2625172341454126645
+      girl_walk_256px_unity_sheet_48: 9004563346829043351
+      girl_walk_256px_unity_sheet_49: 2689466208417437375
+      girl_walk_256px_unity_sheet_5: -1493633944636737633
+      girl_walk_256px_unity_sheet_50: -5747913721301112234
+      girl_walk_256px_unity_sheet_51: 8580093971653171310
+      girl_walk_256px_unity_sheet_52: 2245135297271846954
+      girl_walk_256px_unity_sheet_53: 3073846326455524283
+      girl_walk_256px_unity_sheet_54: -4120864982165555980
+      girl_walk_256px_unity_sheet_55: -169171417554337969
+      girl_walk_256px_unity_sheet_56: -6410874867399968485
+      girl_walk_256px_unity_sheet_57: 728022402808695712
+      girl_walk_256px_unity_sheet_58: -4332471475126052404
+      girl_walk_256px_unity_sheet_59: 4069159416241077309
+      girl_walk_256px_unity_sheet_6: -72477733252147633
+      girl_walk_256px_unity_sheet_60: 5324233296316588898
+      girl_walk_256px_unity_sheet_61: 8562709280370369431
+      girl_walk_256px_unity_sheet_62: -5606962373549414161
+      girl_walk_256px_unity_sheet_63: 893937626995331121
+      girl_walk_256px_unity_sheet_7: -6141219211312099346
+      girl_walk_256px_unity_sheet_8: -8325540416597008018
+      girl_walk_256px_unity_sheet_9: -8594785897557641924
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

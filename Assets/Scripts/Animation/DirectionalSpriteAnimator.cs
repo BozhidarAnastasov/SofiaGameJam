@@ -77,7 +77,7 @@ public class DirectionalSpriteAnimator : MonoBehaviour
 
         Locomotion state;
         float reference;
-        if (Crawling) { state = Locomotion.Crawl; reference = crawlReferenceSpeed; }
+        if (Crawling || (playerMovement != null && playerMovement.IsCrawling)) { state = Locomotion.Crawl; reference = crawlReferenceSpeed; }
         else if (!moving && stoppedFor >= stopGraceTime) { state = Locomotion.Idle; reference = 1f; }
         else if (WantsRun(speed)) { state = Locomotion.Run; reference = runReferenceSpeed; }
         else { state = Locomotion.Walk; reference = walkReferenceSpeed; }
