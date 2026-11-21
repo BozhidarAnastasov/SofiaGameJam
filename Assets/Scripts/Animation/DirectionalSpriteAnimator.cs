@@ -49,7 +49,13 @@ public class DirectionalSpriteAnimator : MonoBehaviour
     static readonly int GrabId = Animator.StringToHash("Grab");
 
     private Animator animator;
+    private Transform groundShadow;
+    private Vector3 restingShadowScale;
+    [Tooltip("Seconds for the shadow to grow or shrink when entering or leaving a diagonal crawl.")]
+    [SerializeField, Min(0f)] private float shadowTransitionTime = 0.15f;
+    private float shadowBlend;
     private Vector2 lastPos, velocity, facing = Vector2.down;
+    private Vector2 eightWayFacing = Vector2.down;
     private float side = 1f, stoppedFor;
 
     void Awake()
@@ -57,6 +63,11 @@ public class DirectionalSpriteAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
         if (body == null) body = GetComponentInParent<Rigidbody2D>();
         if (playerMovement == null) playerMovement = GetComponentInParent<TopDownMovement>();
+        if (playerMovement != null)
+        {
+            groundShadow = playerMovement.transform.Find("Shadow");
+            if (groundShadow != null) restingShadowScale = groundShadow.localScale;
+        }
         lastPos = Position();
     }
 
@@ -88,9 +99,19 @@ public class DirectionalSpriteAnimator : MonoBehaviour
         }
 
         bool crawling = Crawling || (playerMovement != null && playerMovement.IsCrawling);
+        if (FacingOverride.HasValue || moving)
+        {
+            Vector2 direction = FacingOverride ?? velocity;
+            // Round to the nearest 45-degree sector for both keys and analog sticks.
+            Vector2 unit = direction.normalized;
+            const float boundary = 0.38268343f; // sin(22.5 degrees)
+            eightWayFacing = new Vector2(Mathf.Abs(unit.x) > boundary ? Mathf.Sign(unit.x) : 0f,
+                                      Mathf.Abs(unit.y) > boundary ? Mathf.Sign(unit.y) : 0f);
+        }
+
         Locomotion state;
         float reference;
-        if (Crawling || (playerMovement != null && playerMovement.IsCrawling)) { state = Locomotion.Crawl; reference = crawlReferenceSpeed; }
+        if (crawling) { state = Locomotion.Crawl; reference = crawlReferenceSpeed; }
         else if (!moving && stoppedFor >= stopGraceTime) { state = Locomotion.Idle; reference = 1f; }
         else if (WantsRun(speed)) { state = Locomotion.Run; reference = runReferenceSpeed; }
         else { state = Locomotion.Walk; reference = walkReferenceSpeed; }
@@ -100,11 +121,30 @@ public class DirectionalSpriteAnimator : MonoBehaviour
             : state == Locomotion.Crawl && !moving ? 0f
             : Mathf.Clamp(speed / reference, animSpeedClamp.x, animSpeedClamp.y);
 
-        animator.SetFloat(DirX, facing.x);
-        animator.SetFloat(DirY, facing.y);
+        bool eightWayMovement = playerMovement != null && (state == Locomotion.Walk || state == Locomotion.Run);
+        Vector2 animationFacing = crawling || eightWayMovement ? eightWayFacing : facing;
+        SetDiagonalShadow(crawling && eightWayFacing.x != 0f && eightWayFacing.y != 0f);
+        animator.SetFloat(DirX, animationFacing.x);
+        animator.SetFloat(DirY, animationFacing.y);
         animator.SetFloat(SideX, side);
         animator.SetInteger(StateId, (int)state);
         animator.SetFloat(AnimSpeed, animSpeed);
+    }
+
+    void SetDiagonalShadow(bool enlarged)
+    {
+        float target = enlarged ? 1f : 0f;
+        if (groundShadow == null || shadowBlend == target) return;
+        shadowBlend = shadowTransitionTime <= 0f ? target
+            : Mathf.MoveTowards(shadowBlend, target, Time.deltaTime / shadowTransitionTime);
+        float scale = Mathf.SmoothStep(1f, 1.25f, shadowBlend);
+        groundShadow.localScale = Vector3.Scale(restingShadowScale, new Vector3(scale, scale, 1f));
+    }
+
+    void OnDisable()
+    {
+        shadowBlend = 0f;
+        if (groundShadow != null) groundShadow.localScale = restingShadowScale;
     }
 
     // Player: run button held + movement input. Others (psycho): fast enough.
@@ -125,6 +165,7 @@ public class DirectionalSpriteAnimator : MonoBehaviour
         Vector2 d = worldPoint - Position();
         if (d.sqrMagnitude < 0.0001f) return;
         facing = ToCardinal(d);
+        eightWayFacing = facing;
         if (Mathf.Abs(d.x) > 0.01f) side = Mathf.Sign(d.x);
     }
 

@@ -1,0 +1,845 @@
+fileFormatVersion: 2
+guid: 4e561cb7a425fcd45adf2b784c119259
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2616429691169084354
+    second: girl_walk_downright_00
+  - first:
+      213: 9027617506902772301
+    second: girl_walk_downright_01
+  - first:
+      213: 2684767403754332664
+    second: girl_walk_downright_02
+  - first:
+      213: -3364730838243619039
+    second: girl_walk_downright_03
+  - first:
+      213: 5064282261682588308
+    second: girl_walk_downright_04
+  - first:
+      213: 6649770958632553361
+    second: girl_walk_downright_05
+  - first:
+      213: -1635575353835503865
+    second: girl_walk_downright_06
+  - first:
+      213: 1964797554905346222
+    second: girl_walk_downleft_00
+  - first:
+      213: -6537753644552220271
+    second: girl_walk_downleft_01
+  - first:
+      213: 5136894669114015343
+    second: girl_walk_downleft_02
+  - first:
+      213: -9131948668698573893
+    second: girl_walk_downleft_03
+  - first:
+      213: 6216859622863653867
+    second: girl_walk_downleft_04
+  - first:
+      213: 5783784241852526238
+    second: girl_walk_downleft_05
+  - first:
+      213: -6464357806385253922
+    second: girl_walk_downleft_06
+  - first:
+      213: 3912677431856034595
+    second: girl_walk_upleft_00
+  - first:
+      213: 5498217666774369988
+    second: girl_walk_upleft_01
+  - first:
+      213: 2037800992672537597
+    second: girl_walk_upleft_02
+  - first:
+      213: 5353391311967091069
+    second: girl_walk_upleft_03
+  - first:
+      213: 3406105319483269914
+    second: girl_walk_upleft_04
+  - first:
+      213: -7617339993432167912
+    second: girl_walk_upleft_05
+  - first:
+      213: -9201937947058289792
+    second: girl_walk_upleft_06
+  - first:
+      213: -2068864156487923712
+    second: girl_walk_upright_00
+  - first:
+      213: 4270269710983789476
+    second: girl_walk_upright_01
+  - first:
+      213: -5024545678417245141
+    second: girl_walk_upright_02
+  - first:
+      213: 596592241627300785
+    second: girl_walk_upright_03
+  - first:
+      213: 4561876842297091681
+    second: girl_walk_upright_04
+  - first:
+      213: 595767658749013068
+    second: girl_walk_upright_05
+  - first:
+      213: 4416810185211999133
+    second: girl_walk_upright_06
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 101
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: girl_walk_downright_00
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c213eb11f16c4f24b7f85a6041f87e7a
+      internalID: 2616429691169084354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downright_01
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d8a09cb4a8a487da85fbbf1fad3cf53
+      internalID: 9027617506902772301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downright_02
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f82153adba354225a862b844c6c836f9
+      internalID: 2684767403754332664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downright_03
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21cfaf3521134ed191c66d78e6416013
+      internalID: -3364730838243619039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downright_04
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 940ae7a1e2f14746b6ccee4b25a0997b
+      internalID: 5064282261682588308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downright_05
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 918b007374bb485caa858779605c490d
+      internalID: 6649770958632553361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downright_06
+      rect:
+        serializedVersion: 2
+        x: 1404
+        y: 666
+        width: 190
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 073f409fe1444de9aae373054a9cfd88
+      internalID: -1635575353835503865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_00
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae70b05bf75c441bb135e08e8a43aeaf
+      internalID: 1964797554905346222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_01
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 911173e3b23b45a5be68435a3ba58b17
+      internalID: -6537753644552220271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_02
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f7e23317cea49479090e8f3fdaf1212
+      internalID: 5136894669114015343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_03
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbc31ea711cd4481a292852f2e601bed
+      internalID: -9131948668698573893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_04
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebcb417fe3b846569c01ecff9fe8582d
+      internalID: 6216859622863653867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_05
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e2e1fc91f214450959b86ec6e023459
+      internalID: 5783784241852526238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_downleft_06
+      rect:
+        serializedVersion: 2
+        x: 1443
+        y: 444
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de316221d3fc49a6a0fdc0adf30542ea
+      internalID: -6464357806385253922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_00
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 237377de649f4c36b6157b787a7a6f87
+      internalID: 3912677431856034595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_01
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c406dd4dd6974d4c8ec6993d35604f26
+      internalID: 5498217666774369988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_02
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd5b2fc334b9471cbce894036f4806a0
+      internalID: 2037800992672537597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_03
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7df975e508114b4ab5c647c77f7f3415
+      internalID: 5353391311967091069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_04
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a635ee3bdea442f84b3bca80a16f993
+      internalID: 3406105319483269914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_05
+      rect:
+        serializedVersion: 2
+        x: 1188
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 186a1966a2c54996ac0c40faa6ac9e74
+      internalID: -7617339993432167912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upleft_06
+      rect:
+        serializedVersion: 2
+        x: 1410
+        y: 222
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 804367ec30264c8082ee643e6db57f16
+      internalID: -9201937947058289792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_00
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00c8ffcf02eb49e3bae72b970c6fca6e
+      internalID: -2068864156487923712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_01
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a47b4c62ad0b433bafce252787b1f30e
+      internalID: 4270269710983789476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_02
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b4c37a0533a45ba995e0e97dd440d9f
+      internalID: -5024545678417245141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_03
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b103f39d7b854708ade8029149edc19c
+      internalID: 596592241627300785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_04
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61e63276d10a4f3faff6b425b3614f75
+      internalID: 4561876842297091681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_05
+      rect:
+        serializedVersion: 2
+        x: 1225
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cac667487974408a96b2e52adb803eb
+      internalID: 595767658749013068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: girl_walk_upright_06
+      rect:
+        serializedVersion: 2
+        x: 1445
+        y: 0
+        width: 190
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d73e35176a94b3d8865bc5ea42a0e05
+      internalID: 4416810185211999133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      girl_walk_downright_00: 2616429691169084354
+      girl_walk_downright_01: 9027617506902772301
+      girl_walk_downright_02: 2684767403754332664
+      girl_walk_downright_03: -3364730838243619039
+      girl_walk_downright_04: 5064282261682588308
+      girl_walk_downright_05: 6649770958632553361
+      girl_walk_downright_06: -1635575353835503865
+      girl_walk_downleft_00: 1964797554905346222
+      girl_walk_downleft_01: -6537753644552220271
+      girl_walk_downleft_02: 5136894669114015343
+      girl_walk_downleft_03: -9131948668698573893
+      girl_walk_downleft_04: 6216859622863653867
+      girl_walk_downleft_05: 5783784241852526238
+      girl_walk_downleft_06: -6464357806385253922
+      girl_walk_upleft_00: 3912677431856034595
+      girl_walk_upleft_01: 5498217666774369988
+      girl_walk_upleft_02: 2037800992672537597
+      girl_walk_upleft_03: 5353391311967091069
+      girl_walk_upleft_04: 3406105319483269914
+      girl_walk_upleft_05: -7617339993432167912
+      girl_walk_upleft_06: -9201937947058289792
+      girl_walk_upright_00: -2068864156487923712
+      girl_walk_upright_01: 4270269710983789476
+      girl_walk_upright_02: -5024545678417245141
+      girl_walk_upright_03: 596592241627300785
+      girl_walk_upright_04: 4561876842297091681
+      girl_walk_upright_05: 595767658749013068
+      girl_walk_upright_06: 4416810185211999133
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
