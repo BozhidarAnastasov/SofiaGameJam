@@ -622,6 +622,7 @@ MonoBehaviour:
   moveAction: {fileID: 8210608491476628109, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   sprintAction: {fileID: -2140485466925686867, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   crawlAction: {fileID: 1040916751974094725, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
+  crawlAction: {fileID: 0}
 --- !u!61 &7018561963001543453
 BoxCollider2D:
   m_ObjectHideFlags: 0

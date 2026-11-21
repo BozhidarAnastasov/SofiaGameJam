@@ -63,8 +63,9 @@ public class RoomTransition : MonoBehaviour
 
         // ...load in the dark...
         Debug.Log($"[RoomTransition] 2/4 Black. Loading '{sceneName}'...");
+        FindFirstObjectByType<Inventory>()?.SaveForRoom(sceneName);
         var load = SceneManager.LoadSceneAsync(sceneName);
-        if (load == null) { Debug.LogError($"[RoomTransition] Couldn't load '{sceneName}' (not in Build Settings?)."); SetAlpha(0f); if (move != null) move.CanMove = true; busy = false; yield break; }
+        if (load == null) { Debug.LogError($"[RoomTransition] Couldn't load '{sceneName}' (not in Build Settings?)."); Inventory.ClearRoomSave(); SetAlpha(0f); if (move != null) move.CanMove = true; busy = false; yield break; }
         while (!load.isDone) yield return null;
         yield return null;                                   // one frame so the new scene's Awake/Start have run
         Debug.Log($"[RoomTransition] 3/4 Loaded '{SceneManager.GetActiveScene().name}'. Placing her...");

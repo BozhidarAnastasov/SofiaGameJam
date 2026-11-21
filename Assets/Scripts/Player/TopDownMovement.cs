@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class TopDownMovement : MonoBehaviour
@@ -12,6 +13,9 @@ public class TopDownMovement : MonoBehaviour
     [SerializeField] private float crawlSpeed = 0.8f;
     [Tooltip("Stick values below this count as no input.")]
     [SerializeField] private float inputDeadZone = 0.2f;
+    [SerializeField, Min(0.1f)] private float sprintDuration = 3f;
+    [SerializeField, Min(0f)] private float staminaRecoveryDelay = 3f;
+    [SerializeField, Min(0.1f)] private float staminaRecoveryDuration = 4f;
 
     [SerializeField] private InputActionReference moveAction;
     [Tooltip("Hold this button to run (Arcade B). Without it she always walks.")]
@@ -21,15 +25,34 @@ public class TopDownMovement : MonoBehaviour
 
     private InputAction crouchAction;
     private Rigidbody2D rb;
+    private Animator animator;
+    private static readonly int PickupState = Animator.StringToHash("Base Layer.PickUp");
+    private bool movementAllowed = true;
     private Vector2 moveInput;
+    private float stamina = 1f;
+    private float staminaRecoveryStartsAt;
+    private bool exhausted;
+    private RectTransform staminaFill;
 
-    /// True only while the run button is held AND there is movement input.
+    /// True while moving with the run button held and stamina available.
     public bool IsRunning { get; private set; }
 
     public bool IsCrawling { get; private set; }
 
     /// Freeze movement, e.g. during the pick-up animation or a cutscene.
-    public bool CanMove { get; set; } = true;
+    public bool CanMove
+    {
+        get => movementAllowed && !IsPlayingPickup();
+        set => movementAllowed = value;
+    }
+
+    private bool IsPlayingPickup()
+    {
+        if (animator == null || !animator.isActiveAndEnabled || animator.runtimeAnimatorController == null)
+            return false;
+        return animator.GetCurrentAnimatorStateInfo(0).fullPathHash == PickupState ||
+               (animator.IsInTransition(0) && animator.GetNextAnimatorStateInfo(0).fullPathHash == PickupState);
+    }
 
     /// Slows her down, e.g. while she drags the heavy box (1 = normal).
     public float SpeedMultiplier { get; set; } = 1f;
@@ -52,6 +75,7 @@ public class TopDownMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void OnEnable()
@@ -72,6 +96,33 @@ public class TopDownMovement : MonoBehaviour
         crouchAction?.Enable();
     }
 
+    void Start()
+    {
+        var inventory = FindFirstObjectByType<Inventory>();
+        var canvas = inventory != null ? inventory.GetComponentInParent<Canvas>() : null;
+        if (canvas == null) return;
+
+        RectTransform background = CreateBarImage("Stamina", canvas.transform, new Color(0.08f, 0.08f, 0.08f, 0.9f));
+        background.anchorMin = background.anchorMax = background.pivot = Vector2.zero;
+        background.anchoredPosition = new Vector2(20f, 24f);
+        background.sizeDelta = new Vector2(140f, 12f);
+
+        staminaFill = CreateBarImage("Fill", background, new Color(0.4f, 0.8f, 0.6f));
+        staminaFill.anchorMin = staminaFill.anchorMax = staminaFill.pivot = Vector2.zero;
+        staminaFill.anchoredPosition = new Vector2(2f, 2f);
+        staminaFill.sizeDelta = new Vector2(136f, 8f);
+    }
+
+    private static RectTransform CreateBarImage(string objectName, Transform parent, Color color)
+    {
+        var bar = new GameObject(objectName, typeof(RectTransform), typeof(Image));
+        bar.transform.SetParent(parent, false);
+        var image = bar.GetComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+        return image.rectTransform;
+    }
+
     void OnDisable()
     {
         moveAction?.action.Disable();
@@ -89,12 +140,27 @@ public class TopDownMovement : MonoBehaviour
 
         bool hasInput = moveInput != Vector2.zero;
         IsCrawling = CanMove && AllowCrawl && crouchAction != null && crouchAction.IsPressed();
-        IsRunning = hasInput && AllowRun && !IsCrawling && sprintAction.action.IsPressed();
+        bool sprintHeld = sprintAction.action.IsPressed();
+        if (exhausted && !sprintHeld && stamina >= 0.25f) exhausted = false;
+
+        IsRunning = hasInput && AllowRun && !IsCrawling && sprintHeld && !exhausted;
+        if (IsRunning)
+        {
+            stamina = Mathf.MoveTowards(stamina, 0f, Time.deltaTime / sprintDuration);
+            staminaRecoveryStartsAt = Time.time + staminaRecoveryDelay;
+            exhausted = stamina == 0f;
+        }
+        else if (Time.time >= staminaRecoveryStartsAt)
+        {
+            stamina = Mathf.MoveTowards(stamina, 1f, Time.deltaTime / staminaRecoveryDuration);
+        }
+
+        if (staminaFill != null) staminaFill.localScale = new Vector3(stamina, 1f, 1f);
     }
 
     void FixedUpdate()
     {
-        if (moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
+        if (!CanMove || moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
 
         float speed = (IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
         CurrentSpeed = speed;

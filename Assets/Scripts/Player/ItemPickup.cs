@@ -10,14 +10,19 @@ public class ItemPickup : MonoBehaviour
             InventoryController = FindFirstObjectByType<Inventory>();
     }
 
+    internal bool HasCollected(Item item) =>
+        InventoryController != null && InventoryController.HasCollected(item.PickupId);
+
     public void Pickup(Item item)
     {
         if (item == null || !item.CanInteract() || InventoryController == null) return;
         if (!InventoryController.AddItem(item.gameObject)) return;
+        InventoryController.MarkCollected(item.PickupId);
 
         if (TryGetComponent(out DirectionalSpriteAnimator animationDriver))
+        {
             animationDriver.PlayPickUp();
-
+        }
         item.gameObject.SetActive(false);
         Destroy(item.gameObject);
     }
