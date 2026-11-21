@@ -16,6 +16,8 @@ public class TopDownMovement : MonoBehaviour
     [SerializeField] private InputActionReference moveAction;
     [Tooltip("Hold this button to run (Arcade B). Without it she always walks.")]
     [SerializeField] private InputActionReference sprintAction;
+    [Tooltip("Hold this button to crawl (Arcade C). The Player prefab already has it set to ButtonC.")]
+    [SerializeField] private InputActionReference crawlAction;
 
     private InputAction crouchAction;
     private Rigidbody2D rb;
@@ -62,7 +64,11 @@ public class TopDownMovement : MonoBehaviour
         }
         moveAction.action.Enable();
         sprintAction.action.Enable();
-        crouchAction = sprintAction.action.actionMap.FindAction("Crouch");
+        // the crawl button (C); fall back to an action called "Crouch" or "ButtonC" in the same map
+        crouchAction = crawlAction != null ? crawlAction.action : null;
+        if (crouchAction == null && sprintAction.action.actionMap != null)
+            crouchAction = sprintAction.action.actionMap.FindAction("Crouch") ?? sprintAction.action.actionMap.FindAction("ButtonC");
+        if (crouchAction == null) Debug.LogWarning($"{name}: no crawl action found, so she can't crawl. Assign Crawl Action on TopDownMovement.", this);
         crouchAction?.Enable();
     }
 
@@ -82,15 +88,16 @@ public class TopDownMovement : MonoBehaviour
         if (moveInput.magnitude < inputDeadZone) moveInput = Vector2.zero;
 
         bool hasInput = moveInput != Vector2.zero;
-        IsCrawling = CanMove && crouchAction != null && crouchAction.IsPressed();
-        IsRunning = hasInput && !IsCrawling && sprintAction.action.IsPressed();
+        IsCrawling = CanMove && AllowCrawl && crouchAction != null && crouchAction.IsPressed();
+        IsRunning = hasInput && AllowRun && !IsCrawling && sprintAction.action.IsPressed();
     }
 
     void FixedUpdate()
     {
         if (moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
 
-        float speed = IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed;
+        float speed = (IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
+        CurrentSpeed = speed;
         rb.MovePosition(rb.position + moveInput.normalized * speed * Time.fixedDeltaTime);
     }
 }
