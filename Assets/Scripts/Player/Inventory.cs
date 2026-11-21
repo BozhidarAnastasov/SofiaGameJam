@@ -15,7 +15,28 @@ public class Inventory : MonoBehaviour
     public Slot SelectedSlot => slots.Count > 0 ? slots[SelectedSlotIndex] : null;
 
     private readonly List<Slot> slots = new List<Slot>();
+    private HashSet<string> collectedItems = new HashSet<string>();
     private bool enabledNextSlotAction;
+
+    private struct ItemIcon
+    {
+        public string Name;
+        public Sprite Sprite;
+        public Color Color;
+    }
+
+    private static string destinationRoom;
+    private static ItemIcon[] savedSlots;
+    private static int savedSelection;
+    private static HashSet<string> savedCollectedItems;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    internal static void ClearRoomSave()
+    {
+        destinationRoom = null;
+        savedSlots = null;
+        savedCollectedItems = null;
+    }
 
     private void Awake()
     {
@@ -33,10 +54,39 @@ public class Inventory : MonoBehaviour
         }
         SelectSlot(0);
 
+        if (savedSlots != null && gameObject.scene.name == destinationRoom)
+        {
+            for (int i = 0; i < slots.Count && i < savedSlots.Length; i++)
+                if (savedSlots[i].Sprite != null) CreateIcon(slots[i], savedSlots[i]);
+
+            SelectSlot(savedSelection);
+            collectedItems = savedCollectedItems;
+            ClearRoomSave();
+            return;
+        }
+
         if (itemPrefabs == null) return;
         for (int i = 0; i < itemPrefabs.Length && i < slotCount; i++)
             if (itemPrefabs[i] != null) AddItem(itemPrefabs[i]);
     }
+
+    internal void SaveForRoom(string roomName)
+    {
+        destinationRoom = roomName;
+        savedSelection = SelectedSlotIndex;
+        savedCollectedItems = new HashSet<string>(collectedItems);
+        savedSlots = new ItemIcon[slots.Count];
+        for (int i = 0; i < slots.Count; i++)
+        {
+            GameObject item = slots[i].currentItem;
+            if (item != null && item.TryGetComponent(out Image icon))
+                savedSlots[i] = new ItemIcon { Name = item.name, Sprite = icon.sprite, Color = icon.color };
+        }
+    }
+
+    internal bool HasCollected(string id) => collectedItems.Contains(id);
+
+    internal void MarkCollected(string id) => collectedItems.Add(id);
 
     private void OnEnable()
     {
@@ -79,24 +129,34 @@ public class Inventory : MonoBehaviour
             Slot slot = slotTransform.GetComponent<Slot>();
             if (slot != null && slot.currentItem == null)
             {
-                // Only put an icon in the UI, not a copy of the world object's physics/scripts.
-                GameObject newItem = new GameObject(itemPrefab.name, typeof(RectTransform), typeof(Image));
-                newItem.transform.SetParent(slotTransform, false);
-                Image icon = newItem.GetComponent<Image>();
-                icon.sprite = spriteRenderer.sprite;
-                icon.color = spriteRenderer.color;
-                icon.preserveAspect = true;
-                icon.raycastTarget = false;
-                RectTransform rect = icon.rectTransform;
-                rect.anchorMin = Vector2.zero;
-                rect.anchorMax = Vector2.one;
-                rect.offsetMin = new Vector2(6f, 6f);
-                rect.offsetMax = new Vector2(-6f, -6f);
-                slot.currentItem = newItem;
+                CreateIcon(slot, new ItemIcon
+                {
+                    Name = itemPrefab.name,
+                    Sprite = spriteRenderer.sprite,
+                    Color = spriteRenderer.color
+                });
                 return true;
             }
         }
         Debug.Log("HotBar is full.", this);
         return false;
+    }
+
+    private static void CreateIcon(Slot slot, ItemIcon item)
+    {
+        // The hotbar stores icons without copying the world object's physics or scripts.
+        var iconObject = new GameObject(item.Name, typeof(RectTransform), typeof(Image));
+        iconObject.transform.SetParent(slot.transform, false);
+        Image icon = iconObject.GetComponent<Image>();
+        icon.sprite = item.Sprite;
+        icon.color = item.Color;
+        icon.preserveAspect = true;
+        icon.raycastTarget = false;
+        RectTransform rect = icon.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = new Vector2(6f, 6f);
+        rect.offsetMax = new Vector2(-6f, -6f);
+        slot.currentItem = iconObject;
     }
 }

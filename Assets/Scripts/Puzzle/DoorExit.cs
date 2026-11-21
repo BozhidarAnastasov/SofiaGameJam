@@ -104,6 +104,7 @@ public class DoorExit : MonoBehaviour
 
     void Exit()
     {
+        if (RoomTransition.IsBusy) return;
         leaving = true;
         if (prompt != null) prompt.Request(this, false);
         if (move != null) move.CanMove = false;
@@ -114,7 +115,11 @@ public class DoorExit : MonoBehaviour
             RoomSpawnPoint.NextEntry = entryId;
             Debug.Log($"[DoorExit] She left the room -> loading scene '{sceneName}' (arrives at '{entryId}').", this);
             if (fainting) RoomTransition.FaintAndLoad(sceneName, player);   // fade out, load, fade in
-            else SceneManager.LoadScene(sceneName);
+            else
+            {
+                FindFirstObjectByType<Inventory>()?.SaveForRoom(sceneName);
+                SceneManager.LoadScene(sceneName);
+            }
         }
         else
         {

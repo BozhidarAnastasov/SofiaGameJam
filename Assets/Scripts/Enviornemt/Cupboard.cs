@@ -28,7 +28,12 @@ public class Cupboard : MonoBehaviour, Interactable
 
         if (itemPrefab)
         {
+            string pickupId = "Cupboard:" + CupboardID;
+            var inventory = FindFirstObjectByType<Inventory>();
+            if (inventory != null && inventory.HasCollected(pickupId)) return;
+
             GameObject droppedItem = Instantiate(itemPrefab, transform.position + Vector3.down, Quaternion.identity);
+            if (droppedItem.TryGetComponent(out Item item)) item.PickupId = pickupId;
             BounceEffect bounce = droppedItem.GetComponent<BounceEffect>();
             if (bounce == null) bounce = droppedItem.AddComponent<BounceEffect>();
             bounce.StartBounce();
