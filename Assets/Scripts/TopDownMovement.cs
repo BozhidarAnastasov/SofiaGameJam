@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,41 +6,45 @@ using UnityEngine.InputSystem;
 public class TopDownMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private InputActionReference moveActionReference;
+    [SerializeField] private float sprintMultiplier = 1.5f;
+
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference sprintAction;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void Awake()
+    private bool isSprinting;
+
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + moveInput.normalized *
-        moveSpeed * Time.fixedDeltaTime);
     }
 
     void OnEnable()
     {
-        moveActionReference.action.Enable();
-        moveActionReference.action.performed += onMovePerfomed;
-        moveActionReference.action.canceled += onMoveCanceled;
-    }
-    void OnDisable()
-    {
-        moveActionReference.action.performed -= onMovePerfomed;
-        moveActionReference.action.canceled -= onMoveCanceled;
-        moveActionReference.action.Disable();
+        moveAction.action.Enable();
+        sprintAction.action.Enable();
     }
 
-    private void onMovePerfomed(InputAction.CallbackContext ctx)
+    void OnDisable()
     {
-        moveInput = ctx.ReadValue<Vector2>();
+        moveAction.action.Disable();
+        sprintAction.action.Disable();
     }
-    private void onMoveCanceled(InputAction.CallbackContext ctx)
+
+    void Update()
     {
-        moveInput = Vector2.zero;
+        moveInput = moveAction.action.ReadValue<Vector2>();
+        isSprinting = sprintAction.action.IsPressed();
+    }
+
+    void FixedUpdate()
+    {
+        float speed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
+
+        rb.MovePosition(
+            rb.position +
+            moveInput.normalized * speed * Time.fixedDeltaTime
+        );
     }
 }
