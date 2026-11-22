@@ -1,5 +1,6 @@
 using System.Collections;
 using ArcadesTemplate.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -8,7 +9,8 @@ using UnityEngine.UI;
 /// The ending, in the corridor and office. Two seconds after she comes in, he bursts out of the
 /// Lobby door behind her and comes down the corridor. If he catches up with her on the way, he
 /// grabs her. When he reaches the office doorway he stops and throws his knife at her, misses, and
-/// it smashes the window. She climbs out through the broken window (A) -> the win screen.
+/// it smashes the window. She climbs out through the broken window (A) -> plays the right-to-left
+/// psycho retreat + afterimage + bloody "YOU SURVIVED" text -> automatically transitions to MainMenu.
 public class OfficeFinale : MonoBehaviour
 {
     [Header("Scene")]
@@ -26,7 +28,7 @@ public class OfficeFinale : MonoBehaviour
     [Tooltip("Where the escape works from (A within reach of this).")]
     [SerializeField] private Transform windowStand;
     [SerializeField] private float windowReach = 1.4f;
-    [SerializeField] private EscapeEndingScreen winScreen;
+    [SerializeField] private WinScreen winManager;
     [Tooltip("Sorting reference for the knife / glass (a room sprite).")]
     [SerializeField] private SpriteRenderer roomArt;
 
@@ -45,6 +47,26 @@ public class OfficeFinale : MonoBehaviour
     [SerializeField] private string throwMessage = "He throws his knife...!";
     [SerializeField] private string brokenMessage = "The window shattered! Get out! (A)";
 
+    [Header("Auto Win Sequence -> Main Menu")]
+    [Tooltip("Sliced psycho frames (0 = leftmost faint face, 3 = rightmost close-up). Plays 3 -> 2 -> 1 -> 0.")]
+    [SerializeField] private Sprite[] psychoFrames;
+    [SerializeField] private float[] retreatStepDurations = { 0.65f, 0.75f, 0.90f };
+    [SerializeField] private float afterimageHoldAndDissolve = 1.8f;
+    [SerializeField] private TMP_FontAsset surviveFont;
+    [SerializeField] private string escapedText = "YOU SURVIVED";
+    [SerializeField] private float surviveFontSize = 105f;
+    [SerializeField] private Color bloodTopColor = new Color(0.88f, 0.06f, 0.06f, 1f);
+    [SerializeField] private Color bloodBottomColor = new Color(0.28f, 0.0f, 0.02f, 1f);
+    [Tooltip("How long 'YOU SURVIVED' stays visible before automatically fading to the Main Menu.")]
+    [SerializeField] private float surviveHoldBeforeMenu = 2.4f;
+    [SerializeField] private float finalFadeOutTime = 1.1f;
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+
+    [Header("Ending Audio (Optional)")]
+    [SerializeField] private AudioSource endingAudioSource;
+    [SerializeField] private AudioClip escapeWindowClip;
+    [SerializeField] private AudioClip surviveStingerClip;
+
     private bool windowBroken, escaped;
     private InteractPrompt prompt;
     private InputAction fallback;
@@ -54,7 +76,15 @@ public class OfficeFinale : MonoBehaviour
 
     void Awake()
     {
-        if (player == null) { var p = FindFirstObjectByType<TopDownMovement>(); if (p != null) player = p.transform; }
+        if (player == null)
+        {
+            var p = FindFirstObjectByType<TopDownMovement>();
+            if (p != null) player = p.transform;
+        }
+        if (winManager == null)
+        {
+            winManager = FindFirstObjectByType<WinScreen>(FindObjectsInactive.Include);
+        }
     }
 
     void OnEnable()
@@ -62,16 +92,30 @@ public class OfficeFinale : MonoBehaviour
         if (interactAction == null || interactAction.action == null)
         {
             fallback = new InputAction("WindowInteract", InputActionType.Button);
-            fallback.AddBinding("<Keyboard>/e"); fallback.AddBinding("<Gamepad>/buttonNorth"); fallback.AddBinding("<Joystick>/trigger");
+            fallback.AddBinding("<Keyboard>/e");
+            fallback.AddBinding("<Gamepad>/buttonNorth");
+            fallback.AddBinding("<Joystick>/trigger");
         }
         Interact.Enable();
     }
 
-    void OnDisable() { if (fallback != null) { fallback.Disable(); fallback.Dispose(); fallback = null; } }
+    void OnDisable()
+    {
+        if (fallback != null)
+        {
+            fallback.Disable();
+            fallback.Dispose();
+            fallback = null;
+        }
+    }
 
     IEnumerator Start()
     {
-        if (psycho == null || entrance == null || throwSpot == null) { Debug.LogWarning("[OfficeFinale] Not wired - run the setup step.", this); yield break; }
+        if (psycho == null || entrance == null || throwSpot == null)
+        {
+            Debug.LogWarning("[OfficeFinale] Not wired - run the setup step.", this);
+            yield break;
+        }
         while (RoomTransition.IsBusy) yield return null;              // let the fade-in finish
         yield return new WaitForSeconds(delayBehindHer);
 
@@ -178,48 +222,219 @@ public class OfficeFinale : MonoBehaviour
     {
         escaped = true;
         if (prompt != null) prompt.Request(this, false);
-        Debug.Log("[OfficeFinale] She climbs out of the window - ESCAPED.", this);
+
+        if (PlayerItemHintPopup.Instance != null)
+        {
+            PlayerItemHintPopup.Instance.HideHint(null);
+        }
+
+        Debug.Log("[OfficeFinale] She climbs out of the window - SURVIVED.", this);
         if (psycho != null) psycho.ScriptVanish();                    // he's left behind
         var move = player.GetComponent<TopDownMovement>();
         if (move != null) move.CanMove = false;
-        if (winScreen != null) winScreen.TriggerEnding();
-        else StartCoroutine(OwnEnding());
+
+        if (endingAudioSource != null && escapeWindowClip != null)
+        {
+            endingAudioSource.PlayOneShot(escapeWindowClip);
+        }
+
+        // Run the self-contained auto-transitioning Win ending so it always flows straight to Main Menu
+        StartCoroutine(OwnEnding());
     }
 
-    [Header("Ending (used when no EscapeEndingScreen is assigned)")]
-    [SerializeField] private string escapedText = "YOU ESCAPED";
-    [SerializeField] private float endingHold = 3f;
-
-    // she's outside: the screen fades to cold moonlight, "YOU ESCAPED", then the arcade's win screen
+    // Plays right-to-left psycho retreat (3 -> 0), ghostly afterimage dissolve,
+    // bloody "YOU SURVIVED" text, and automatically transitions to the Main Menu.
     IEnumerator OwnEnding()
     {
-        var go = new GameObject("EscapeEnding");
+        Time.timeScale = 0f;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        var go = new GameObject("EscapeWinEnding_Canvas");
         var canvas = go.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.overrideSorting = true;
         canvas.sortingOrder = 2000;
-        var bg = new GameObject("Fade", typeof(RectTransform)).AddComponent<Image>();
-        bg.transform.SetParent(go.transform, false);
-        var rt = bg.rectTransform; rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
-        var textGo = new GameObject("Text", typeof(RectTransform));
-        textGo.transform.SetParent(go.transform, false);
-        var text = textGo.AddComponent<Text>();
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        text.text = escapedText; text.fontSize = 96; text.alignment = TextAnchor.MiddleCenter;
-        var trt = text.rectTransform; trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one; trt.offsetMin = trt.offsetMax = Vector2.zero;
 
-        Color moon = new Color(0.78f, 0.84f, 0.95f);
-        for (float e = 0f; e < 1.2f; e += Time.unscaledDeltaTime)
+        var scaler = go.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        var rootGroup = go.AddComponent<CanvasGroup>();
+        rootGroup.alpha = 0f;
+        rootGroup.blocksRaycasts = false;
+        rootGroup.interactable = false;
+
+        var bg = CreateFullImage("BlackBG", go.transform);
+        bg.color = Color.black;
+
+        var faceCurrent = CreateFullImage("Psycho_Current", go.transform);
+        var faceBlend = CreateFullImage("Psycho_Blend", go.transform);
+        var faceAfterimage = CreateFullImage("Psycho_Afterimage", go.transform);
+        faceCurrent.enabled = faceBlend.enabled = faceAfterimage.enabled = false;
+
+        // 1. Fade to black
+        for (float e = 0f; e < 0.35f; e += Time.unscaledDeltaTime)
         {
-            bg.color = new Color(moon.r, moon.g, moon.b, e / 1.2f);
-            text.color = new Color(0.08f, 0.1f, 0.16f, Mathf.Clamp01((e - 0.6f) / 0.6f));
+            rootGroup.alpha = Mathf.Clamp01(e / 0.35f);
             yield return null;
         }
-        bg.color = moon; text.color = new Color(0.08f, 0.1f, 0.16f, 1f);
-        yield return new WaitForSecondsRealtime(endingHold);
+        rootGroup.alpha = 1f;
+        yield return new WaitForSecondsRealtime(0.15f);
+
+        // 2. Right-to-Left Psycho Retreat (3 -> 2 -> 1 -> 0) + Afterimage Dissolve
+        if (psychoFrames != null && psychoFrames.Length > 0 && HasAnySprite(psychoFrames))
+        {
+            int rightIdx = psychoFrames.Length - 1;
+            faceCurrent.enabled = true;
+            faceCurrent.sprite = psychoFrames[rightIdx];
+            faceCurrent.color = Color.white;
+
+            int step = 0;
+            for (int i = rightIdx; i > 0; i--)
+            {
+                Sprite closeSp = psychoFrames[i];
+                Sprite farSp = psychoFrames[i - 1];
+                float dur = (retreatStepDurations != null && step < retreatStepDurations.Length) ? retreatStepDurations[step] : 0.75f;
+                step++;
+
+                faceCurrent.sprite = closeSp;
+                faceBlend.enabled = true;
+                faceBlend.sprite = farSp;
+
+                for (float e = 0f; e < dur; e += Time.unscaledDeltaTime)
+                {
+                    float k = Mathf.SmoothStep(0f, 1f, e / dur);
+                    faceCurrent.rectTransform.localScale = Vector3.one * Mathf.Lerp(1f, 0.94f, k);
+                    faceBlend.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.04f, 1f, k);
+                    faceCurrent.color = new Color(1f, 1f, 1f, 1f - k);
+                    faceBlend.color = new Color(1f, 1f, 1f, k);
+                    yield return null;
+                }
+
+                faceCurrent.sprite = farSp;
+                faceCurrent.color = Color.white;
+                faceCurrent.rectTransform.localScale = Vector3.one;
+                faceBlend.enabled = false;
+            }
+
+            // Lingering ghostly afterimage on frame 0
+            faceAfterimage.enabled = true;
+            faceAfterimage.sprite = psychoFrames[0];
+            for (float e = 0f; e < afterimageHoldAndDissolve; e += Time.unscaledDeltaTime)
+            {
+                float k = e / afterimageHoldAndDissolve;
+                float sk = Mathf.SmoothStep(0f, 1f, k);
+
+                faceCurrent.rectTransform.localScale = Vector3.one * Mathf.Lerp(1f, 0.86f, sk);
+                faceCurrent.color = new Color(1f, 1f, 1f, 1f - sk);
+
+                float echoAlpha = Mathf.Sin(Mathf.Clamp01(k * 1.2f) * Mathf.PI) * 0.42f * (1f - k);
+                faceAfterimage.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.01f, 1.12f, sk);
+                faceAfterimage.rectTransform.anchoredPosition = Random.insideUnitCircle * (1.5f * (1f - k));
+                faceAfterimage.color = new Color(0.85f, 0.75f, 0.75f, echoAlpha);
+                yield return null;
+            }
+            faceCurrent.enabled = false;
+            faceAfterimage.enabled = false;
+        }
+
+        // 3. Bloody "YOU SURVIVED" Text
+        if (endingAudioSource != null && surviveStingerClip != null)
+        {
+            endingAudioSource.PlayOneShot(surviveStingerClip);
+        }
+
+        var textGO = new GameObject("Txt_YouSurvived", typeof(RectTransform));
+        textGO.transform.SetParent(go.transform, false);
+        var txtRT = textGO.GetComponent<RectTransform>();
+        txtRT.anchorMin = txtRT.anchorMax = new Vector2(0.5f, 0.5f);
+        txtRT.sizeDelta = new Vector2(1500f, 280f);
+
+        var txtGroup = textGO.AddComponent<CanvasGroup>();
+        txtGroup.alpha = 0f;
+
+        var tmp = textGO.AddComponent<TextMeshProUGUI>();
+        tmp.text = escapedText;
+        tmp.fontSize = surviveFontSize;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.characterSpacing = 10f;
+        if (surviveFont != null) tmp.font = surviveFont;
+        tmp.enableVertexGradient = true;
+        tmp.color = Color.white;
+        tmp.colorGradient = new VertexGradient(bloodTopColor, bloodTopColor, bloodBottomColor, bloodBottomColor);
+        tmp.raycastTarget = false;
+
+        var shadow = textGO.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0.22f, 0f, 0f, 0.9f);
+        shadow.effectDistance = new Vector2(0f, -6f);
+
+        for (float e = 0f; e < 1.0f; e += Time.unscaledDeltaTime)
+        {
+            float k = Mathf.SmoothStep(0f, 1f, e / 1.0f);
+            txtGroup.alpha = k;
+            txtRT.localScale = Vector3.one * Mathf.Lerp(1.08f, 1f, k);
+            yield return null;
+        }
+        txtGroup.alpha = 1f;
+
+        // 4. Hold briefly with subtle blood pulse, then auto-transition to Main Menu
+        float holdTimer = 0f;
+        while (holdTimer < surviveHoldBeforeMenu)
+        {
+            holdTimer += Time.unscaledDeltaTime;
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 2.5f);
+            Color top = Color.Lerp(bloodTopColor, new Color(1f, 0.15f, 0.15f, 1f), pulse * 0.25f);
+            tmp.colorGradient = new VertexGradient(top, top, bloodBottomColor, bloodBottomColor);
+            yield return null;
+        }
+
+        // 5. Fade out cleanly into the Main Menu
+        var curtain = CreateFullImage("FinalCurtain", go.transform);
+        curtain.color = new Color(0f, 0f, 0f, 0f);
+        curtain.transform.SetAsLastSibling();
+
+        for (float e = 0f; e < finalFadeOutTime; e += Time.unscaledDeltaTime)
+        {
+            curtain.color = new Color(0f, 0f, 0f, Mathf.SmoothStep(0f, 1f, e / finalFadeOutTime));
+            yield return null;
+        }
+        curtain.color = Color.black;
+        yield return new WaitForSecondsRealtime(0.15f);
 
         Time.timeScale = 1f;
-        if (ArcadesTemplate.Core.ArcadeSceneManager.Instance != null) ArcadesTemplate.Core.ArcadeSceneManager.Instance.LoadWinScreen(0);
-        else SceneManager.LoadScene(0);                               // the main menu (first scene in the build)
+        if (!string.IsNullOrEmpty(mainMenuSceneName) && Application.CanStreamedLevelBeLoaded(mainMenuSceneName))
+        {
+            SceneManager.LoadScene(mainMenuSceneName);
+        }
+        else if (ArcadeSceneManager.Instance != null)
+        {
+            ArcadeSceneManager.Instance.LoadWinScreen(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    private Image CreateFullImage(string name, Transform parent)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
+        var img = go.AddComponent<Image>();
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        return img;
+    }
+
+    private bool HasAnySprite(Sprite[] arr)
+    {
+        for (int i = 0; i < arr.Length; i++)
+            if (arr[i] != null) return true;
+        return false;
     }
 
     // ---------------------------------------------------------------- simple generated art
