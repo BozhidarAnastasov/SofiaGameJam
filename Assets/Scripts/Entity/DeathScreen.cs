@@ -230,6 +230,7 @@ public class DeathScreen : MonoBehaviour
 
     public void Retry()
     {
+        GameAudio.UiClick();
         Time.timeScale = 1f;
         Scene scene = SceneManager.GetActiveScene();
         if (scene.buildIndex >= 0) SceneManager.LoadScene(scene.buildIndex);
@@ -240,6 +241,7 @@ public class DeathScreen : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        GameAudio.UiClick();
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }
@@ -428,6 +430,7 @@ public class DeathScreen : MonoBehaviour
         AddTriggerEvent(trigger, EventTriggerType.PointerEnter, () =>
         {
             if (!btn.interactable) return;
+            GameAudio.UiHover();
             btn.transform.localScale = baseScale * hoverScale;
             if (colorTarget != null) colorTarget.color = buttonHoverColor;
         });

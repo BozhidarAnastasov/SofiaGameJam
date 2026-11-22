@@ -42,6 +42,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9b5a046898d1ba24dbeac48d237f730b, type: 3}
   doorSlam:
   - {fileID: 8300000, guid: de0ce660723e48e40b5ef7797c32d23d, type: 3}
+  knifeGrinding:
+  - {fileID: 8300000, guid: c94ed05c6772cfe45a48f8e5b50dbec9, type: 3}
+  rocksPilingUp:
+  - {fileID: 8300000, guid: 82f5e5d86abc38f4c9503cb4ee8b4a10, type: 3}
+  uiClick:
+  - {fileID: 8300000, guid: 98f4c76566ea22f4696d02de9c39ba8a, type: 3}
   doorOpen:
   - {fileID: 8300000, guid: 6e22709f3ee4f3f4b8a4536654635744, type: 3}
   doorClose:

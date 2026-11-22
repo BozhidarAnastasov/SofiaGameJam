@@ -108,6 +108,7 @@ public class AudioSettingsManager : MonoBehaviour
         {
             uiAudioSource.PlayOneShot(clickClip);
         }
+        else GameAudio.UiClick();
 
         PlayerPrefs.Save();
         Time.timeScale = 1f;
@@ -135,23 +136,25 @@ public class AudioSettingsManager : MonoBehaviour
         ApplyMixerVolume(masterParam, clamped);
     }
 
+    // Ambience/Music slider -> music only (the MainMenu track and any looping background music).
     private void ApplyMusic(float value)
     {
         float clamped = Mathf.Clamp01(value);
 
-        if (musicSource != null)
-        {
-            musicSource.volume = clamped;
-        }
+        if (musicSource != null) musicSource.volume = clamped;
+        foreach (var s in FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
+            if (IsMusic(s)) s.volume = clamped;
 
         ApplyMixerVolume(musicParam, clamped);
     }
 
+    // SFX slider -> sound effects only. Never touches music, even if a music source was dragged into
+    // an SFX field by mistake. (GameAudio's effects read the saved SFX value themselves.)
     private void ApplySFX(float value)
     {
         float clamped = Mathf.Clamp01(value);
 
-        if (uiAudioSource != null && uiAudioSource != musicSource)
+        if (uiAudioSource != null && !IsMusic(uiAudioSource))
         {
             uiAudioSource.volume = clamped;
         }
@@ -160,7 +163,7 @@ public class AudioSettingsManager : MonoBehaviour
         {
             for (int i = 0; i < sfxSources.Length; i++)
             {
-                if (sfxSources[i] != null && sfxSources[i] != musicSource)
+                if (sfxSources[i] != null && !IsMusic(sfxSources[i]))
                 {
                     sfxSources[i].volume = clamped;
                 }
@@ -168,6 +171,15 @@ public class AudioSettingsManager : MonoBehaviour
         }
 
         ApplyMixerVolume(sfxParam, clamped);
+    }
+
+    /// Music = the assigned music source, or any looping AudioSource that isn't one of the game's
+    /// sound-effect loops (footsteps, box scrape...) or GameAudio's own effect players.
+    private bool IsMusic(AudioSource s)
+    {
+        if (s == null) return false;
+        if (s == musicSource) return true;
+        return s.loop && s.GetComponent<SoundLoop>() == null && s.GetComponent<GameAudio>() == null;
     }
 
     private void ApplyMixerVolume(string parameterName, float linearValue)
@@ -186,7 +198,7 @@ public class AudioSettingsManager : MonoBehaviour
         AudioSource[] allSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
         for (int i = 0; i < allSources.Length; i++)
         {
-            if (allSources[i] != uiAudioSource && allSources[i].loop)
+            if (allSources[i].loop && allSources[i].GetComponent<SoundLoop>() == null)
             {
                 musicSource = allSources[i];
                 break;

@@ -74,6 +74,8 @@ public class EntranceCollapse : MonoBehaviour
 
         // rumble
         if (audioSource != null && rumbleClip != null) audioSource.PlayOneShot(rumbleClip);
+        // RocksPillingUp: rumble, then the rocks; its last big crash (~2.7 s) lands with the last rock
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.rocksPilingUp : null, 1f, 0f);
         for (float e = 0f; e < 0.9f; e += 0.15f)
         {
             CameraShake.Shake(0.2f, Mathf.Lerp(0.02f, 0.07f, e / 0.9f));

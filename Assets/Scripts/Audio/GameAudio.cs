@@ -93,6 +93,30 @@ public class GameAudio : MonoBehaviour
         return clip == null ? null : Instance.PlayClip(clip, volume, 1f, owner);
     }
 
+    /// Play only a stretch of a (long) clip, from a random point, fading out after 'seconds'.
+    /// E.g. a few seconds of her steps while she goes up/down the stairs between rooms.
+    public static void PlayFor(AudioClip[] slot, float seconds, float volume = 1f, float fadeOut = 0.5f)
+    {
+        var s = PlayTracked(slot, volume);
+        if (s == null) return;
+        float room = s.clip.length - seconds - fadeOut;
+        if (room > 0f) s.time = Random.Range(0f, room);
+        instance.StartCoroutine(instance.FadeStop(s, s.clip, seconds, fadeOut));
+    }
+
+    IEnumerator FadeStop(AudioSource s, AudioClip clip, float after, float fade)
+    {
+        yield return new WaitForSecondsRealtime(after);
+        float v0 = s.volume;
+        for (float e = 0f; e < fade; e += Time.unscaledDeltaTime)
+        {
+            if (s.clip != clip || !s.isPlaying) yield break;      // the source was reused meanwhile
+            s.volume = v0 * (1f - e / fade);
+            yield return null;
+        }
+        if (s.clip == clip) s.Stop();
+    }
+
     /// Stop every one-shot that was played for this owner (e.g. her breathing when she dies).
     public static void StopOwner(GameObject owner)
     {
@@ -111,6 +135,10 @@ public class GameAudio : MonoBehaviour
         if (slot == null) { Debug.LogWarning($"[GameAudio] Unknown sound '{id}'."); return null; }
         return Play(slot, volume);
     }
+
+    /// Button click (menus, death screen). Hover uses the same click, quieter.
+    public static void UiClick() => Play(Sounds != null ? Sounds.uiClick : null, 1f, 0.02f);
+    public static void UiHover() => Play(Sounds != null ? Sounds.uiClick : null, 0.35f, 0.02f);
 
     /// Play a specific clip (e.g. one assigned by hand in the Inspector).
     public static void PlayClip(AudioClip clip, float volume = 1f) { if (clip != null) Instance.PlayClip(clip, volume, 1f); }

@@ -169,6 +169,7 @@ public class Death_Screen2 : MonoBehaviour
 
     public void RetryLevel()
     {
+        GameAudio.UiClick();
         Time.timeScale = 1f;
         Scene current = SceneManager.GetActiveScene();
         SceneManager.LoadScene(current.name);
@@ -176,6 +177,7 @@ public class Death_Screen2 : MonoBehaviour
 
     public void GoToMainMenu()
     {
+        GameAudio.UiClick();
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }

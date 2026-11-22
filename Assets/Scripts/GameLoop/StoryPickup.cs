@@ -86,7 +86,9 @@ public class StoryPickup : MonoBehaviour, Interactable
             else if (!inv.AddItem(gameObject)) Debug.LogWarning($"[StoryPickup] Hotbar full: '{name}' only sets {flag}.", this);
         }
         GameProgress.Set(flag);
-        if (player != null && player.TryGetComponent(out DirectionalSpriteAnimator anim)) anim.PlayPickUp();
+        // PickUpItem is an animation event on her pick-up clip; without the animation, play it now
+        if (player != null && player.TryGetComponent(out DirectionalSpriteAnimator anim) && anim.isActiveAndEnabled) anim.PlayPickUp();
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.pickUpItem : null, 1f, 0.04f, player != null ? player.gameObject : null);
         if (!string.IsNullOrEmpty(pickupMessage) && ArcadeMessageService.Instance != null)
             ArcadeMessageService.Instance.ShowMessage(pickupMessage);
         Debug.Log($"[StoryPickup] Picked up '{name}' -> {flag}.", this);

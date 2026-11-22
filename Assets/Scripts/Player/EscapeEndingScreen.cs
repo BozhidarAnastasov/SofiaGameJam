@@ -89,6 +89,7 @@ public class EscapeEndingScreen : MonoBehaviour
         {
             audioSource.PlayOneShot(escapeReliefClip);
         }
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.girlExhaust : null);   // her breath of relief
 
         onEndingStarted?.Invoke();
         yield return new WaitForSecondsRealtime(0.2f);

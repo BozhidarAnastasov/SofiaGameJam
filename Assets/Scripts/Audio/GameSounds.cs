@@ -29,6 +29,16 @@ public class GameSounds : ScriptableObject
     public AudioClip[] enemyHitDoor;
     [Tooltip("The kicked-in door slamming onto the floor.")]
     public AudioClip[] doorSlam;
+    [Tooltip("When he shows up in the Lobby (his walk to the stairs).")]
+    public AudioClip[] knifeGrinding;
+
+    [Header("World events")]
+    [Tooltip("Lobby intro: the entrance caves in.")]
+    public AudioClip[] rocksPilingUp;
+
+    [Header("UI")]
+    [Tooltip("Menu / death screen buttons (also used quieter for hover).")]
+    public AudioClip[] uiClick;
 
     [Header("Doors and furniture")]
     public AudioClip[] doorOpen;
@@ -72,6 +82,9 @@ public class GameSounds : ScriptableObject
             case "EnemyWalk": return enemyWalk;
             case "EnemyHitDoor": return enemyHitDoor;
             case "DoorSlam": return doorSlam;
+            case "KnifeGrinding": return knifeGrinding;
+            case "RocksPilingUp": return rocksPilingUp;
+            case "UIClick": return uiClick;
             case "BoxDrag": return boxDrag;
             case "DoorOpen": return doorOpen;
             case "DoorClose": return doorClose;

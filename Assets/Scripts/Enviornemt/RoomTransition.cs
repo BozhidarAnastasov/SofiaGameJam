@@ -9,6 +9,9 @@ public class RoomTransition : MonoBehaviour
 {
     public static bool IsBusy => instance != null && instance.busy;
 
+    /// Set by DoorExit for the stairs: no door closing behind her when the next room fades in.
+    public static bool SilentArrival { get; set; }
+
     static RoomTransition instance;
 
     [SerializeField] private float fadeOutTime = 0.8f;
@@ -73,7 +76,8 @@ public class RoomTransition : MonoBehaviour
         var newMove = FindFirstObjectByType<TopDownMovement>();
         if (newMove != null) newMove.CanMove = false;
         else Debug.LogWarning("[RoomTransition] The new scene has no Player (TopDownMovement)!");
-        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.doorClose : null, 0.8f);   // the door shuts behind her
+        if (!SilentArrival) GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.doorClose : null, 0.8f);   // the door shuts behind her
+        SilentArrival = false;
 
         // ...and brighter
         for (float e = 0f; e < fadeInTime; e += Time.deltaTime)
