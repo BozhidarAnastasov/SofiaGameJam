@@ -55,6 +55,22 @@ public class DoorExit : MonoBehaviour
     private bool leaving;
     private bool wasInRange, warnedNoAction;
 
+    /// Locked only because the power is off (the Electrical door before the lever is pulled).
+    public bool NeedsPower => requireLeverPulled && !LeverSwitch.PowerRestored && (lever == null || !lever.IsPulled);
+
+    /// Still locked for her right now (missing power / card / kicked-open state): the hint bubble's turn.
+    public bool LockedForHint
+    {
+        get
+        {
+            var jam = GetComponent<JammedDoor>();
+            bool forced = jam != null && jam.IsOpen;
+            var storyLock = GetComponent<DoorLock>();
+            if (!forced && storyLock != null && !storyLock.IsOpen) return true;
+            return !DoorIsOpen;
+        }
+    }
+
     bool DoorIsOpen =>
         (!requireLeverPulled || LeverSwitch.PowerRestored || (lever != null && lever.IsPulled)) &&
         (!requireKickedOpen || (doorOpen != null && doorOpen.enabled));
@@ -99,7 +115,8 @@ public class DoorExit : MonoBehaviour
             Debug.Log($"[DoorExit] '{name}' -> '{sceneName}': she {(inRange ? "is at the door, press A" : "walked away")} (distance {dist:0.00}, reach {reachDistance}).", this);
             wasInRange = inRange;
         }
-        if (prompt != null) prompt.Request(this, inRange, Interact);
+        // the "E" only when the door can be used now - a locked door shows the thought bubble instead
+        if (prompt != null) prompt.Request(this, inRange && !LockedForHint, Interact);
         if (Interact == null) { if (!warnedNoAction) { Debug.LogWarning($"[DoorExit] '{name}': no Interact input at all!", this); warnedNoAction = true; } return; }
         if (!Interact.WasPressedThisFrame()) return;
         if (!inRange)

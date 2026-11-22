@@ -1,11 +1,10 @@
 using System.Collections;
 using ArcadesTemplate.Core;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// The finale's door (Lobby -> office). With the key card selected the lock clicks open, but the door
-/// is jammed: every press of A shoves it (door shakes, she throws her shoulder into it, a bar on screen
-/// fills). It gives way after 'pressesNeeded' presses and she gets through. The first shove is loud:
+/// is jammed: every press of A shoves it (door shakes, she throws her shoulder into it, a flickering
+/// "A" over her head tells the player to keep mashing). It gives way after 'pressesNeeded' presses and she gets through. The first shove is loud:
 /// he comes down the stairs and walks straight at her, timed so that steady mashing is just enough.
 /// While she's at it she panics: trembles, sweats, glances back over her shoulder at him.
 /// Sits on the same object as the door's DoorExit (DoorExit forwards the A presses here).
@@ -38,11 +37,8 @@ public class JammedDoor : MonoBehaviour
     private float shoveUntil;
     private SpriteRenderer alarm;
 
-    // on-screen bar
-    private GameObject barRoot;
-    private RectTransform fillRect, barFrame;
-    private Image fill;
-    private Text label, counter;
+    // the flickering "A" over her head
+    private SpriteRenderer aKey;
     private float pop;
 
     /// Forced open already (this run): from then on it's a normal door.
@@ -63,7 +59,7 @@ public class JammedDoor : MonoBehaviour
             started = true;
             Debug.Log($"[JammedDoor] Jammed - {pressesNeeded} shoves needed. He's coming from the stairs.", this);
             if (ArcadeMessageService.Instance != null) ArcadeMessageService.Instance.ShowMessage(jammedMessage);
-            BuildBar();
+            aKey = MakeWorldSprite("MashA", KeyA(), Color.white);
             if (player != null) { girlScale = player.localScale; girlAnim = player.GetComponentInChildren<DirectionalSpriteAnimator>(); }
             StartCoroutine(HeComes());
             StartCoroutine(Panic());
@@ -72,7 +68,6 @@ public class JammedDoor : MonoBehaviour
         CameraShake.Shake(0.1f, 0.04f);
         shoveUntil = Time.time + 0.12f;                       // she throws her shoulder into it
         pop = 1f;
-        UpdateBar();
         if (presses >= pressesNeeded) StartCoroutine(Open());
     }
 
@@ -83,10 +78,8 @@ public class JammedDoor : MonoBehaviour
         Debug.Log("[JammedDoor] The door gives way.", this);
         if (ArcadeMessageService.Instance != null) ArcadeMessageService.Instance.ShowMessage(openMessage);
         CameraShake.Shake(0.3f, 0.12f);
-        if (label != null) label.text = "IT GIVES WAY!";
         yield return Shake(doorArt, 0.25f, 0.12f);
         EndPanic();
-        if (barRoot != null) Destroy(barRoot);
         GetComponent<DoorExit>().Leave();                      // through, before he gets her
     }
 
@@ -149,6 +142,20 @@ public class JammedDoor : MonoBehaviour
 
             // a red "!" over her head once he's close
             ShowAlarm(near > 0.35f, near);
+
+            // the "A" over her head flickers - faster the closer he is - and pops on every press
+            if (aKey != null)
+            {
+                pop = Mathf.MoveTowards(pop, 0f, Time.deltaTime * 6f);
+                float rate = Mathf.Lerp(6f, 14f, near);
+                bool on = Mathf.Repeat(Time.time * rate, 1f) < 0.6f || pop > 0.5f;
+                aKey.enabled = on;
+                float h = 2.45f * Mathf.Abs(player.lossyScale.y);
+                aKey.transform.position = player.position + new Vector3(-0.1f, h, 0f);
+                float sc = 1f + pop * 0.35f;
+                aKey.transform.localScale = new Vector3(sc, sc, 1f);
+                aKey.color = Color.Lerp(Color.white, new Color(1f, 0.85f, 0.35f), pop);
+            }
             yield return null;
         }
     }
@@ -167,6 +174,7 @@ public class JammedDoor : MonoBehaviour
         if (player != null && girlScale != Vector3.zero) player.localScale = girlScale;
         if (girlAnim != null) girlAnim.FacingOverride = null;
         if (alarm != null) Destroy(alarm.gameObject);
+        if (aKey != null) Destroy(aKey.gameObject);
     }
 
     IEnumerator Sweat()
@@ -214,7 +222,39 @@ public class JammedDoor : MonoBehaviour
         return sr;
     }
 
-    static Sprite drop, exclaim;
+    static Sprite drop, exclaim, keyA;
+    // a dark key cap with a white "A" on it
+    static Sprite KeyA()
+    {
+        if (keyA != null) return keyA;
+        string[] rows =
+        {
+            ".############.",
+            "#oooooooooooo#",
+            "#oooooAAooooo#",
+            "#ooooAooAoooo#",
+            "#oooAooooAooo#",
+            "#oooAooooAooo#",
+            "#oooAAAAAAooo#",
+            "#oooAooooAooo#",
+            "#oooAooooAooo#",
+            "#oooAooooAooo#",
+            "#oooooooooooo#",
+            "#############.",
+            ".###########..",
+        };
+        int h = rows.Length, w = rows[0].Length;
+        var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                char ch = rows[y][x];
+                Color c = ch == '#' ? new Color(0.85f, 0.85f, 0.9f) : ch == 'o' ? new Color(0.12f, 0.12f, 0.16f) : ch == 'A' ? Color.white : new Color(0, 0, 0, 0);
+                tex.SetPixel(x, h - 1 - y, c);
+            }
+        tex.Apply();
+        return keyA = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0f), 22f);
+    }
     static Sprite Drop()
     {
         if (drop != null) return drop;
@@ -238,90 +278,6 @@ public class JammedDoor : MonoBehaviour
         return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0f), ppu);
     }
 
-    // ------------------------------------------------------------------ the bar (on screen)
-    void BuildBar()
-    {
-        var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        barRoot = new GameObject("JamBar");
-        var canvas = barRoot.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 900;                                             // under the room fade (1000)
-        var scaler = barRoot.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920, 1080);
-
-        barFrame = Box("Frame", barRoot.transform, new Vector2(0.5f, 0f), new Vector2(0f, 120f), new Vector2(760f, 64f), new Color(0.9f, 0.9f, 0.92f, 0.9f));
-        var back = Box("Back", barFrame, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(748f, 52f), new Color(0.06f, 0.05f, 0.06f, 0.95f));
-        fillRect = Box("Fill", back, new Vector2(0f, 0.5f), new Vector2(4f, 0f), new Vector2(0f, 44f), Color.red);
-        fillRect.pivot = new Vector2(0f, 0.5f);
-        fill = fillRect.GetComponent<Image>();
-        for (int i = 1; i < 4; i++)                                             // quarter ticks
-            Box("Tick", back, new Vector2(i / 4f, 0.5f), Vector2.zero, new Vector2(3f, 52f), new Color(0.9f, 0.9f, 0.92f, 0.35f));
-
-        label = TextBox("Label", barRoot.transform, font, new Vector2(0f, 205f), 54, "MASH  A !");
-        counter = TextBox("Count", barFrame, font, Vector2.zero, 34, "");
-        counter.rectTransform.anchorMin = counter.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        StartCoroutine(AnimateBar());
-    }
-
-    void UpdateBar()
-    {
-        if (fillRect == null) return;
-        float k = Mathf.Clamp01((float)presses / pressesNeeded);
-        fillRect.sizeDelta = new Vector2(740f * k, 44f);
-        fill.color = k < 0.5f ? Color.Lerp(new Color(0.85f, 0.12f, 0.1f), new Color(0.95f, 0.55f, 0.1f), k * 2f)
-                              : Color.Lerp(new Color(0.95f, 0.55f, 0.1f), new Color(0.55f, 0.9f, 0.3f), (k - 0.5f) * 2f);
-        counter.text = $"{presses} / {pressesNeeded}";
-    }
-
-    IEnumerator AnimateBar()
-    {
-        while (barRoot != null)
-        {
-            pop = Mathf.MoveTowards(pop, 0f, Time.deltaTime * 6f);
-            float near = Danger();
-            if (barFrame != null) barFrame.localScale = Vector3.one * (1f + pop * 0.05f);
-            if (label != null)
-            {
-                float beat = 1f + Mathf.Abs(Mathf.Sin(Time.time * Mathf.Lerp(5f, 11f, near))) * 0.12f;
-                label.rectTransform.localScale = Vector3.one * beat;
-                label.color = Color.Lerp(Color.white, new Color(1f, 0.3f, 0.25f), near);
-            }
-            if (barFrame != null)                                               // the frame flashes red when he's close
-            {
-                var img = barFrame.GetComponent<Image>();
-                float flash = near > 0.5f ? Mathf.Abs(Mathf.Sin(Time.time * 10f)) : 0f;
-                img.color = Color.Lerp(new Color(0.9f, 0.9f, 0.92f, 0.9f), new Color(1f, 0.2f, 0.15f, 1f), flash);
-            }
-            yield return null;
-        }
-    }
-
-    static RectTransform Box(string n, Transform parent, Vector2 anchor, Vector2 pos, Vector2 size, Color c)
-    {
-        var go = new GameObject(n, typeof(RectTransform), typeof(Image));
-        go.transform.SetParent(parent, false);
-        var rt = (RectTransform)go.transform;
-        rt.anchorMin = rt.anchorMax = anchor;
-        rt.anchoredPosition = pos; rt.sizeDelta = size;
-        var img = go.GetComponent<Image>(); img.color = c; img.raycastTarget = false;
-        return rt;
-    }
-
-    static Text TextBox(string n, Transform parent, Font font, Vector2 pos, int size, string text)
-    {
-        var go = new GameObject(n, typeof(RectTransform), typeof(Text));
-        go.transform.SetParent(parent, false);
-        var t = go.GetComponent<Text>();
-        t.font = font; t.fontSize = size; t.text = text; t.alignment = TextAnchor.MiddleCenter;
-        t.color = Color.white; t.raycastTarget = false; t.fontStyle = FontStyle.Bold;
-        var outline = go.AddComponent<Outline>(); outline.effectColor = new Color(0, 0, 0, 0.9f); outline.effectDistance = new Vector2(2f, -2f);
-        var rt = t.rectTransform;
-        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
-        rt.anchoredPosition = pos; rt.sizeDelta = new Vector2(700f, 80f);
-        return t;
-    }
-
     static IEnumerator Shake(Transform t, float time, float amount)
     {
         if (t == null) yield break;
@@ -334,7 +290,7 @@ public class JammedDoor : MonoBehaviour
         t.localPosition = home;
     }
 
-    void OnDestroy() { if (barRoot != null) Destroy(barRoot); }
+    void OnDestroy() { if (aKey != null) Destroy(aKey.gameObject); if (alarm != null) Destroy(alarm.gameObject); }
 
     void OnDrawGizmosSelected()
     {

@@ -13,6 +13,8 @@ public class ZoneLock : MonoBehaviour
     [SerializeField] private float messageCooldown = 3f;
 
     private Collider2D col;
+
+    public StoryFlag Flag => flag;
     private float nextMessage;
 
     void Awake() { col = GetComponent<Collider2D>(); Refresh(); }
