@@ -42,6 +42,7 @@ public class LobbyStalker : MonoBehaviour
         Vector2 first = toStairs[0].position;
         Vector2 look = toStairs.Length > 1 ? (Vector2)toStairs[1].position - first : Vector2.left;
         psycho.ScriptAppear(first, look);
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.knifeGrinding : null, 0.8f);   // he announces himself
         for (int i = 1; i < toStairs.Length; i++) yield return WalkTo(toStairs[i].position);
         if (stairsTop != null) yield return WalkTo(stairsTop.position);
 

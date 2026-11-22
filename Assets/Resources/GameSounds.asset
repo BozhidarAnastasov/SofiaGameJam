@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650006bf9c3c4f66889d5a6c89041528, type: 3}
+  m_Name: GameSounds
+  m_EditorClassIdentifier:
+  girlWalk:
+  - {fileID: 8300000, guid: 303ce134bb450c24cbb9a1dc5e011d95, type: 3}
+  girlRun:
+  - {fileID: 8300000, guid: 3dff84197ead534469a015e993a3f5bb, type: 3}
+  girlCrawl:
+  - {fileID: 8300000, guid: 4d8a91fa1daac4c429a0776385affeb7, type: 3}
+  bedFirstUse:
+  - {fileID: 8300000, guid: bfbe98aa279034847be6b04448fe22e7, type: 3}
+  bedSecondUse:
+  - {fileID: 8300000, guid: f9b7969f4ab369249a77efd21c6314cb, type: 3}
+  girlExhaust:
+  - {fileID: 8300000, guid: b1ba43101c5b6154daecaf9945447967, type: 3}
+  girlNoticeEnemy:
+  - {fileID: 8300000, guid: 0a499b7dd921d694d870fee7562d0c6d, type: 3}
+  pickUpItem:
+  - {fileID: 8300000, guid: 7f7d4371814689d4389021bbe837f12c, type: 3}
+  switchItem:
+  - {fileID: 8300000, guid: f7105b57f31dd16499263b815f6925a9, type: 3}
+  flashlightOn:
+  - {fileID: 8300000, guid: bee006ad5a732bb4da3432e70303cf25, type: 3}
+  flashlightOff:
+  - {fileID: 8300000, guid: 1df03b7b0d68569439508df07b54eb78, type: 3}
+  boxDrag:
+  - {fileID: 8300000, guid: cc65594d86f6d784fb6793d6146763c0, type: 3}
+  enemyWalk:
+  - {fileID: 8300000, guid: 357ac88cc1ee0eb43ac15a5abeae1f35, type: 3}
+  enemyHitDoor:
+  - {fileID: 8300000, guid: 9b5a046898d1ba24dbeac48d237f730b, type: 3}
+  doorSlam:
+  - {fileID: 8300000, guid: de0ce660723e48e40b5ef7797c32d23d, type: 3}
+  knifeGrinding:
+  - {fileID: 8300000, guid: c94ed05c6772cfe45a48f8e5b50dbec9, type: 3}
+  rocksPilingUp:
+  - {fileID: 8300000, guid: 82f5e5d86abc38f4c9503cb4ee8b4a10, type: 3}
+  uiClick:
+  - {fileID: 8300000, guid: 98f4c76566ea22f4696d02de9c39ba8a, type: 3}
+  coatUse:
+  - {fileID: 8300000, guid: b010909f8b776ac478f6d929d0092539, type: 3}
+  pryPlanks:
+  - {fileID: 8300000, guid: 0833f42a1fd082a4fb0d766724f3cfa4, type: 3}
+  surgicalLamp:
+  - {fileID: 8300000, guid: 661c002e403fcc34c99e38a930ef58f7, type: 3}
+  doorOpen:
+  - {fileID: 8300000, guid: 6e22709f3ee4f3f4b8a4536654635744, type: 3}
+  doorClose:
+  - {fileID: 8300000, guid: 639d388e47de5d4439a1ff90af32d348, type: 3}
+  electricalDoor:
+  - {fileID: 8300000, guid: c149e5a54396bd14aaa04e4f7e85c5a3, type: 3}
+  cupboardOpen:
+  - {fileID: 8300000, guid: 68c3405dc4a2ffd4bbd0babf1dde7fc2, type: 3}
+  cupboardClose:
+  - {fileID: 8300000, guid: 373630a5d195f924799db1ad5ef05e9f, type: 3}
+  breakWindow:
+  - {fileID: 8300000, guid: dcc804f2c007ce240960dc3e786606c1, type: 3}
+  leverPush:
+  - {fileID: 8300000, guid: 96792399ba5cf1a42af6d425bfd3e37f, type: 3}
+  lightsStarting:
+  - {fileID: 8300000, guid: c1a017a1650784b4db16df6aec72c98f, type: 3}
+  lightsExploding:
+  - {fileID: 8300000, guid: 236a4831a725e2f4cbd5953e34070f55, type: 3}
+  killGrab:
+  - {fileID: 8300000, guid: 77f2a1092d283fc4098b1aece93960c4, type: 3}
+  killLift:
+  - {fileID: 8300000, guid: bba97d01a977249458d17b3def678649, type: 3}
+  killGasp:
+  - {fileID: 8300000, guid: 637e68a4aebd83e49af881cf9456c9ad, type: 3}
+  killKnifeRaise:
+  - {fileID: 8300000, guid: 590cef0c06364db4e9ff58fdb23691ad, type: 3}
+  killStab:
+  - {fileID: 8300000, guid: bee88d9d28e20ef4f83ee6bbe3713dea, type: 3}
+  killFull:
+  - {fileID: 8300000, guid: d9fb746acedb76344b7d4538c6ae359d, type: 3}
+  youDied:
+  - {fileID: 8300000, guid: ec7575b762414ce44abe63c616366387, type: 3}

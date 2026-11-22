@@ -23,6 +23,7 @@ public class PlayerFlashlight : MonoBehaviour
     {
         HasFlashlight = true;
         if (flashlight != null) flashlight.enabled = true;
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.flashlightOn : null, 1f, 0.04f, Owner);
         Debug.Log("[PlayerFlashlight] She has the flashlight now: D switches it on/off.", this);
     }
 
@@ -49,6 +50,9 @@ public class PlayerFlashlight : MonoBehaviour
     private Vector3 standPos;              // chest height, as placed on the prefab
 
     public bool IsOn => flashlight != null && flashlight.enabled;
+
+    // her sounds are tagged with the player root so they stop when she dies
+    GameObject Owner => movement != null ? movement.gameObject : (GetComponentInParent<TopDownMovement>() is TopDownMovement m && m != null ? m.gameObject : gameObject);
 
     void Awake()
     {
@@ -83,6 +87,7 @@ public class PlayerFlashlight : MonoBehaviour
         {
             flashlight.enabled = !flashlight.enabled;
             if (audioSource != null && clickClip != null) audioSource.PlayOneShot(clickClip);
+            else if (GameAudio.Sounds != null) GameAudio.Play(flashlight.enabled ? GameAudio.Sounds.flashlightOn : GameAudio.Sounds.flashlightOff, 1f, 0.04f, Owner);
         }
 
         // crawling: the light goes down to her hands, in front of her; standing: back to the chest

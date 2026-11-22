@@ -92,6 +92,7 @@ public class CoatHide : MonoBehaviour
     {
         hidden = IsHidden = true;
         hiddenSprites.Clear(); hiddenLights.Clear();
+        PlayCoatSound(0.9f);
         SpriteRenderer main = GetComponent<SpriteRenderer>();
         foreach (var r in GetComponentsInChildren<SpriteRenderer>())
             if (r.enabled && r != pile) { r.enabled = false; hiddenSprites.Add(r); }
@@ -125,9 +126,14 @@ public class CoatHide : MonoBehaviour
         }
     }
 
+    // CoatUse: the rustle starts ~0.7 s into the file, so skip the silence and it sounds right away
+    void PlayCoatSound(float volume) =>
+        GameAudio.PlayFrom(GameAudio.Sounds != null ? GameAudio.Sounds.coatUse : null, 0.65f, volume, gameObject);
+
     void Uncover()
     {
         hidden = IsHidden = false;
+        if (move != null && move.enabled) PlayCoatSound(0.6f);    // throws it off (quiet; not when she was caught)
         stillFor = 0f;
         foreach (var r in hiddenSprites) if (r != null) r.enabled = true;
         foreach (var l in hiddenLights) if (l != null) l.enabled = true;

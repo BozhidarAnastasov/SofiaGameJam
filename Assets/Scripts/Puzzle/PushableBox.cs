@@ -69,7 +69,7 @@ public class PushableBox : MonoBehaviour
     }
 
     void OnEnable() { if (interactAction != null) interactAction.action.Enable(); }
-    void OnDisable() { Release(); }
+    void OnDisable() { Release(); StopDragSound(); }
 
     void Update()
     {
@@ -83,7 +83,26 @@ public class PushableBox : MonoBehaviour
 
         if (!IsGrabbed && canGrab && interactAction.action.WasPressedThisFrame()) Grab();
         else if (IsGrabbed && !interactAction.action.IsPressed()) Release();
+        UpdateDragSound();
     }
+
+    [Header("Sound")]
+    [SerializeField, Range(0f, 1f)] private float dragVolume = 1f;
+    private SoundLoop dragSound;
+
+    // the box scrapes along the floor, looped, only while she is actually moving it
+    void UpdateDragSound()
+    {
+        var lib = GameAudio.Sounds;
+        if (lib == null) return;
+        if (dragSound == null) { dragSound = SoundLoop.Create(gameObject); dragSound.fadeTime = 0.08f; dragSound.SetClip(GameAudio.Pick(lib.boxDrag)); }
+        bool sheCanAct = playerMove == null || playerMove.enabled;
+        dragSound.Playing = IsGrabbed && sheCanAct && IsMoving;
+        dragSound.Volume = dragVolume;
+    }
+
+    /// Cut the scrape off right away (she was caught).
+    public void StopDragSound() { if (dragSound != null) dragSound.StopNow(); }
 
     void FixedUpdate()
     {
