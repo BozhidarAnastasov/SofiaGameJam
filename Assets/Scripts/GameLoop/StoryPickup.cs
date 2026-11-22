@@ -35,6 +35,15 @@ public class StoryPickup : MonoBehaviour, Interactable
             Debug.Log($"[StoryPickup] '{name}' already taken earlier ({flag}): removing it.", this);
             taken = true; gameObject.SetActive(false); return;
         }
+        // a trigger around it, so the team's InteractionDetector (icon + A) finds it as well
+        if (GetComponent<Collider2D>() == null)
+        {
+            var trig = gameObject.AddComponent<CircleCollider2D>();
+            trig.isTrigger = true;
+            float s = Mathf.Max(0.01f, Mathf.Abs(transform.lossyScale.x));
+            trig.radius = (reach * 0.6f) / s;
+            if (sr != null && sr.sprite != null) trig.offset = sr.sprite.bounds.center;   // around the picture, not the sort pivot
+        }
         Debug.Log($"[StoryPickup] '{name}' waiting at {transform.position} ({flag}), player {(player != null ? "found" : "MISSING")}.", this);
     }
 
@@ -67,6 +76,8 @@ public class StoryPickup : MonoBehaviour, Interactable
         bool inRange = (move == null || (move.enabled && move.CanMove)) && Vector2.Distance(player.position, transform.position) <= reach;
         if (prompt != null) prompt.Request(this, inRange);
         if (inRange && Interact_.WasPressedThisFrame()) Interact();
+        else if (!inRange && Interact_.WasPressedThisFrame() && Vector2.Distance(player.position, transform.position) <= reach * 2f)
+            Debug.Log($"[StoryPickup] A pressed near '{name}' but too far ({Vector2.Distance(player.position, transform.position):0.00} > {reach}).", this);
     }
 
     // ---- Interactable (team system)

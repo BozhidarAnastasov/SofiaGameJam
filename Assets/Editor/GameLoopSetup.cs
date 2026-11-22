@@ -816,4 +816,53 @@ public static class GameLoopSetup
         if (!string.IsNullOrEmpty(returnTo) && returnTo != Floor2Path) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
         Debug.Log("[GameLoop] Floor2 runs at 0.6x speed for the girl and the psycho (RoomPace object). Saved.");
     }
+
+    // =====================================================================================
+    // 28. Operating room: a lamp that clearly flickers + a card that's easy to pick up
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/28. Operating Room: Stronger Lamp Flicker + Card Pickup")]
+    public static void OperatingRoomFix()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var sw = EditorSceneManager.OpenScene(SurgPath, OpenSceneMode.Single);
+
+        var lampGo = Find(sw, "SurgeryLamp");
+        var lamp = lampGo != null ? lampGo.GetComponent<SurgeryLamp>() : null;
+        if (lamp != null)
+        {
+            var so = new SerializedObject(lamp);
+            so.FindProperty("baseIntensity").floatValue = 1.1f;
+            so.FindProperty("wobble").floatValue = 0.25f;
+            so.FindProperty("dipEvery").vector2Value = new Vector2(0.4f, 2.0f);
+            so.FindProperty("blackoutChance").floatValue = 0.3f;
+            so.FindProperty("burstChance").floatValue = 0.45f;
+            so.FindProperty("ringDarkness").floatValue = 0.5f;
+            so.FindProperty("dipDarkness").floatValue = 0.85f;      // the painted glow goes dark with the lamp
+            so.ApplyModifiedProperties();
+        }
+        else Debug.LogWarning("[GameLoop] SurgicalWing: no SurgeryLamp - run step 19 first.");
+
+        var card = Find(sw, "Card");
+        var pick = card != null ? card.GetComponent<StoryPickup>() : null;
+        if (pick != null)
+        {
+            var so = new SerializedObject(pick);
+            so.FindProperty("reach").floatValue = 1.5f;
+            so.ApplyModifiedProperties();
+            // trigger for the team's InteractionDetector, around the card picture
+            var sr = card.GetComponent<SpriteRenderer>();
+            var trig = card.GetComponent<CircleCollider2D>();
+            if (trig == null) trig = card.AddComponent<CircleCollider2D>();
+            trig.isTrigger = true;
+            trig.radius = 0.9f / Mathf.Max(0.01f, card.transform.lossyScale.x);
+            if (sr != null && sr.sprite != null) trig.offset = sr.sprite.bounds.center;
+        }
+        else Debug.LogWarning("[GameLoop] SurgicalWing: no Card - run step 19 first.");
+
+        EditorSceneManager.MarkSceneDirty(sw);
+        EditorSceneManager.SaveScene(sw);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != SurgPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Operating room: lamp flickers hard (stutters, dips, blackouts), card reach 1.5 + interaction trigger. Saved.");
+    }
 }
