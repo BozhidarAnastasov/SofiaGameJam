@@ -64,7 +64,7 @@ public class TopDownMovement : MonoBehaviour
     public bool AllowCrawl { get; set; } = true;
 
     /// Her normal walking speed.
-    public float WalkSpeed => walkSpeed;
+    public float WalkSpeed => walkSpeed * RoomPace.Factor;
 
     /// How fast she is moving right now (0 when standing still).
     public float CurrentSpeed { get; private set; }
@@ -162,7 +162,7 @@ public class TopDownMovement : MonoBehaviour
     {
         if (!CanMove || moveInput == Vector2.zero) { CurrentSpeed = 0f; return; }
 
-        float speed = (IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier;
+        float speed = (IsCrawling ? crawlSpeed : IsRunning ? runSpeed : walkSpeed) * SpeedMultiplier * RoomPace.Factor;   // RoomPace: rooms built at another scale
         CurrentSpeed = speed;
         rb.MovePosition(rb.position + moveInput.normalized * speed * Time.fixedDeltaTime);
     }

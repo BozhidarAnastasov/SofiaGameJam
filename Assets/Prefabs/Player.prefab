@@ -340,12 +340,12 @@ MonoBehaviour:
   m_ComponentVersion: 3
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.7
+  m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 0.9, b: 0.75, a: 1}
-  m_Intensity: 1.1
+  m_Intensity: 7
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: c70c1e8600000000
+  m_ApplyToSortingLayers: c70c1e860000000069f39c9c
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -363,10 +363,10 @@ MonoBehaviour:
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
-  m_PointLightInnerAngle: 360
-  m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.5
-  m_PointLightOuterRadius: 3.5
+  m_PointLightInnerAngle: 40
+  m_PointLightOuterAngle: 110
+  m_PointLightInnerRadius: 2.5
+  m_PointLightOuterRadius: 7
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 7635911113354578929}
   - component: {fileID: 4801310070271515826}
   - component: {fileID: 2594052273128264129}
+  - component: {fileID: 1527416731668313577}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -521,9 +522,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c2c6f896336d24ebe05ed01930ade4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TopDownMovement
-  walkSpeed: 2
-  runSpeed: 3
-  crawlSpeed: 0.8
+  walkSpeed: 3
+  runSpeed: 5
+  crawlSpeed: 1
   inputDeadZone: 0.2
   sprintDuration: 3
   staminaRecoveryDelay: 3
@@ -565,7 +566,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.6}
+  m_Offset: {x: 0, y: 0.2}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.04}
@@ -575,7 +576,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 0.8}
+  m_Size: {x: 0.7, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &7087214735045915859
 MonoBehaviour:
@@ -589,8 +590,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1096b4ce1c79d14c9c6b9bee1e12bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DirectionalSpriteAnimator
-  body: {fileID: 0}
-  playerMovement: {fileID: 0}
+  body: {fileID: 4171582911513696338}
+  playerMovement: {fileID: 1920884587880025862}
   moveThreshold: 0.05
   runThreshold: 3.5
   stopGraceTime: 0.08
@@ -696,6 +697,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   InventoryController: {fileID: 0}
+--- !u!114 &1527416731668313577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7363867419542223452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c1cb731752c2242bc1c0398375059f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
+  InventoryController: {fileID: 0}
 --- !u!1 &8784045216253347969
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,9 +757,9 @@ MonoBehaviour:
   m_ComponentVersion: 3
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.8
+  m_FalloffIntensity: 0.5
   m_Color: {r: 0.75, g: 0.82, b: 1, a: 1}
-  m_Intensity: 0.55
+  m_Intensity: 0.7
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: c70c1e860000000069f39c9c2384f823
@@ -768,8 +782,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.2
-  m_PointLightOuterRadius: 1.5
+  m_PointLightInnerRadius: 0.7
+  m_PointLightOuterRadius: 3
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
