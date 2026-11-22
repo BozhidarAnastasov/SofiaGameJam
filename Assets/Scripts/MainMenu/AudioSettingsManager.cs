@@ -123,9 +123,6 @@ public class AudioSettingsManager : MonoBehaviour
         slider.minValue = 0f;
         slider.maxValue = 1f;
 
-        Navigation nav = slider.navigation;
-        nav.mode = Navigation.Mode.None;
-        slider.navigation = nav;
     }
 
     private void ApplyMaster(float value)
