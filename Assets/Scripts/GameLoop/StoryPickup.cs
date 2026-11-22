@@ -74,7 +74,7 @@ public class StoryPickup : MonoBehaviour, Interactable
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
         var move = player.GetComponent<TopDownMovement>();
         bool inRange = (move == null || (move.enabled && move.CanMove)) && Vector2.Distance(player.position, transform.position) <= reach;
-        if (prompt != null) prompt.Request(this, inRange);
+        if (prompt != null) prompt.Request(this, inRange, Interact_);
         if (inRange && Interact_.WasPressedThisFrame()) Interact();
         else if (!inRange && Interact_.WasPressedThisFrame() && Vector2.Distance(player.position, transform.position) <= reach * 2f)
             Debug.Log($"[StoryPickup] A pressed near '{name}' but too far ({Vector2.Distance(player.position, transform.position):0.00} > {reach}).", this);

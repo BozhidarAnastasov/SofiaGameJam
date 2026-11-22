@@ -1296,6 +1296,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 790636834451211034, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7660377
+      objectReference: {fileID: 0}
+    - target: {fileID: 790636834451211034, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.61819667
+      objectReference: {fileID: 0}
+    - target: {fileID: 790636834451211034, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.48997506
+      objectReference: {fileID: 0}
     - target: {fileID: 1527416731668313577, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: InventoryController
       value: 
@@ -1558,7 +1570,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.55, g: 0.65, b: 0.9, a: 1}
-  m_Intensity: 0.4
+  m_Intensity: 0.2
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: c70c1e860000000069f39c9c2384f823
@@ -4372,9 +4384,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 413216446}
     - target: {fileID: 8995748324783048330, guid: b0f3a10bed9a379469ba75482ee73470, type: 3}
+      propertyPath: grabRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8995748324783048330, guid: b0f3a10bed9a379469ba75482ee73470, type: 3}
+      propertyPath: viewRange
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8995748324783048330, guid: b0f3a10bed9a379469ba75482ee73470, type: 3}
       propertyPath: deathScreen
       value: 
       objectReference: {fileID: 524565491}
+    - target: {fileID: 8995748324783048330, guid: b0f3a10bed9a379469ba75482ee73470, type: 3}
+      propertyPath: visionAngle
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8995748324783048330, guid: b0f3a10bed9a379469ba75482ee73470, type: 3}
       propertyPath: lurksInElectrical
       value: 0

@@ -440,6 +440,8 @@ public class EntityAI : MonoBehaviour
         // the girl is now part of his grab animation: hide her and freeze her controls
         if (girlMove != null) { girlMove.CanMove = false; girlMove.enabled = false; }
         if (girlRb != null) { girlRb.linearVelocity = Vector2.zero; girlRb.simulated = false; }
+        // Disabling the coat restores her normal sprites, so do it before hiding them for the grab.
+        if (girl.TryGetComponent(out CoatHide coatHide)) coatHide.enabled = false;
         foreach (var r in girl.GetComponentsInChildren<SpriteRenderer>(true)) r.enabled = false;
         foreach (var l in girl.GetComponentsInChildren<Light2D>(true)) l.enabled = false;
         var girlAnim = girl.GetComponentInChildren<DirectionalSpriteAnimator>();

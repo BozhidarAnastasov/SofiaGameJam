@@ -68,18 +68,13 @@ public class BarricadedDoor : MonoBehaviour
         if (prompt != null) prompt.Request(this, inRange, Interact);
         if (!inRange || !Interact.WasPressedThisFrame()) return;
 
-        string held = SelectedItemName();
+        var inventory = FindFirstObjectByType<Inventory>();
+        Slot slot = inventory != null ? inventory.SelectedSlot : null;
+        GameObject item = slot != null ? slot.currentItem : null;
+        string held = item != null ? item.name : null;
         Debug.Log($"[BarricadedDoor] A pressed at '{name}', selected hotbar item: '{held ?? "none"}'.", this);
-        if (held != null && held.ToLowerInvariant().Contains(toolName.ToLowerInvariant())) StartCoroutine(PryOff());
+        if (held != null && held.ToLowerInvariant().Contains(toolName.ToLowerInvariant())) StartCoroutine(PryOff(slot, item));
         else Say(held == null ? boardedMessage : wrongItemMessage);
-    }
-
-    // the team's Inventory names each hotbar icon after the item it came from (e.g. "Crowbar")
-    static string SelectedItemName()
-    {
-        var inv = FindFirstObjectByType<Inventory>();
-        var slot = inv != null ? inv.SelectedSlot : null;
-        return slot != null && slot.currentItem != null ? slot.currentItem.name : null;
     }
 
     void Say(string msg)
@@ -88,7 +83,7 @@ public class BarricadedDoor : MonoBehaviour
         Debug.Log("[BarricadedDoor] " + msg, this);
     }
 
-    IEnumerator PryOff()
+    IEnumerator PryOff(Slot toolSlot, GameObject usedTool)
     {
         busy = true;
         if (prompt != null) prompt.Request(this, false);
@@ -119,6 +114,7 @@ public class BarricadedDoor : MonoBehaviour
             planks.enabled = false;
             t.localPosition = home; t.localRotation = rot;
         }
+        toolSlot.RemoveItem(usedTool);
         open = true;
         removed.Add(Id);
         if (door != null) door.enabled = true;

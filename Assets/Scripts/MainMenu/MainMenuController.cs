@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
@@ -11,66 +12,96 @@ public class MainMenuController : MonoBehaviour
     [Header("UI Panels")]
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject controlsPanel;
 
-    [Header("UI Buttons (Drag your 4 buttons here)")]
+    [Header("Menu Navigation")]
+    [SerializeField] private InputActionAsset arcadeActions;
     [SerializeField] private Button playButton;
     [SerializeField] private Button settingsButton;
-    [SerializeField] private Button backButton; // Inside SettingsPanel (leave empty if AudioSettingsManager handles it)
+    [SerializeField] private Button controlsButton;
     [SerializeField] private Button quitButton;
+    [SerializeField] private Button settingsBackButton;
+    [SerializeField] private Button controlsBackButton;
+    [SerializeField] private Selectable[] settingsOptions;
 
     [Header("Menu Audio (Optional)")]
     [SerializeField] private AudioSource uiAudioSource;
     [SerializeField] private AudioClip clickClip;
     [SerializeField] private AudioClip hoverClip;
 
-    private void Awake()
-    {
-        BindButton(playButton, PlayGame);
-        BindButton(settingsButton, OpenSettings);
-        BindButton(backButton, CloseSettings);
-        BindButton(quitButton, QuitGame);
-    }
+    private InputAction startAction;
+    private InputAction exitAction;
+    private InputAction submitAction;
+    private bool enabledStart;
+    private bool enabledExit;
 
     private void Start()
     {
         Time.timeScale = 1f;
-        ShowMainMenu();
+        ConfigureNavigation(new Selectable[] { playButton, settingsButton, controlsButton, quitButton });
+        ConfigureNavigation(settingsOptions);
+        ConfigureNavigation(new Selectable[] { controlsBackButton });
+        ShowPanel(mainMenuPanel, playButton);
     }
 
-    private void OnDestroy()
+    private void OnEnable()
     {
-        if (playButton != null) playButton.onClick.RemoveListener(PlayGame);
-        if (settingsButton != null) settingsButton.onClick.RemoveListener(OpenSettings);
-        if (backButton != null) backButton.onClick.RemoveListener(CloseSettings);
-        if (quitButton != null) quitButton.onClick.RemoveListener(QuitGame);
+        startAction = arcadeActions?.FindAction("Arcade/ButtonStart");
+        exitAction = arcadeActions?.FindAction("Arcade/ButtonExit");
+        submitAction = arcadeActions?.FindAction("Arcade/ButtonA");
+        enabledStart = startAction != null && !startAction.enabled;
+        enabledExit = exitAction != null && !exitAction.enabled;
+        if (enabledStart) startAction.Enable();
+        if (enabledExit) exitAction.Enable();
     }
 
-    private void BindButton(Button btn, UnityEngine.Events.UnityAction action)
+    private void OnDisable()
     {
-        if (btn == null) return;
+        if (enabledStart) startAction.Disable();
+        if (enabledExit) exitAction.Disable();
+    }
 
-        // Clear duplicate listeners and wire click in code
-        btn.onClick.RemoveListener(action);
-        btn.onClick.AddListener(action);
-
-        // Lock out keyboard/controller navigation (mouse only, zero keybinds)
-        Navigation nav = btn.navigation;
-        nav.mode = Navigation.Mode.None;
-        btn.navigation = nav;
-
-        // Auto-wire pointer hover sound
-        EventTrigger trigger = btn.GetComponent<EventTrigger>();
-        if (trigger == null) trigger = btn.gameObject.AddComponent<EventTrigger>();
-
-        EventTrigger.Entry enterEntry = new EventTrigger.Entry
+    private void Update()
+    {
+        if (exitAction != null && exitAction.WasPressedThisFrame())
         {
-            eventID = EventTriggerType.PointerEnter
-        };
-        enterEntry.callback.AddListener(_ =>
+            if (controlsPanel.activeSelf) CloseControls();
+            else if (settingsPanel.activeSelf) settingsBackButton.onClick.Invoke();
+        }
+        else if (startAction != null && startAction.WasPressedThisFrame()
+            && (submitAction == null || !submitAction.WasPressedThisFrame()))
         {
-            if (btn.interactable) PlayHoverSound();
-        });
-        trigger.triggers.Add(enterEntry);
+            EventSystem events = EventSystem.current;
+            if (events != null && events.currentSelectedGameObject != null)
+                ExecuteEvents.Execute(events.currentSelectedGameObject, new BaseEventData(events), ExecuteEvents.submitHandler);
+        }
+    }
+
+    private void ConfigureNavigation(Selectable[] options)
+    {
+        for (int i = 0; i < options.Length; i++)
+        {
+            Selectable option = options[i];
+            option.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = options[(i + options.Length - 1) % options.Length],
+                selectOnDown = options[(i + 1) % options.Length]
+            };
+            ColorBlock colors = option.colors;
+            colors.selectedColor = new Color(1f, 0.78f, 0.48f);
+            option.colors = colors;
+
+            if (hoverClip == null || !(option is Button)) continue;
+            var trigger = option.GetComponent<EventTrigger>();
+            if (trigger == null) trigger = option.gameObject.AddComponent<EventTrigger>();
+            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entry.callback.AddListener(_ =>
+            {
+                if (option.IsInteractable()) PlayHoverSound();
+            });
+            trigger.triggers.Add(entry);
+        }
     }
 
     public void PlayGame()
@@ -82,14 +113,25 @@ public class MainMenuController : MonoBehaviour
     public void OpenSettings()
     {
         PlayClickSound();
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
-        if (settingsPanel != null) settingsPanel.SetActive(true);
+        ShowPanel(settingsPanel, settingsOptions[0]);
     }
 
     public void CloseSettings()
     {
         PlayClickSound();
-        ShowMainMenu();
+        ShowPanel(mainMenuPanel, settingsButton);
+    }
+
+    public void OpenControls()
+    {
+        PlayClickSound();
+        ShowPanel(controlsPanel, controlsBackButton);
+    }
+
+    public void CloseControls()
+    {
+        PlayClickSound();
+        ShowPanel(mainMenuPanel, controlsButton);
     }
 
     public void QuitGame()
@@ -102,10 +144,12 @@ public class MainMenuController : MonoBehaviour
         #endif
     }
 
-    private void ShowMainMenu()
+    private void ShowPanel(GameObject panel, Selectable selection)
     {
-        if (settingsPanel != null) settingsPanel.SetActive(false);
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
+        mainMenuPanel.SetActive(panel == mainMenuPanel);
+        settingsPanel.SetActive(panel == settingsPanel);
+        controlsPanel.SetActive(panel == controlsPanel);
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(selection.gameObject);
     }
 
     public void PlayHoverSound()
