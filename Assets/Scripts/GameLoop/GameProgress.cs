@@ -18,6 +18,9 @@ public enum StoryFlag
     OfficeOpen,           // the office door was forced open
     CoatEventDone,        // the psycho's walk through the Lobby after she found the coat is over
     EnemyInElectrical,    // after that walk he waits in Electrical and goes straight for her
+    BedTakenOut,          // she dragged the bed out of Dr. Mundo's cabinet onto the second floor
+    CabinetVisitDone,     // the psycho's visit to Dr. Mundo's cabinet (when she first moves the bed) is over
+    Floor2PatrolDone,     // after the bed fell he came up to the second floor and patrolled until she left it
 }
 
 public static class GameProgress

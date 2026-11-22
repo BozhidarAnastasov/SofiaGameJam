@@ -20,6 +20,9 @@ public class SurgeryLamp : MonoBehaviour
     [SerializeField] private float wobble = 0.12f;
     [Tooltip("Seconds between sudden dips (random in this range).")]
     [SerializeField] private Vector2 dipEvery = new Vector2(0.8f, 3.5f);
+    [Tooltip("Chance that a dip comes as a burst of quick on/off flickers (a failing tube).")]
+    [SerializeField, Range(0f, 1f)] private float burstChance = 0.45f;
+    [SerializeField] private Vector2Int burstFlickers = new Vector2Int(3, 7);
     [Tooltip("Chance that a dip becomes a short blackout.")]
     [SerializeField, Range(0f, 1f)] private float blackoutChance = 0.25f;
     [SerializeField] private Vector2 blackoutLength = new Vector2(0.15f, 0.6f);
@@ -38,6 +41,7 @@ public class SurgeryLamp : MonoBehaviour
 
     private SpriteRenderer ring, disc;
     private float nextDip, dipUntil, dipLevel = 1f, seed;
+    private int burstLeft;
 
     void Awake()
     {
@@ -91,10 +95,22 @@ public class SurgeryLamp : MonoBehaviour
         float t = Time.time;
         if (t >= nextDip)
         {
-            bool blackout = Random.value < blackoutChance;
-            dipLevel = blackout ? 0.02f : Random.Range(0.35f, 0.7f);
-            dipUntil = t + (blackout ? Random.Range(blackoutLength.x, blackoutLength.y) : Random.Range(0.05f, 0.18f));
-            nextDip = dipUntil + Random.Range(dipEvery.x, dipEvery.y);
+            if (burstLeft == 0 && Random.value < burstChance) burstLeft = Random.Range(burstFlickers.x, burstFlickers.y + 1);
+            if (burstLeft > 0)
+            {
+                // failing tube: quick off/on stutters one after another
+                burstLeft--;
+                dipLevel = Random.value < 0.5f ? 0.02f : Random.Range(0.15f, 0.4f);
+                dipUntil = t + Random.Range(0.03f, 0.09f);
+                nextDip = dipUntil + (burstLeft > 0 ? Random.Range(0.03f, 0.12f) : Random.Range(dipEvery.x, dipEvery.y));
+            }
+            else
+            {
+                bool blackout = Random.value < blackoutChance;
+                dipLevel = blackout ? 0.02f : Random.Range(0.25f, 0.6f);
+                dipUntil = t + (blackout ? Random.Range(blackoutLength.x, blackoutLength.y) : Random.Range(0.05f, 0.18f));
+                nextDip = dipUntil + Random.Range(dipEvery.x, dipEvery.y);
+            }
         }
         float dip = t < dipUntil ? dipLevel : 1f;
         float w = 1f + (Mathf.PerlinNoise(seed, t * 9f) - 0.5f) * 2f * wobble;

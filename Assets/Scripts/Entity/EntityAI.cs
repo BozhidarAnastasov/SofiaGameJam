@@ -175,6 +175,17 @@ public class EntityAI : MonoBehaviour
         if (!Hunting) state = State.Scripted;
     }
 
+    /// Switch from a scripted walk to an endless patrol along these points (stops and looks around at each).
+    public void BeginPatrol(Transform[] points)
+    {
+        patrolPoints = points;
+        patrolIndex = 0;
+        hasScript = false;
+        ScriptArrived = true;
+        if (state == State.Waiting || Hunting) return;
+        state = State.Patrolling;
+    }
+
     /// He leaves (through a door / up the stairs): hidden and switched off until he appears again.
     public void ScriptVanish()
     {
@@ -221,10 +232,13 @@ public class EntityAI : MonoBehaviour
 
     void FixedUpdate()
     {
+        // she is leaving the room (the door fade has started): he can't catch her any more
+        if (RoomTransition.IsBusy && state != State.Grabbing) { if (rb.simulated) Stop(); return; }
+        float walk = walkSpeed * RoomPace.Factor;            // RoomPace: rooms built at another scale
         switch (state)
         {
             case State.Entering:
-                if (MoveKinematic(doorInside.position, walkSpeed))
+                if (MoveKinematic(doorInside.position, walk))
                 {
                     // only now, fully inside the room, does he get his collider back
                     rb.bodyType = RigidbodyType2D.Dynamic;
@@ -234,22 +248,22 @@ public class EntityAI : MonoBehaviour
                 }
                 break;
             case State.GoingToLever:
-                if (Steer(leverStandPoint.position, walkSpeed)) { state = State.AtLever; routine = StartCoroutine(AtLever()); }
+                if (Steer(leverStandPoint.position, walk)) { state = State.AtLever; routine = StartCoroutine(AtLever()); }
                 break;
             case State.Scripted:
                 if (pausing || ScriptArrived) { Stop(); break; }
-                if (Steer(scriptTarget, walkSpeed)) ScriptArrived = true;
+                if (Steer(scriptTarget, walk)) ScriptArrived = true;
                 break;
             case State.Patrolling:
                 if (pausing || patrolPoints == null || patrolPoints.Length == 0) { Stop(); break; }
-                if (Steer(patrolPoints[patrolIndex].position, walkSpeed)) routine = StartCoroutine(LookAround(true));
+                if (Steer(patrolPoints[patrolIndex].position, walk)) routine = StartCoroutine(LookAround(true));
                 break;
             case State.Searching:
                 if (pausing) { Stop(); break; }
-                if (Steer(lastSeen, walkSpeed)) routine = StartCoroutine(LookAround(false));
+                if (Steer(lastSeen, walk)) routine = StartCoroutine(LookAround(false));
                 break;
             case State.Chasing:
-                float herSpeed = girlMove != null ? Mathf.Max(girlMove.CurrentSpeed, girlMove.WalkSpeed) : walkSpeed;
+                float herSpeed = girlMove != null ? Mathf.Max(girlMove.CurrentSpeed, girlMove.WalkSpeed) : walk;
                 Steer(girl.position, herSpeed * chaseMultiplier);
                 if (Vector2.Distance(rb.position, girl.position) <= grabRange) Grab();
                 break;
@@ -262,6 +276,7 @@ public class EntityAI : MonoBehaviour
     void Update()
     {
         if (state == State.Waiting || state == State.Grabbing || girl == null) return;
+        if (RoomTransition.IsBusy) return;                    // she's already going through the door
 
         if (CanSeeGirl())
         {
@@ -414,6 +429,7 @@ public class EntityAI : MonoBehaviour
 
     void Grab()
     {
+        if (RoomTransition.IsBusy) return;                    // too late: she made it out
         state = State.Grabbing;
         if (routine != null) StopCoroutine(routine);
         rb.linearVelocity = Vector2.zero;
@@ -441,6 +457,7 @@ public class EntityAI : MonoBehaviour
     IEnumerator ShowDeath()
     {
         yield return new WaitForSeconds(deathScreenDelay);
+        if (RoomTransition.IsBusy) yield break;               // the room is changing: no death screen
         if (deathScreen != null) { deathScreen.gameObject.SetActive(true); deathScreen.Show(); }
     }
 

@@ -30,6 +30,7 @@ public class PushableBox : MonoBehaviour
     private InteractPrompt prompt;
     private Vector2 grabOffset;
     private bool locked;
+    private float settleUntil;     // right after grabbing: walls may nudge it, that isn't "stuck"
 
     public bool IsGrabbed { get; private set; }
     public Vector3 StandPoint => transform.position + (Vector3)standOffset;
@@ -88,9 +89,22 @@ public class PushableBox : MonoBehaviour
     {
         if (!IsGrabbed) return;
         Vector2 playerPos = playerRb != null ? playerRb.position : (Vector2)player.position;
+        if (Time.time < settleUntil)
+        {
+            // the moment it becomes solid, physics may push it out of a wall it touched:
+            // follow that instead of treating it as stuck
+            rb.linearVelocity = Vector2.zero;
+            grabOffset = rb.position - playerPos;
+            return;
+        }
         Vector2 target = playerPos + grabOffset;
         Vector2 gap = target - rb.position;
-        if (gap.magnitude > stuckDistance) { Release(); return; }      // hit a wall: let go
+        if (gap.magnitude > stuckDistance)                              // hit a wall: let go
+        {
+            Debug.Log($"[PushableBox] '{name}' got stuck ({gap.magnitude:0.00} > {stuckDistance}) - she lets go.", this);
+            Release();
+            return;
+        }
         rb.linearVelocity = gap / Time.fixedDeltaTime;
     }
 
@@ -101,6 +115,8 @@ public class PushableBox : MonoBehaviour
         grabOffset = rb.position - (playerRb != null ? playerRb.position : (Vector2)player.position);
         rb.bodyType = RigidbodyType2D.Dynamic;          // dynamic so walls stop it
         rb.linearDamping = 0f;
+        settleUntil = Time.time + 0.15f;
+        Debug.Log($"[PushableBox] She grabbed '{name}'.", this);
         if (playerCol != null && boxCol != null) Physics2D.IgnoreCollision(playerCol, boxCol, true);
         if (playerMove != null) { playerMove.StandUp(); playerMove.AllowCrawl = false; playerMove.SpeedMultiplier = dragSpeed; playerMove.AllowRun = false; }
         if (playerAnim != null) playerAnim.FacingOverride = grabOffset;   // keep facing the box
@@ -127,4 +143,14 @@ public class PushableBox : MonoBehaviour
     }
 
     public void Unlock() => locked = false;
+
+    /// Current drag velocity (the bed tilts with it).
+    public Vector2 Velocity => rb != null ? rb.linearVelocity : Vector2.zero;
+
+    /// Grab it right away, e.g. when she arrives in the next room still holding Interact.
+    public void ForceGrab()
+    {
+        if (IsGrabbed || locked || player == null) return;
+        Grab();
+    }
 }

@@ -429,4 +429,440 @@ public static class GameLoopSetup
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }
+
+    // =====================================================================================
+    // 21. Electrical: add the hotbar (the same UI as the Lobby), so items survive going in and out
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/21. Electrical: Add Hotbar (keep items between rooms)")]
+    public static void AddHotbarToElectrical()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+
+        var elec = EditorSceneManager.OpenScene(ElecPath, OpenSceneMode.Single);
+        if (Object.FindFirstObjectByType<Inventory>(FindObjectsInactive.Include) != null)
+        {
+            Debug.Log("[GameLoop] Electrical already has a hotbar - nothing to do.");
+        }
+        else
+        {
+            var lobby = EditorSceneManager.OpenScene(LobbyPath, OpenSceneMode.Additive);
+            var inv = lobby.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Inventory>(true)).FirstOrDefault();
+            if (inv == null) { Debug.LogWarning("[GameLoop] No Inventory found in the Lobby."); EditorSceneManager.CloseScene(lobby, true); return; }
+            var uiRoot = inv.transform.root.gameObject;                 // the Lobby's UI canvas (HotBar inside)
+            var copy = Object.Instantiate(uiRoot);
+            copy.name = uiRoot.name;
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(copy, elec);
+            EditorSceneManager.CloseScene(lobby, true);
+            EditorSceneManager.MarkSceneDirty(elec);
+            EditorSceneManager.SaveScene(elec);
+            Debug.Log($"[GameLoop] Copied the Lobby's '{uiRoot.name}' (hotbar + Inventory) into Electrical and saved it.");
+        }
+
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != ElecPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+    }
+
+    // =====================================================================================
+    // 22. Floor2 -> Patient Room (Dr. Mundo's cabinet): door centred on the Dr. Mundo door + hotbar in the room
+    // =====================================================================================
+    const string Floor2Path = "Assets/Scenes/Rooms/Floor2.unity";
+    const string PatientPath = "Assets/Scenes/Rooms/Patient Room.unity";
+
+    [MenuItem("Tools/Horror Room/22. Floor2: Door to Patient Room (Dr. Mundo)")]
+    public static void Floor2ToPatientRoom()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var a = ButtonA();
+
+        // ---- Floor2: the door in front of "Dr. Mundo" (2ndFloor_2.png, 100 px/unit, door at x ~1.8 on the top wall)
+        var f2 = EditorSceneManager.OpenScene(Floor2Path, OpenSceneMode.Single);
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        var door = Find(f2, "DoorToPatients");
+        if (door == null)
+        {
+            var spawns = Find(f2, "Spawns");
+            door = Child(spawns != null ? spawns.transform : null, "DoorToPatients");
+        }
+        door.transform.position = new Vector3(1.8f, 2.4f, 0f);
+        var exit = Get<DoorExit>(door);
+        var so = new SerializedObject(exit);
+        so.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
+        if (a != null) so.FindProperty("interactAction").objectReferenceValue = a;
+        so.FindProperty("reachDistance").floatValue = 1.3f;
+        so.FindProperty("sceneName").stringValue = "Patient Room";
+        so.FindProperty("entryId").stringValue = "PatientsFromFloor2";
+        so.FindProperty("fainting").boolValue = true;
+        so.FindProperty("requireLeverPulled").boolValue = false;
+        so.FindProperty("requireKickedOpen").boolValue = false;
+        so.ApplyModifiedProperties();
+        // she comes back out right in front of the same door
+        var back = Find(f2, "SpawnPointPatients");
+        if (back != null)
+        {
+            back.transform.position = new Vector3(1.8f, 1.85f, 0f);
+            var sp = back.GetComponent<RoomSpawnPoint>();
+            if (sp != null) { var sso = new SerializedObject(sp); sso.FindProperty("entryId").stringValue = "Floor2FromPatients"; sso.FindProperty("faceDirection").vector2Value = Vector2.down; sso.ApplyModifiedProperties(); }
+        }
+        EditorSceneManager.MarkSceneDirty(f2);
+        EditorSceneManager.SaveScene(f2);
+
+        // ---- Patient Room: needs the hotbar so her items survive the visit
+        var pr = EditorSceneManager.OpenScene(PatientPath, OpenSceneMode.Single);
+        if (Object.FindFirstObjectByType<Inventory>(FindObjectsInactive.Include) == null)
+        {
+            var lobby = EditorSceneManager.OpenScene(LobbyPath, OpenSceneMode.Additive);
+            var inv = lobby.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Inventory>(true)).FirstOrDefault();
+            if (inv != null)
+            {
+                var copy = Object.Instantiate(inv.transform.root.gameObject);
+                copy.name = inv.transform.root.name;
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(copy, pr);
+            }
+            EditorSceneManager.CloseScene(lobby, true);
+        }
+        EditorSceneManager.MarkSceneDirty(pr);
+        EditorSceneManager.SaveScene(pr);
+
+        if (!string.IsNullOrEmpty(returnTo)) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Floor2: A at the Dr. Mundo door -> Patient Room (arrives at 'PatientsFromFloor2'); coming back she stands in front of it. Patient Room has the hotbar. Both saved.");
+    }
+
+    // =====================================================================================
+    // 23. Patient Room: the bed can be pushed / pulled (hold A next to it, then walk)
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/23. Patient Room: Push / Pull the Bed")]
+    public static void PatientRoomBed()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+
+        var pr = EditorSceneManager.OpenScene(PatientPath, OpenSceneMode.Single);
+        var bed = Find(pr, "Bed");
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        if (bed == null) { Debug.LogWarning("[GameLoop] Patient Room: no 'Bed' object."); return; }
+        // the bed's footprint as a box that stays inside the room's walls (the old outline poked into the wall,
+        // so the first grab only shoved it out of the wall and she let go)
+        var oldCol = bed.GetComponent<Collider2D>();
+        Bounds bb = oldCol != null ? oldCol.bounds : new Bounds(bed.transform.position, Vector3.one);
+        var wall = Find(pr, "Background") != null ? Find(pr, "Background").GetComponent<EdgeCollider2D>() : null;
+        if (wall != null)
+        {
+            Bounds wb = wall.bounds;
+            float top = wb.max.y - 0.15f, bottom = wb.min.y + 0.15f, left = wb.min.x + 1.2f, right = wb.max.x - 1.2f;
+            float minX = Mathf.Max(bb.min.x, left), maxX = Mathf.Min(bb.max.x, right);
+            float minY = Mathf.Max(bb.min.y, bottom), maxY = Mathf.Min(bb.max.y, top);
+            bb.SetMinMax(new Vector3(minX, minY, 0f), new Vector3(maxX, maxY, 0f));
+        }
+        foreach (var c in bed.GetComponents<Collider2D>()) Object.DestroyImmediate(c);
+        var boxCol = bed.AddComponent<BoxCollider2D>();
+        Vector3 ls = bed.transform.lossyScale;
+        boxCol.offset = bed.transform.InverseTransformPoint(bb.center);
+        boxCol.size = new Vector2(bb.size.x / Mathf.Abs(ls.x), bb.size.y / Mathf.Abs(ls.y));
+        Debug.Log($"[GameLoop] Patient Room bed collider: world {bb.min} .. {bb.max} (inside the walls).");
+
+        var rb = Get<Rigidbody2D>(bed);
+        rb.gravityScale = 0f;
+        rb.bodyType = RigidbodyType2D.Kinematic;          // PushableBox makes it dynamic only while she holds it
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.mass = 40f;
+
+        var box = Get<PushableBox>(bed);
+        var so = new SerializedObject(box);
+        so.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
+        var a = ButtonA(); if (a != null) so.FindProperty("interactAction").objectReferenceValue = a;
+        so.FindProperty("lever").objectReferenceValue = null;
+        so.FindProperty("grabDistance").floatValue = 0.7f;   // from her feet to the bed's edge
+        so.FindProperty("dragSpeed").floatValue = 0.28f;     // heavy bed: much slower than the box
+        so.FindProperty("stuckDistance").floatValue = 0.4f;
+        so.ApplyModifiedProperties();
+
+        EditorSceneManager.MarkSceneDirty(pr);
+        EditorSceneManager.SaveScene(pr);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != PatientPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Patient Room: the Bed can be pushed / pulled - stand next to it, HOLD A and walk; let go of A to drop it. Saved.");
+    }
+
+    // =====================================================================================
+    // 24. The bed's journey: tilt while dragged, drag it out of the Patient Room, push it into Floor2's hole
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/24. Bed: Drag Out of the Cabinet + Into Floor2's Hole")]
+    public static void BedJourney()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var a = ButtonA();
+
+        // ---- Patient Room: tilt + leave the room together with the bed
+        var pr = EditorSceneManager.OpenScene(PatientPath, OpenSceneMode.Single);
+        var bed = Find(pr, "Bed");
+        var box = bed != null ? bed.GetComponent<PushableBox>() : null;
+        if (box == null) { Debug.LogWarning("[GameLoop] Patient Room: run step 23 first (the Bed has no PushableBox)."); return; }
+        { var tso = new SerializedObject(Get<BedTilt>(bed)); tso.FindProperty("tiltPerSpeed").floatValue = 16f; tso.ApplyModifiedProperties(); }
+        var prPlayer = Object.FindFirstObjectByType<TopDownMovement>();
+        var exitGo = Find(pr, "Exit");
+        var exitDoor = exitGo != null ? exitGo.GetComponent<DoorExit>() : null;
+        var carry = Get<BedCarryExit>(Child(bed.transform.parent, "BedCarryExit"));
+        var cso = new SerializedObject(carry);
+        cso.FindProperty("bed").objectReferenceValue = box;
+        cso.FindProperty("player").objectReferenceValue = prPlayer != null ? prPlayer.transform : null;
+        cso.FindProperty("exit").objectReferenceValue = exitGo != null ? exitGo.transform : null;
+        cso.FindProperty("reach").floatValue = exitDoor != null ? Mathf.Max(1.3f, new SerializedObject(exitDoor).FindProperty("reachDistance").floatValue) : 1.3f;
+        cso.FindProperty("sceneName").stringValue = "Floor2";
+        cso.FindProperty("entryId").stringValue = "Floor2FromPatients";
+        cso.ApplyModifiedProperties();
+
+        // what the bed looks like, to copy it onto the second floor
+        var bedSr = bed.GetComponent<SpriteRenderer>();
+        Sprite bedSprite = bedSr != null ? bedSr.sprite : null;
+        int layer = bedSr != null ? bedSr.sortingLayerID : 0, order = bedSr != null ? bedSr.sortingOrder : 0;
+        var mat = bedSr != null ? bedSr.sharedMaterial : null;
+        var sortPoint = bedSr != null ? bedSr.spriteSortPoint : SpriteSortPoint.Center;
+        float bedScale = bed.transform.lossyScale.x;
+        float prGirl = prPlayer != null ? prPlayer.transform.lossyScale.x : 1f;
+        EditorSceneManager.MarkSceneDirty(pr);
+        EditorSceneManager.SaveScene(pr);
+
+        // ---- Floor2: the same bed, sized to the girl there, + the hole it can fall through
+        var f2 = EditorSceneManager.OpenScene(Floor2Path, OpenSceneMode.Single);
+        var f2Player = Object.FindFirstObjectByType<TopDownMovement>();
+        float f2Girl = f2Player != null ? f2Player.transform.lossyScale.x : 1f;
+        var bg = Find(f2, "Background");
+        var hole = bg != null ? bg.GetComponent<CapsuleCollider2D>() : null;
+
+        var old = Find(f2, "Bed_FromCabinet"); if (old != null) Object.DestroyImmediate(old);
+        var fb = new GameObject("Bed_FromCabinet");
+        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(fb, f2);
+        fb.transform.position = new Vector3(1.8f, 0.9f, 0f);
+        float sc = bedScale * (f2Girl / Mathf.Max(0.01f, prGirl));
+        fb.transform.localScale = new Vector3(sc, sc, 1f);
+        var sr = fb.AddComponent<SpriteRenderer>();
+        sr.sprite = bedSprite; sr.sortingLayerID = layer; sr.sortingOrder = order; sr.spriteSortPoint = sortPoint;
+        if (mat != null) sr.sharedMaterial = mat;
+        fb.AddComponent<PolygonCollider2D>();                     // shape from the bed sprite
+        var rb = fb.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f; rb.bodyType = RigidbodyType2D.Kinematic; rb.constraints = RigidbodyConstraints2D.FreezeRotation; rb.mass = 40f;
+        var fbox = fb.AddComponent<PushableBox>();
+        var bso = new SerializedObject(fbox);
+        bso.FindProperty("player").objectReferenceValue = f2Player != null ? f2Player.transform : null;
+        if (a != null) bso.FindProperty("interactAction").objectReferenceValue = a;
+        bso.FindProperty("grabDistance").floatValue = 0.7f;
+        bso.FindProperty("dragSpeed").floatValue = 0.28f;
+        bso.FindProperty("stuckDistance").floatValue = 0.4f;
+        bso.ApplyModifiedProperties();
+        { var tso = new SerializedObject(fb.AddComponent<BedTilt>()); tso.FindProperty("tiltPerSpeed").floatValue = 16f; tso.ApplyModifiedProperties(); }
+
+        var evGo = Child(bg != null ? bg.transform : null, "BedHole");
+        Vector2 hc = hole != null ? (Vector2)hole.transform.TransformPoint(hole.offset) : new Vector2(3.1f, -1.35f);
+        evGo.transform.position = hc;
+        var ev = Get<Floor2Bed>(evGo);
+        var eso = new SerializedObject(ev);
+        eso.FindProperty("bed").objectReferenceValue = fbox;
+        eso.FindProperty("player").objectReferenceValue = f2Player != null ? f2Player.transform : null;
+        eso.FindProperty("holeCollider").objectReferenceValue = hole;
+        eso.FindProperty("holeCentre").objectReferenceValue = evGo.transform;
+        eso.FindProperty("holeRadii").vector2Value = hole != null ? new Vector2(hole.size.x * 0.36f, hole.size.y * 0.33f) : new Vector2(1.25f, 0.9f);
+        eso.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(f2);
+        EditorSceneManager.SaveScene(f2);
+
+        if (!string.IsNullOrEmpty(returnTo)) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log($"[GameLoop] Bed journey set up: Patient Room bed tilts and leaves with her; Floor2 has 'Bed_FromCabinet' (scale {sc:0.###}) and the hole at {hc}. Both saved.");
+    }
+
+    // =====================================================================================
+    // 25. Patient Room: when she first drags the bed his shadow creeps in, he walks round the bed, waits, leaves
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/25. Patient Room: Psycho Visit When the Bed Moves")]
+    public static void PatientRoomVisitSetup()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var psychoAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PsychoPrefab);
+        var deathAsset = AssetDatabase.LoadAssetAtPath<GameObject>(DeathPrefab);
+        if (psychoAsset == null || deathAsset == null) { Debug.LogWarning("[GameLoop] Run step 20 first (it makes the psycho prefabs)."); return; }
+
+        var pr = EditorSceneManager.OpenScene(PatientPath, OpenSceneMode.Single);
+        var bed = Find(pr, "Bed");
+        var box = bed != null ? bed.GetComponent<PushableBox>() : null;
+        if (box == null) { Debug.LogWarning("[GameLoop] Patient Room: run step 23 first (the bed isn't draggable yet)."); return; }
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        var bgGo = Find(pr, "Background");
+        var floor = bgGo != null ? bgGo.GetComponent<SpriteRenderer>() : null;
+
+        var old = Find(pr, "Psycho"); if (old != null) Object.DestroyImmediate(old);
+        var oldDeath = Find(pr, "PsychoDeathScreen"); if (oldDeath != null) Object.DestroyImmediate(oldDeath);
+        var death = (GameObject)PrefabUtility.InstantiatePrefab(deathAsset, pr); death.name = "PsychoDeathScreen";
+        var psychoGo = (GameObject)PrefabUtility.InstantiatePrefab(psychoAsset, pr); psychoGo.name = "Psycho";
+        // same size relation to the girl as in Electrical (the girl there has scale 1)
+        float girl = player != null ? player.transform.lossyScale.x : 1f;
+        psychoGo.transform.localScale = new Vector3(girl, girl, 1f);
+
+        var visitGo = Find(pr, "PsychoVisit_Bed");
+        if (visitGo == null) { visitGo = new GameObject("PsychoVisit_Bed"); UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(visitGo, pr); }
+        var doorPt = Child(visitGo.transform, "Door"); doorPt.transform.position = new Vector3(0f, -4.4f, 0f);
+        psychoGo.transform.position = doorPt.transform.position;
+
+        var ai = psychoGo.GetComponent<EntityAI>();
+        var aso = new SerializedObject(ai);
+        aso.FindProperty("girl").objectReferenceValue = player != null ? player.transform : null;
+        aso.FindProperty("deathScreen").objectReferenceValue = death.GetComponent<DeathScreen>();
+        aso.FindProperty("lurksInElectrical").boolValue = false;
+        aso.FindProperty("standingAlwaysSeen").boolValue = false;      // only his cone counts: stay out of it / hide
+        aso.FindProperty("patrolPoints").arraySize = 0;
+        foreach (var n in new[] { "lever", "leverStandPoint", "doorOutside", "doorInside", "doorOpen", "brokenDoor", "lurkPoint" })
+        { var pp = aso.FindProperty(n); if (pp != null) pp.objectReferenceValue = null; }
+        aso.ApplyModifiedProperties();
+
+        var vso = new SerializedObject(Get<PatientRoomVisit>(visitGo));
+        vso.FindProperty("psycho").objectReferenceValue = ai;
+        vso.FindProperty("bed").objectReferenceValue = box;
+        vso.FindProperty("door").objectReferenceValue = doorPt.transform;
+        vso.FindProperty("floor").objectReferenceValue = floor;
+        vso.FindProperty("startDelay").floatValue = 4f;
+        vso.FindProperty("roundTime").floatValue = 3f;
+        vso.FindProperty("idleTime").floatValue = 3f;
+        var wall = bgGo != null ? bgGo.GetComponent<EdgeCollider2D>() : null;
+        if (wall != null)
+        {
+            Bounds wb = wall.bounds;
+            vso.FindProperty("floorArea").rectValue = Rect.MinMaxRect(wb.min.x + 1.3f, wb.min.y + 0.3f, wb.max.x - 1.3f, wb.max.y - 0.25f);
+        }
+        vso.ApplyModifiedProperties();
+
+        EditorSceneManager.MarkSceneDirty(pr);
+        EditorSceneManager.SaveScene(pr);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != PatientPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Patient Room: first time she drags the bed, his shadow creeps in through the door, he walks round the bed (3 s), waits (3 s) and leaves. Saved.");
+    }
+
+    // =====================================================================================
+    // 26. Floor2: after the bed crashes through the hole he comes up the stairs and patrols (hole, then desk) until she leaves
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/26. Floor2: Psycho Patrol After the Bed Falls")]
+    public static void Floor2PatrolSetup()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var psychoAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PsychoPrefab);
+        var deathAsset = AssetDatabase.LoadAssetAtPath<GameObject>(DeathPrefab);
+        if (psychoAsset == null || deathAsset == null) { Debug.LogWarning("[GameLoop] Run step 20 first (it makes the psycho prefabs)."); return; }
+
+        var f2 = EditorSceneManager.OpenScene(Floor2Path, OpenSceneMode.Single);
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+
+        var old = Find(f2, "Psycho"); if (old != null) Object.DestroyImmediate(old);
+        var oldDeath = Find(f2, "PsychoDeathScreen"); if (oldDeath != null) Object.DestroyImmediate(oldDeath);
+        var death = (GameObject)PrefabUtility.InstantiatePrefab(deathAsset, f2); death.name = "PsychoDeathScreen";
+        var psychoGo = (GameObject)PrefabUtility.InstantiatePrefab(psychoAsset, f2); psychoGo.name = "Psycho";
+        float girl = player != null ? player.transform.lossyScale.x : 1f;       // same size relation as in Electrical
+        psychoGo.transform.localScale = new Vector3(girl, girl, 1f);
+
+        var root = Find(f2, "PsychoPatrol_Floor2");
+        if (root == null) { root = new GameObject("PsychoPatrol_Floor2"); UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root, f2); }
+        Transform P(string n, float x, float y) { var g = Child(root.transform, n); g.transform.position = new Vector3(x, y, 0f); return g.transform; }
+        var top = P("StairsTop", -3.1f, 1.9f);
+        var off = P("OffStairs", -2.3f, 0.9f);
+        var pts = new[]
+        {
+            // around the hole (centre 3.1, -1.35)
+            P("Hole_Top", 3.1f, 0.65f), P("Hole_Right", 5.7f, -1.35f), P("Hole_Bottom", 3.1f, -3.35f), P("Hole_Left", 0.5f, -1.35f),
+            // around the desk (centre -4.5, -2.6)
+            P("Desk_RightTop", -2.6f, -1.6f), P("Desk_RightBottom", -2.6f, -3.4f), P("Desk_LeftBottom", -6.4f, -3.4f), P("Desk_LeftTop", -6.4f, -1.6f),
+        };
+        psychoGo.transform.position = top.position;
+
+        var ai = psychoGo.GetComponent<EntityAI>();
+        var aso = new SerializedObject(ai);
+        aso.FindProperty("girl").objectReferenceValue = player != null ? player.transform : null;
+        aso.FindProperty("deathScreen").objectReferenceValue = death.GetComponent<DeathScreen>();
+        aso.FindProperty("lurksInElectrical").boolValue = false;
+        aso.FindProperty("standingAlwaysSeen").boolValue = false;      // big floor: only his cone counts
+        aso.FindProperty("patrolPoints").arraySize = 0;
+        foreach (var n in new[] { "lever", "leverStandPoint", "doorOutside", "doorInside", "doorOpen", "brokenDoor", "lurkPoint" })
+        { var pp = aso.FindProperty(n); if (pp != null) pp.objectReferenceValue = null; }
+        aso.ApplyModifiedProperties();
+
+        var fso = new SerializedObject(Get<Floor2Patrol>(root));
+        fso.FindProperty("psycho").objectReferenceValue = ai;
+        fso.FindProperty("stairsTop").objectReferenceValue = top;
+        fso.FindProperty("offStairs").objectReferenceValue = off;
+        var pa = fso.FindProperty("patrol"); pa.arraySize = pts.Length;
+        for (int i = 0; i < pts.Length; i++) pa.GetArrayElementAtIndex(i).objectReferenceValue = pts[i];
+        fso.ApplyModifiedProperties();
+
+        EditorSceneManager.MarkSceneDirty(f2);
+        EditorSceneManager.SaveScene(f2);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != Floor2Path) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Floor2: 2 s after the bed falls he comes up the stairs and patrols the hole, then the desk, in a loop until she leaves. Saved.");
+    }
+
+    // =====================================================================================
+    // 27. Floor2: slower pace for her and the psycho (that floor is zoomed in and the girl is smaller)
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/27. Floor2: Slower Pace (girl + psycho)")]
+    public static void Floor2Pace()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var f2 = EditorSceneManager.OpenScene(Floor2Path, OpenSceneMode.Single);
+        var go = Find(f2, "RoomPace");
+        if (go == null) { go = new GameObject("RoomPace"); UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go, f2); }
+        var so = new SerializedObject(Get<RoomPace>(go));
+        so.FindProperty("factor").floatValue = 0.6f;
+        so.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(f2);
+        EditorSceneManager.SaveScene(f2);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != Floor2Path) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Floor2 runs at 0.6x speed for the girl and the psycho (RoomPace object). Saved.");
+    }
+
+    // =====================================================================================
+    // 28. Operating room: a lamp that clearly flickers + a card that's easy to pick up
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/28. Operating Room: Stronger Lamp Flicker + Card Pickup")]
+    public static void OperatingRoomFix()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var sw = EditorSceneManager.OpenScene(SurgPath, OpenSceneMode.Single);
+
+        var lampGo = Find(sw, "SurgeryLamp");
+        var lamp = lampGo != null ? lampGo.GetComponent<SurgeryLamp>() : null;
+        if (lamp != null)
+        {
+            var so = new SerializedObject(lamp);
+            so.FindProperty("baseIntensity").floatValue = 1.1f;
+            so.FindProperty("wobble").floatValue = 0.25f;
+            so.FindProperty("dipEvery").vector2Value = new Vector2(0.4f, 2.0f);
+            so.FindProperty("blackoutChance").floatValue = 0.3f;
+            so.FindProperty("burstChance").floatValue = 0.45f;
+            so.FindProperty("ringDarkness").floatValue = 0.5f;
+            so.FindProperty("dipDarkness").floatValue = 0.85f;      // the painted glow goes dark with the lamp
+            so.ApplyModifiedProperties();
+        }
+        else Debug.LogWarning("[GameLoop] SurgicalWing: no SurgeryLamp - run step 19 first.");
+
+        var card = Find(sw, "Card");
+        var pick = card != null ? card.GetComponent<StoryPickup>() : null;
+        if (pick != null)
+        {
+            var so = new SerializedObject(pick);
+            so.FindProperty("reach").floatValue = 1.5f;
+            so.ApplyModifiedProperties();
+            // trigger for the team's InteractionDetector, around the card picture
+            var sr = card.GetComponent<SpriteRenderer>();
+            var trig = card.GetComponent<CircleCollider2D>();
+            if (trig == null) trig = card.AddComponent<CircleCollider2D>();
+            trig.isTrigger = true;
+            trig.radius = 0.9f / Mathf.Max(0.01f, card.transform.lossyScale.x);
+            if (sr != null && sr.sprite != null) trig.offset = sr.sprite.bounds.center;
+        }
+        else Debug.LogWarning("[GameLoop] SurgicalWing: no Card - run step 19 first.");
+
+        EditorSceneManager.MarkSceneDirty(sw);
+        EditorSceneManager.SaveScene(sw);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != SurgPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Operating room: lamp flickers hard (stutters, dips, blackouts), card reach 1.5 + interaction trigger. Saved.");
+    }
 }
