@@ -5,7 +5,7 @@
 // 5. Build Box + Lever Puzzle     : pushable box (cut out of the room art) + breaker lever on the left wall.
 // 6. Add Door Lamp Scare          : lamp over the door flickers after the lever; last flash shows his face in the window.
 // 7. Use Current Lever Pose as Pulled : pose the Lever by hand, run this, it becomes the pulled state.
-// 8. Add Interact Prompt (U)      : key icon over the girl's head when she can use something.
+// 8. Add Interact Prompt          : shows the active binding over the girl's head.
 // 9. Set Arcade Controls          : A = interact, B = run, C = crawl, D = flashlight (Player prefab + open scene).
 // 10. Build Psycho Ambush         : desk cover, door kick, the psycho (vision cone, chase, grab) and the death screen.
 // 11. Add Door Exit               : press A at the open door to go to the information room.
@@ -419,7 +419,7 @@ public static class HorrorRoomSetup
         Debug.Log("[HorrorRoom] Saved that pose as the pulled lever and put the handle back up. Pull Time 0 = instant snap.");
     }
 
-    [MenuItem("Tools/Horror Room/8. Add Interact Prompt (U) to Player")]
+    [MenuItem("Tools/Horror Room/8. Add Interact Prompt to Player")]
     public static void AddInteractPrompt()
     {
         var player = Object.FindFirstObjectByType<TopDownMovement>();
@@ -429,35 +429,10 @@ public static class HorrorRoomSetup
             Debug.Log("[HorrorRoom] The Player already has an InteractPrompt.");
             return;
         }
-        const string iconPath = "Assets/Images/prompt_key_u.png";
-        var ti = AssetImporter.GetAtPath(iconPath) as TextureImporter;
-        if (ti != null)
-        {
-            ti.textureType = TextureImporterType.Sprite;
-            ti.spriteImportMode = SpriteImportMode.Single;
-            ti.spritePixelsPerUnit = 160f;            // ~0.45 units wide
-            ti.alphaIsTransparency = true;
-            ti.mipmapEnabled = false;
-            ti.textureCompression = TextureImporterCompression.Uncompressed;
-            ti.SaveAndReimport();
-        }
-        var psr = player.GetComponentInChildren<SpriteRenderer>();
-
-        var go = new GameObject("InteractPrompt");
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/InteractPrompt.prefab");
+        var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, player.transform);
         Undo.RegisterCreatedObjectUndo(go, "Add interact prompt");
-        go.transform.SetParent(player.transform, false);
-        go.transform.localPosition = new Vector3(0f, 2.35f, 0f);    // just above her head (she is ~2 units tall)
-        var sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath);
-        if (psr != null) sr.sortingLayerID = psr.sortingLayerID;
-        sr.sortingOrder = 100;                                      // always on top
-        // unlit: stays readable in the dark room
-        var unlit = AssetDatabase.LoadAssetAtPath<Material>("Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat");
-        if (unlit != null) sr.sharedMaterial = unlit;
-        var prompt = go.AddComponent<InteractPrompt>();
-        var so = new SerializedObject(prompt);
-        so.FindProperty("icon").objectReferenceValue = sr;
-        so.ApplyModifiedProperties();
+        go.transform.localPosition = new Vector3(0f, 2.35f, 0f);
         EditorUtility.SetDirty(player.gameObject);
         Selection.activeGameObject = go;
         Debug.Log("[HorrorRoom] Interact prompt added to the Player. If it's a prefab instance, use Overrides > Apply All.");

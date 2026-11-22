@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class InteractionPrompt : MonoBehaviour
 {
     private TextMeshPro label;
+    private SpriteRenderer circle;
     private InputDevice lastDevice;
 
     public void Initialize()
@@ -21,12 +22,24 @@ public class InteractionPrompt : MonoBehaviour
         label.alignment = TextAlignmentOptions.Center;
         label.color = Color.white;
         label.richText = false;
-        SpriteRenderer circle = GetComponent<SpriteRenderer>();
+        circle = GetComponent<SpriteRenderer>();
+        if (circle == null) return;
         label.sortingLayerID = circle.sortingLayerID;
         label.sortingOrder = circle.sortingOrder + 1;
     }
 
     public void SetDevice(InputDevice device) => lastDevice = device;
+
+    public void SetAlpha(float alpha)
+    {
+        label.alpha = alpha;
+        label.enabled = alpha > 0f;
+        if (circle == null) return;
+        var color = circle.color;
+        color.a = alpha;
+        circle.color = color;
+        circle.enabled = alpha > 0f;
+    }
 
     public void Refresh(InputAction action)
     {

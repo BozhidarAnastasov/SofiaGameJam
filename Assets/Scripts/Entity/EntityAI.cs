@@ -4,14 +4,14 @@ using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 /// The psycho. Waits outside until BeginEntrance() (called when the door lamp scare ends),
-/// kicks the door in after a short delay, walks straight to the lever and shoves it back up,
-/// then patrols. His red vision cone shows where he is looking. If the girl is inside it
+/// kicks the door in after a short delay, walks to the lever to investigate (the power stays on),
+/// then patrols. Other rooms can drive him along a scripted route (ScriptAppear / ScriptWalkTo). His red vision cone shows where he is looking. If the girl is inside it
 /// (and not hidden), he chases her at 1.5x her speed; when he reaches her he grabs her
 /// and the death screen appears.
 [RequireComponent(typeof(Rigidbody2D))]
 public class EntityAI : MonoBehaviour
 {
-    public enum State { Waiting, Entering, GoingToLever, AtLever, Patrolling, Searching, Chasing, Grabbing }
+    public enum State { Waiting, Entering, GoingToLever, AtLever, Patrolling, Searching, Chasing, Grabbing, Scripted }
 
     [Header("Scene")]
     [SerializeField] private Transform girl;
@@ -29,6 +29,15 @@ public class EntityAI : MonoBehaviour
     [SerializeField] private float kickDelay = 2f;
     [SerializeField] private float leverPause = 1.5f;
     [SerializeField] private float lookAroundTime = 1.6f;
+    [Tooltip("Old behaviour: at the lever he shoves it back up and the lights die. Off = he only checks the fuse box.")]
+    [SerializeField] private bool pushLeverBack = false;
+
+    [Header("Game loop")]
+    [Tooltip("Electrical: once StoryFlag.EnemyInElectrical is set he is already in the room and goes straight for her.")]
+    [SerializeField] private bool lurksInElectrical = true;
+    [Tooltip("Where he waits in Electrical (defaults to the lever stand).")]
+    [SerializeField] private Transform lurkPoint;
+    [SerializeField] private float lurkPounceDelay = 0.8f;
 
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 1.6f;
@@ -49,6 +58,12 @@ public class EntityAI : MonoBehaviour
     [Tooltip("Seconds without seeing her before he gives up the chase and searches.")]
     [SerializeField] private float loseSightTime = 3f;
     [SerializeField] private float turnSpeed = 300f;
+    [Tooltip("On: standing up she is seen anywhere (small rooms). Off: only inside the cone (big rooms like the Lobby).")]
+    [SerializeField] private bool standingAlwaysSeen = true;
+    [Tooltip("Hidden under the coat with the flashlight ON: he can still spot her light, but only within this part of his range...")]
+    [SerializeField, Range(0f, 1f)] private float hiddenLightRange = 0.5f;
+    [Tooltip("...and this part of his cone angle (narrowed vision: she is mostly covered).")]
+    [SerializeField, Range(0f, 1f)] private float hiddenLightAngle = 0.5f;
 
     [Header("Grab")]
     [Tooltip("Sideways distance from her to his pivot so the grab art lines up with where she was.")]
@@ -111,8 +126,75 @@ public class EntityAI : MonoBehaviour
         // hidden outside until the door is kicked
         SetVisible(false);
         rb.simulated = false;
-        if (doorOpen != null) doorOpen.enabled = false;
-        if (brokenDoor != null) brokenDoor.enabled = false;
+        // the door stays kicked in when she comes back later
+        bool kicked = GameProgress.Get(StoryFlag.ElectricalDoorKicked);
+        if (doorOpen != null) doorOpen.enabled = kicked;
+        if (brokenDoor != null) brokenDoor.enabled = kicked;
+    }
+
+    void Start()
+    {
+        if (lurksInElectrical && doorOpen != null && GameProgress.Get(StoryFlag.EnemyInElectrical))
+            StartCoroutine(Lurk());          // not stored in 'routine': ScriptAppear stops that one
+    }
+
+    // Electrical after his walk through the Lobby: he is already here and comes straight at her.
+    IEnumerator Lurk()
+    {
+        Transform p = lurkPoint != null ? lurkPoint : leverStandPoint;
+        Debug.Log("[EntityAI] He is waiting in Electrical - going straight for her.", this);
+        ScriptAppear(p != null ? (Vector2)p.position : rb.position, girl != null ? (Vector2)(girl.position - (p != null ? p.position : transform.position)) : Vector2.left);
+        yield return new WaitForSeconds(lurkPounceDelay);
+        StartChase();
+    }
+
+    // ---- scripted routes (used by the Lobby walk)
+    private Vector2 scriptTarget;
+    private bool hasScript;
+
+    /// True when he reached the point given to ScriptWalkTo (or got stuck on the way for a few seconds).
+    public bool ScriptArrived { get; private set; } = true;
+
+    /// True while he is after her (chasing, searching, grabbing): a script should wait.
+    public bool Hunting => state == State.Chasing || state == State.Searching || state == State.Grabbing;
+
+    /// Make him appear at a point, visible and solid, ready to walk a route.
+    public void ScriptAppear(Vector2 pos, Vector2 look)
+    {
+        if (routine != null) StopCoroutine(routine);
+        pausing = false;
+        transform.position = pos;
+        rb.position = pos;
+        SetVisible(true);
+        rb.simulated = true;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        if (col != null) col.enabled = true;
+        if (look.sqrMagnitude > 0.001f) lookDir = look.normalized;
+        if (visionLight != null) visionLight.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(-lookDir.x, lookDir.y) * Mathf.Rad2Deg);
+        hasScript = true;
+        ScriptArrived = true;
+        state = State.Scripted;
+    }
+
+    /// Walk to a point (his vision stays on; if he spots her he chases, and afterwards resumes this walk).
+    public void ScriptWalkTo(Vector2 target)
+    {
+        scriptTarget = target;
+        ScriptArrived = false;
+        hasScript = true;
+        if (state == State.Waiting) return;
+        if (!Hunting) state = State.Scripted;
+    }
+
+    /// He leaves (through a door / up the stairs): hidden and switched off until he appears again.
+    public void ScriptVanish()
+    {
+        if (routine != null) StopCoroutine(routine);
+        pausing = false;
+        Stop();
+        SetVisible(false);
+        rb.simulated = false;
+        state = State.Waiting;
     }
 
     void SetVisible(bool on)
@@ -168,6 +250,7 @@ public class EntityAI : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;     // through the doorway without bumping the wall collider
         if (col != null) col.enabled = false;
         lookDir = doorInside != null ? ((Vector2)(doorInside.position - transform.position)).normalized : Vector2.left;
+        GameProgress.Set(StoryFlag.ElectricalDoorKicked);      // the Lobby side of this door is now a dark hole
         state = State.Entering;
         onEnter.Invoke();
     }
@@ -192,6 +275,10 @@ public class EntityAI : MonoBehaviour
                 break;
             case State.GoingToLever:
                 if (Steer(leverStandPoint.position, walkSpeed)) { state = State.AtLever; routine = StartCoroutine(AtLever()); }
+                break;
+            case State.Scripted:
+                if (pausing || ScriptArrived) { Stop(); break; }
+                if (Steer(scriptTarget, walkSpeed)) ScriptArrived = true;
                 break;
             case State.Patrolling:
                 if (pausing || patrolPoints == null || patrolPoints.Length == 0) { Stop(); break; }
@@ -277,6 +364,7 @@ public class EntityAI : MonoBehaviour
     bool CanSeeGirl()
     {
         if (girlMove != null && !girlMove.enabled) return false;
+        if (CoatHide.IsHidden) return CanSeeHiddenLight();
         var girlSr = girl.GetComponentInChildren<SpriteRenderer>();
         if (girlSr != null && !girlSr.enabled) return false;
 
@@ -286,9 +374,10 @@ public class EntityAI : MonoBehaviour
         float dist = to.magnitude;
         bool crawling = girlMove != null && girlMove.IsCrawling;
 
-        // standing up she is always seen (once he is in the room); only crawling can hide her
-        if (!crawling) return true;
-        float range = viewRange * crawlViewMultiplier;
+        // small rooms: standing up she is always seen (once he is in the room); only crawling can hide her.
+        // big rooms: standing or crawling, only what is inside his cone counts.
+        if (!crawling && standingAlwaysSeen) return true;
+        float range = crawling ? viewRange * crawlViewMultiplier : viewRange;
         if (dist > range) return false;
         // compare against where the cone actually points
         Vector2 coneDir = visionLight != null ? (Vector2)visionLight.transform.up : lookDir;
@@ -299,6 +388,22 @@ public class EntityAI : MonoBehaviour
             var cover = hit.collider.GetComponent<VisionCover>();
             if (cover != null && (!cover.lowCover || crawling)) return false;
         }
+        return true;
+    }
+
+    // Under the coat she is invisible - unless her flashlight is on. Then he can notice the light,
+    // but only closer and more straight ahead than usual (narrowed vision).
+    private PlayerFlashlight girlLight;
+    bool CanSeeHiddenLight()
+    {
+        if (girlLight == null) girlLight = girl.GetComponentInChildren<PlayerFlashlight>();
+        if (girlLight == null || !girlLight.IsOn) return false;
+        Vector2 eye = rb.position, her = girl.position, to = her - eye;
+        if (to.magnitude > viewRange * hiddenLightRange) return false;
+        Vector2 coneDir = visionLight != null ? (Vector2)visionLight.transform.up : lookDir;
+        if (Vector2.Angle(coneDir, to) > visionAngle * hiddenLightAngle * 0.5f) return false;
+        foreach (var hit in Physics2D.LinecastAll(eye, her))
+            if (hit.collider.GetComponent<VisionCover>() != null) return false;     // any cover hides the glow
         return true;
     }
 
@@ -339,7 +444,7 @@ public class EntityAI : MonoBehaviour
             lookDir = ((Vector2)(lever.transform.position - transform.position)).normalized;
             if (anim != null) anim.FaceTowards(lever.transform.position);
             yield return new WaitForSeconds(0.5f);
-            lever.PushBackUp(0.2f);                       // lights die again
+            if (pushLeverBack) lever.PushBackUp(0.2f);    // old behaviour: lights die again
         }
         yield return new WaitForSeconds(leverPause);
         patrolIndex = 0;
@@ -362,7 +467,8 @@ public class EntityAI : MonoBehaviour
         }
         lookDir = baseDir;
         if (nextPoint && patrolPoints != null && patrolPoints.Length > 0) patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
-        state = State.Patrolling;
+        // lost her on a scripted walk: carry on with the walk
+        state = hasScript && (patrolPoints == null || patrolPoints.Length == 0) ? State.Scripted : State.Patrolling;
         pausing = false;
     }
 

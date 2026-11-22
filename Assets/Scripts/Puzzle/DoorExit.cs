@@ -82,7 +82,7 @@ public class DoorExit : MonoBehaviour
             Debug.Log($"[DoorExit] '{name}' -> '{sceneName}': she {(inRange ? "is at the door, press A" : "walked away")} (distance {dist:0.00}, reach {reachDistance}).", this);
             wasInRange = inRange;
         }
-        if (prompt != null) prompt.Request(this, inRange);
+        if (prompt != null) prompt.Request(this, inRange, Interact);
         if (Interact == null) { if (!warnedNoAction) { Debug.LogWarning($"[DoorExit] '{name}': no Interact input at all!", this); warnedNoAction = true; } return; }
         if (!Interact.WasPressedThisFrame()) return;
         if (!inRange)
@@ -93,6 +93,13 @@ public class DoorExit : MonoBehaviour
         }
         Debug.Log($"[DoorExit] '{name}': A pressed at the door.", this);
 
+        var storyLock = GetComponent<DoorLock>();
+        if (storyLock != null && !storyLock.IsOpen)
+        {
+            Debug.Log($"[DoorExit] '{name}': story lock is closed ({storyLock.Message})", this);
+            if (ArcadeMessageService.Instance != null) ArcadeMessageService.Instance.ShowMessage(storyLock.Message);
+            return;
+        }
         if (!DoorIsOpen)
         {
             Debug.Log($"[DoorExit] '{name}': door is still locked - pull the lever first ({lockedMessage})", this);

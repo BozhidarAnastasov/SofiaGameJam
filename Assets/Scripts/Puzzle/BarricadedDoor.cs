@@ -63,8 +63,9 @@ public class BarricadedDoor : MonoBehaviour
         if (open || busy || player == null) return;
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
         var move = player.GetComponent<TopDownMovement>();
-        bool inRange = (move == null || (move.enabled && move.CanMove)) && Vector2.Distance(player.position, transform.position) <= reach;
-        if (prompt != null) prompt.Request(this, inRange);
+        float distance = Vector2.Distance(player.position, transform.position);
+        bool inRange = (move == null || (move.enabled && move.CanMove)) && distance <= reach;
+        if (prompt != null) prompt.Request(this, inRange, Interact);
         if (!inRange || !Interact.WasPressedThisFrame()) return;
 
         string held = SelectedItemName();

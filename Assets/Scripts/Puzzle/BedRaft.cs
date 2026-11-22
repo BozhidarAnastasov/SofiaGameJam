@@ -71,7 +71,7 @@ public class BedRaft : MonoBehaviour
         bool fromLeft = feet.x < transform.position.x;
         float target = fromLeft ? rightRestX : leftRestX;
         bool canRide = canAct && near && Mathf.Abs(target - transform.position.x) > 0.2f;
-        if (prompt != null) prompt.Request(this, canRide);
+        if (prompt != null) prompt.Request(this, canRide, Interact);
 
         if (canRide && Interact.WasPressedThisFrame())
         {

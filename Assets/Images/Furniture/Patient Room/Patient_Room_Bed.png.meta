@@ -1,0 +1,975 @@
+fileFormatVersion: 2
+guid: 4d0df72e3107a8840bf2df255e096bd4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2585847962011822835
+    second: Patient_Room_Bed_0
+  - first:
+      213: -3132348123019849762
+    second: Patient_Room_Bed_1
+  - first:
+      213: -2153981729181125145
+    second: Patient_Room_Bed_2
+  - first:
+      213: -2178970199913985260
+    second: Patient_Room_Bed_3
+  - first:
+      213: 4157986544216318506
+    second: Patient_Room_Bed_4
+  - first:
+      213: 5967572707007306367
+    second: Patient_Room_Bed_5
+  - first:
+      213: -2921337380050973144
+    second: Patient_Room_Bed_6
+  - first:
+      213: -2881984899989500264
+    second: Patient_Room_Bed_7
+  - first:
+      213: 2596933410196565502
+    second: Patient_Room_Bed_8
+  - first:
+      213: -7780733205047457491
+    second: Patient_Room_Bed_9
+  - first:
+      213: -8019683647823488644
+    second: Patient_Room_Bed_10
+  - first:
+      213: -5013548746635945385
+    second: Patient_Room_Bed_11
+  - first:
+      213: -4035873047092418114
+    second: Patient_Room_Bed_12
+  - first:
+      213: -7141363313270042846
+    second: Patient_Room_Bed_13
+  - first:
+      213: 3368233782731402256
+    second: Patient_Room_Bed_14
+  - first:
+      213: 6296007530120715326
+    second: Patient_Room_Bed_15
+  - first:
+      213: -151892774990206741
+    second: Patient_Room_Bed_16
+  - first:
+      213: 1126424246261606165
+    second: Patient_Room_Bed_17
+  - first:
+      213: 1134698730085500366
+    second: Patient_Room_Bed_18
+  - first:
+      213: -2770937148278078658
+    second: Patient_Room_Bed_19
+  - first:
+      213: 2212481045159763427
+    second: Patient_Room_Bed_20
+  - first:
+      213: 8079013246553341496
+    second: Patient_Room_Bed_21
+  - first:
+      213: 6926239669363046555
+    second: Patient_Room_Bed_22
+  - first:
+      213: 6428084357630613558
+    second: Patient_Room_Bed_23
+  - first:
+      213: 6619952315441680980
+    second: Patient_Room_Bed_24
+  - first:
+      213: 7621889878578687126
+    second: Patient_Room_Bed_25
+  - first:
+      213: -1455467762490930140
+    second: Patient_Room_Bed_26
+  - first:
+      213: 1465547913622810965
+    second: Patient_Room_Bed_27
+  - first:
+      213: 6343147324708528748
+    second: Patient_Room_Bed_28
+  - first:
+      213: 47275093550134528
+    second: Patient_Room_Bed_29
+  - first:
+      213: -2113952947945823879
+    second: Patient_Room_Bed_30
+  - first:
+      213: 1508183746320525166
+    second: Patient_Room_Bed_31
+  - first:
+      213: -9034134584468546651
+    second: Patient_Room_Bed_32
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Patient_Room_Bed_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 31
+        width: 339
+        height: 1033
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fae1e26507c2e320800000000000000
+      internalID: 2585847962011822835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_1
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 15
+        width: 924
+        height: 1044
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edf4a8e5af9a784d0800000000000000
+      internalID: -3132348123019849762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_2
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 896
+        width: 33
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e53a7397058b12e0800000000000000
+      internalID: -2153981729181125145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_3
+      rect:
+        serializedVersion: 2
+        x: 1108
+        y: 915
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41b07f9d52eb2c1e0800000000000000
+      internalID: -2178970199913985260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_4
+      rect:
+        serializedVersion: 2
+        x: 1118
+        y: 972
+        width: 7
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a222ed46bb224b930800000000000000
+      internalID: 4157986544216318506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_5
+      rect:
+        serializedVersion: 2
+        x: 1199
+        y: 923
+        width: 73
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7a9c7c62c311d250800000000000000
+      internalID: 5967572707007306367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_6
+      rect:
+        serializedVersion: 2
+        x: 1261
+        y: 623
+        width: 132
+        height: 331
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82ecdf871235577d0800000000000000
+      internalID: -2921337380050973144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_7
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 836
+        width: 25
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89e061cb0022108d0800000000000000
+      internalID: -2881984899989500264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_8
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 631
+        width: 23
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efd2c1c6d292a0420800000000000000
+      internalID: 2596933410196565502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_9
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 671
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d294f05cf58450490800000000000000
+      internalID: -7780733205047457491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_10
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 649
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c79d870663c54b090800000000000000
+      internalID: -8019683647823488644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_11
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 521
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75ad8a45afb4c6ab0800000000000000
+      internalID: -5013548746635945385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_12
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 509
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb9ab7db8d2bdf7c0800000000000000
+      internalID: -4035873047092418114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_13
+      rect:
+        serializedVersion: 2
+        x: 1279
+        y: 19
+        width: 140
+        height: 512
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22f488437e7c4ec90800000000000000
+      internalID: -7141363313270042846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_14
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 465
+        width: 23
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01cec2c97ce5ebe20800000000000000
+      internalID: 3368233782731402256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_15
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 429
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3c9700bd79ef5750800000000000000
+      internalID: 6296007530120715326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_16
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 421
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be8a2ce635e54edf0800000000000000
+      internalID: -151892774990206741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_17
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 388
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5176fc842ecd1af00800000000000000
+      internalID: 1126424246261606165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_18
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 364
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec545ddab724fbf00800000000000000
+      internalID: 1134698730085500366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_19
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 299
+        width: 38
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3383fd3857ab89d0800000000000000
+      internalID: -2770937148278078658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_20
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 325
+        width: 22
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ed5801d9cf44be10800000000000000
+      internalID: 2212481045159763427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_21
+      rect:
+        serializedVersion: 2
+        x: 1255
+        y: 315
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83ebc784ebb6e1070800000000000000
+      internalID: 8079013246553341496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_22
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 311
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b987a915842fe1060800000000000000
+      internalID: 6926239669363046555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_23
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 295
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63851d27aa4253950800000000000000
+      internalID: 6428084357630613558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_24
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 299
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4521def8e8bcedb50800000000000000
+      internalID: 6619952315441680980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_25
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 294
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69ce3d9467466c960800000000000000
+      internalID: 7621889878578687126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_26
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 258
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42c02ba08c32dcbe0800000000000000
+      internalID: -1455467762490930140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_27
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 242
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5517dc8001ca65410800000000000000
+      internalID: 1465547913622810965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_28
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 201
+        width: 20
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c62a83762e2670850800000000000000
+      internalID: 6343147324708528748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_29
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 169
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00577c57274f7a000800000000000000
+      internalID: 47275093550134528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_30
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 189
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 971acc97efab9a2e0800000000000000
+      internalID: -2113952947945823879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_31
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 184
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e67e37760252ee410800000000000000
+      internalID: 1508183746320525166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Patient_Room_Bed_32
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 72
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ab5ea7d57e40a280800000000000000
+      internalID: -9034134584468546651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Patient_Room_Bed_0: 2585847962011822835
+      Patient_Room_Bed_1: -3132348123019849762
+      Patient_Room_Bed_10: -8019683647823488644
+      Patient_Room_Bed_11: -5013548746635945385
+      Patient_Room_Bed_12: -4035873047092418114
+      Patient_Room_Bed_13: -7141363313270042846
+      Patient_Room_Bed_14: 3368233782731402256
+      Patient_Room_Bed_15: 6296007530120715326
+      Patient_Room_Bed_16: -151892774990206741
+      Patient_Room_Bed_17: 1126424246261606165
+      Patient_Room_Bed_18: 1134698730085500366
+      Patient_Room_Bed_19: -2770937148278078658
+      Patient_Room_Bed_2: -2153981729181125145
+      Patient_Room_Bed_20: 2212481045159763427
+      Patient_Room_Bed_21: 8079013246553341496
+      Patient_Room_Bed_22: 6926239669363046555
+      Patient_Room_Bed_23: 6428084357630613558
+      Patient_Room_Bed_24: 6619952315441680980
+      Patient_Room_Bed_25: 7621889878578687126
+      Patient_Room_Bed_26: -1455467762490930140
+      Patient_Room_Bed_27: 1465547913622810965
+      Patient_Room_Bed_28: 6343147324708528748
+      Patient_Room_Bed_29: 47275093550134528
+      Patient_Room_Bed_3: -2178970199913985260
+      Patient_Room_Bed_30: -2113952947945823879
+      Patient_Room_Bed_31: 1508183746320525166
+      Patient_Room_Bed_32: -9034134584468546651
+      Patient_Room_Bed_4: 4157986544216318506
+      Patient_Room_Bed_5: 5967572707007306367
+      Patient_Room_Bed_6: -2921337380050973144
+      Patient_Room_Bed_7: -2881984899989500264
+      Patient_Room_Bed_8: 2596933410196565502
+      Patient_Room_Bed_9: -7780733205047457491
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
