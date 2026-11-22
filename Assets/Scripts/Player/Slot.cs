@@ -25,6 +25,13 @@ public class Slot : MonoBehaviour, IPointerClickHandler
         selectionOutline.enabled = selected;
     }
 
+    public void RemoveItem(GameObject item)
+    {
+        if (item == null || currentItem != item) return;
+        currentItem = null;
+        Destroy(item);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
