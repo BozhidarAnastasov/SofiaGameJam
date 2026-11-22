@@ -984,4 +984,110 @@ public static class GameLoopSetup
         if (!string.IsNullOrEmpty(returnTo) && returnTo != OfficePath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
         Debug.Log("[GameLoop] Office finale set up: 2 s after she enters he follows her down the corridor, throws the knife at the doorway, the window on the right wall breaks, A at the window -> win screen. Saved.");
     }
+
+    // 31. Door hints: the team's thought bubble (ItemHintPopup / PlayerItemHintPopup) on the Player prefab,
+    //     sized for the world, drawn unlit (readable in dark rooms), plus a "Power" icon for electric doors.
+    //     DoorHintBubble then drives it automatically at every locked door.
+    const string PlayerPrefabPath = "Assets/Prefabs/Player.prefab";
+    const string OldBubblePath = "Assets/Prefabs/b282300c-df93-4edb-a183-5dc9b76e01f0-removebg-preview.png";
+    const string UnlitSpriteMat = "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat";
+
+    [MenuItem("Tools/Horror Room/31. Door Hints: Thought Bubble on Player")]
+    public static void HintBubbleSetup()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        var root = PrefabUtility.LoadPrefabContents(PlayerPrefabPath);
+        try
+        {
+            var popupT = root.transform.Find("ItemHintPopup");
+            if (popupT == null)
+            {
+                var prevSel = Selection.activeGameObject;
+                Selection.activeGameObject = root;
+                ItemHintPopupBuilder.BuildItemHintPopup();
+                Selection.activeGameObject = prevSel;
+                popupT = root.transform.Find("ItemHintPopup");
+                if (popupT == null)
+                {
+                    // selection didn't reach the prefab: the builder put it on the open scene's player - move it over
+                    var stray = Resources.FindObjectsOfTypeAll<PlayerItemHintPopup>()
+                        .FirstOrDefault(p => p.name == "ItemHintPopup" && !EditorUtility.IsPersistent(p)
+                                             && p.gameObject.scene != root.scene && p.transform.root != root.transform);
+                    if (stray == null) { Debug.LogError("[GameLoop] Could not build the ItemHintPopup."); return; }
+                    stray.transform.SetParent(root.transform, false);
+                    popupT = stray.transform;
+                }
+            }
+            var popup = popupT.GetComponent<PlayerItemHintPopup>();
+            if (popup == null) popup = popupT.gameObject.AddComponent<PlayerItemHintPopup>();
+
+            // the girl's sorting layer, so the bubble draws over the room
+            int layerId = 0;
+            foreach (var r in root.GetComponentsInChildren<SpriteRenderer>(true))
+                if (!r.transform.IsChildOf(popupT)) { layerId = r.sortingLayerID; break; }
+            var unlit = AssetDatabase.LoadAssetAtPath<Material>(UnlitSpriteMat);
+
+            // bubble background: the old bubble art if the builder found none, scaled to ~1.2 units wide
+            var bg = popupT.Find("BubbleBackground");
+            if (bg != null)
+            {
+                var bsr = bg.GetComponent<SpriteRenderer>();
+                if (bsr != null && bsr.sprite == null)
+                    bsr.sprite = AssetDatabase.LoadAllAssetsAtPath(OldBubblePath).OfType<Sprite>()
+                        .OrderByDescending(s => s.rect.width * s.rect.height).FirstOrDefault();
+                if (bsr != null && bsr.sprite != null)
+                {
+                    float s = 1.2f / Mathf.Max(0.01f, bsr.sprite.bounds.size.x);
+                    bg.localScale = Vector3.one * s;
+                    var q = bg.Find("QuestionMark");          // keep the "?" its own size and spot
+                    if (q != null) { q.localScale = Vector3.one / s; q.localPosition = new Vector3(0.32f, 0.04f, 0f) / s; }
+                }
+            }
+
+            // Power icon (new): same spot as the other icons
+            var power = popupT.Find("Power");
+            if (power == null)
+            {
+                var go = new GameObject("Power");
+                go.transform.SetParent(popupT, false);
+                var key = popupT.Find("Keycard");
+                go.transform.localPosition = key != null ? key.localPosition : new Vector3(-0.22f, 0.04f, 0f);
+                var psr = go.AddComponent<SpriteRenderer>();
+                psr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Resources/DoorHints/Power.png");
+                psr.sortingOrder = 51;
+                go.SetActive(false);
+                power = go.transform;
+            }
+            var so = new SerializedObject(popup);
+            var pp = so.FindProperty("powerObj");
+            if (pp != null) { pp.objectReferenceValue = power.gameObject; so.ApplyModifiedPropertiesWithoutUndo(); }
+
+            // icons: fill any empty one from our door-hint art, and fit each into ~0.45 units
+            var fallback = new System.Collections.Generic.Dictionary<string, string> {
+                { "Crowbar", "Crowbar" }, { "Keycard", "Keycard" }, { "light", "Flashlight" }, { "Power", "Power" } };
+            foreach (var n in new[] { "Crowbar", "Keycard", "Cloak", "light", "HeightTip", "Power" })
+            {
+                var c = popupT.Find(n);
+                if (c == null) continue;
+                var sr = c.GetComponentInChildren<SpriteRenderer>(true);
+                if (sr == null) continue;
+                if (sr.sprite == null && fallback.TryGetValue(n, out var f))
+                    sr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Resources/DoorHints/" + f + ".png");
+                if (sr.sprite == null) continue;
+                Vector3 sz = sr.sprite.bounds.size;
+                float max = Mathf.Max(sz.x, sz.y);
+                if (max > 0.0001f) c.localScale = Vector3.one * (0.45f / max);
+            }
+
+            foreach (var r in popupT.GetComponentsInChildren<Renderer>(true))
+            {
+                r.sortingLayerID = layerId;
+                if (unlit != null && r is SpriteRenderer) r.sharedMaterial = unlit;
+            }
+            popupT.gameObject.SetActive(true);
+            PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefabPath);
+            Debug.Log("[GameLoop] Thought bubble set up on the Player prefab (all rooms). Near a locked door it shows the needed item; it steps aside for the \"E\". Saved.");
+        }
+        finally { PrefabUtility.UnloadPrefabContents(root); }
+    }
 }

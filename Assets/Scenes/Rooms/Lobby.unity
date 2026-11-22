@@ -594,6 +594,8 @@ MonoBehaviour:
   requireKickedOpen: 0
   doorOpen: {fileID: 0}
   lockedMessage: It won't open... the lock has no power.
+  passage: 0
+  stairsStepsTime: 2.4
   onExit:
     m_PersistentCalls:
       m_Calls: []
@@ -1313,6 +1315,14 @@ PrefabInstance:
       propertyPath: InventoryController
       value: 
       objectReference: {fileID: 686094921}
+    - target: {fileID: 1811174537742313932, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4280558776
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811174537742313932, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 4283395764535818456, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.42857143
@@ -1355,15 +1365,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7018561963001543453, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
-      value: 0.33
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 7018561963001543453, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 1.3407408
+      value: 2.1586206
       objectReference: {fileID: 0}
     - target: {fileID: 7018561963001543453, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 5.3655815
+      value: 2.1586206
       objectReference: {fileID: 0}
     - target: {fileID: 7363867419542223452, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_Name
@@ -1372,7 +1382,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8885589272993646297, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
 --- !u!4 &413216446 stripped
 Transform:
@@ -2175,6 +2188,8 @@ MonoBehaviour:
   requireKickedOpen: 0
   doorOpen: {fileID: 0}
   lockedMessage: It won't open... the lock has no power.
+  passage: 0
+  stairsStepsTime: 2.4
   onExit:
     m_PersistentCalls:
       m_Calls: []
@@ -3764,6 +3779,8 @@ MonoBehaviour:
   requireKickedOpen: 0
   doorOpen: {fileID: 0}
   lockedMessage: It won't open... the lock has no power.
+  passage: 0
+  stairsStepsTime: 2.4
   onExit:
     m_PersistentCalls:
       m_Calls: []
@@ -6312,6 +6329,8 @@ MonoBehaviour:
   requireKickedOpen: 0
   doorOpen: {fileID: 0}
   lockedMessage: It won't open... the lock has no power.
+  passage: 0
+  stairsStepsTime: 2.4
   onExit:
     m_PersistentCalls:
       m_Calls: []
