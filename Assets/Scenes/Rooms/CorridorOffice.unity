@@ -212,9 +212,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 549627866}
-  - {fileID: 1782413911}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1026,11 +1024,12 @@ Transform:
   m_GameObject: {fileID: 549627864}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 88965.95, y: 108303.01, z: 0}
+  m_LocalPosition: {x: 89414.95, y: 108491.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 19446617}
+  m_Children:
+  - {fileID: 1782413911}
+  m_Father: {fileID: 1195865906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &584136475
 GameObject:
@@ -2218,7 +2217,7 @@ MonoBehaviour:
   window: {fileID: 2128858626}
   windowStand: {fileID: 648913501}
   windowReach: 1.4
-  winScreen: {fileID: 0}
+  winManager: {fileID: 549627865}
   roomArt: {fileID: 878097210}
   delayBehindHer: 2
   corridorSpeed: 3.6
@@ -2228,8 +2227,27 @@ MonoBehaviour:
   knifeSpeed: 14
   throwMessage: He throws his knife...!
   brokenMessage: The window shattered! Get out! (A)
+  psychoFrames:
+  - {fileID: -590098207, guid: 838251695a722514db5bfb5ebd3d475e, type: 3}
+  - {fileID: 205874806, guid: 838251695a722514db5bfb5ebd3d475e, type: 3}
+  - {fileID: -1035773592, guid: 838251695a722514db5bfb5ebd3d475e, type: 3}
+  - {fileID: 1162042734159184584, guid: 838251695a722514db5bfb5ebd3d475e, type: 3}
+  retreatStepDurations:
+  - 0.65
+  - 0.75
+  - 0.9
+  afterimageHoldAndDissolve: 1.8
+  surviveFont: {fileID: 11400000, guid: b494bd60d6409e641adf97db27170a47, type: 2}
   escapedText: YOU ESCAPED
-  endingHold: 3
+  surviveFontSize: 105
+  bloodTopColor: {r: 0.88, g: 0.06, b: 0.06, a: 1}
+  bloodBottomColor: {r: 0.28, g: 0, b: 0.02, a: 1}
+  surviveHoldBeforeMenu: 2.4
+  finalFadeOutTime: 1.1
+  mainMenuSceneName: MainMenu
+  endingAudioSource: {fileID: 0}
+  escapeWindowClip: {fileID: 0}
+  surviveStingerClip: {fileID: 0}
 --- !u!4 &1195865906
 Transform:
   m_ObjectHideFlags: 0
@@ -2243,6 +2261,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 549627866}
   - {fileID: 993970688}
   - {fileID: 1042817689}
   - {fileID: 1583049877}
@@ -3140,17 +3159,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782413910}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 41412570}
-  m_Father: {fileID: 19446617}
+  m_Father: {fileID: 549627866}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -88965.95, y: -108303.01}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1782413912
