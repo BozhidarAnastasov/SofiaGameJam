@@ -45,8 +45,7 @@ public class Floor2Bed : MonoBehaviour
         // wait until the room transition has put her at the door she came out of
         yield return null; yield return null;
         PlaceInFrontOfHer();
-        var a = FindAnyInteractHeld();
-        if (a) { bed.ForceGrab(); Debug.Log("[Floor2Bed] She came out still holding the bed.", this); }
+        if (bed.InteractHeld) { bed.ForceGrab(); Debug.Log("[Floor2Bed] She came out still holding the bed.", this); }
         else Debug.Log("[Floor2Bed] The bed is out on the second floor (hold A next to it to move it).", this);
     }
 
@@ -64,17 +63,6 @@ public class Floor2Bed : MonoBehaviour
         var rb = bed.GetComponent<Rigidbody2D>();
         if (rb != null) rb.position = p;
         Physics2D.SyncTransforms();
-    }
-
-    static bool FindAnyInteractHeld()
-    {
-        var k = UnityEngine.InputSystem.Keyboard.current;
-        if (k != null && k.uKey.isPressed) return true;
-        var g = UnityEngine.InputSystem.Gamepad.current;
-        if (g != null && g.buttonNorth.isPressed) return true;
-        var j = UnityEngine.InputSystem.Joystick.current;
-        if (j != null && j.trigger != null && j.trigger.isPressed) return true;
-        return false;
     }
 
     void Update()

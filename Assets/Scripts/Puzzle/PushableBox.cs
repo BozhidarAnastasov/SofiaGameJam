@@ -144,6 +144,9 @@ public class PushableBox : MonoBehaviour
 
     public void Unlock() => locked = false;
 
+    /// Is the interact button (A) held right now.
+    public bool InteractHeld => interactAction != null && interactAction.action != null && interactAction.action.IsPressed();
+
     /// Current drag velocity (the bed tilts with it).
     public Vector2 Velocity => rb != null ? rb.linearVelocity : Vector2.zero;
 
