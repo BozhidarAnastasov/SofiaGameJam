@@ -54,6 +54,7 @@ public class DeathScreen : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
 
         if (audioSource != null && stinger != null) audioSource.PlayOneShot(stinger);
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.youDied : null);
         onShown.Invoke();
         if (face != null && frames != null && frames.Length > 0)
         {

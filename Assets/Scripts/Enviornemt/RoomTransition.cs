@@ -73,6 +73,7 @@ public class RoomTransition : MonoBehaviour
         var newMove = FindFirstObjectByType<TopDownMovement>();
         if (newMove != null) newMove.CanMove = false;
         else Debug.LogWarning("[RoomTransition] The new scene has no Player (TopDownMovement)!");
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.doorClose : null, 0.8f);   // the door shuts behind her
 
         // ...and brighter
         for (float e = 0f; e < fadeInTime; e += Time.deltaTime)

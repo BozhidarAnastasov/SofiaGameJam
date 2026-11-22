@@ -112,6 +112,9 @@ public class DoorExit : MonoBehaviour
 
         if (Application.CanStreamedLevelBeLoaded(sceneName))
         {
+            // the powered lock buzzes open; ordinary doors creak (the close plays as the next room fades in)
+            var lib = GameAudio.Sounds;
+            if (lib != null) GameAudio.Play(requireLeverPulled ? lib.electricalDoor : lib.doorOpen);
             RoomSpawnPoint.NextEntry = entryId;
             Debug.Log($"[DoorExit] She left the room -> loading scene '{sceneName}' (arrives at '{entryId}').", this);
             if (fainting) RoomTransition.FaintAndLoad(sceneName, player);   // fade out, load, fade in

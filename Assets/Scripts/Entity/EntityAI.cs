@@ -59,6 +59,17 @@ public class EntityAI : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip kickClip;
     [SerializeField] private AudioClip spottedClip;
+    [Tooltip("Where each blow lands in the EnemyHittingDoor clip (seconds). Every blow shakes the camera; " +
+             "the last one is the kick that breaks the door in.")]
+    [SerializeField] private float[] knockTimes = { 0.02f, 0.27f, 0.52f, 0.77f, 1.05f, 1.28f, 1.53f };
+    [Tooltip("Her scream when he spots her won't repeat more often than this (seconds).")]
+    [SerializeField] private float spottedSoundCooldown = 8f;
+    [Tooltip("His footsteps are full volume next to her and fade out this far away.")]
+    [SerializeField] private float footstepHearingRange = 12f;
+    private SoundLoop footsteps;
+    private float lastSpottedSound = -999f;
+    private Vector2 lastFootPos;
+    private float footSpeed;
 
     public UnityEvent onEnter;
     public UnityEvent onSpotted;
@@ -119,11 +130,36 @@ public class EntityAI : MonoBehaviour
 
     IEnumerator Entrance()
     {
-        yield return new WaitForSeconds(kickDelay);
-        // the door gets kicked in and falls into the room
+        // He bangs on the door first. Each blow in the banging clip jolts the camera, and the
+        // clip's last (hardest) blow IS the kick: the scene follows the clip's own playback time,
+        // so picture and sound stay locked together.
+        var lib = GameAudio.Sounds;
+        bool bang = kickClip == null && lib != null && GameAudio.Pick(lib.enemyHitDoor) != null && knockTimes != null && knockTimes.Length > 0;
+        float lastKnock = bang ? knockTimes[knockTimes.Length - 1] : 0f;
+        yield return new WaitForSeconds(Mathf.Max(0f, kickDelay - lastKnock));
+        if (bang)
+        {
+            var src = GameAudio.PlayTracked(lib.enemyHitDoor);
+            var clip = src != null ? src.clip : null;
+            float started = Time.time;
+            for (int i = 0; i < knockTimes.Length; i++)
+            {
+                // wait for this blow on the clip's own clock (falls back to game time if it stopped)
+                while (true)
+                {
+                    bool playing = src != null && src.isPlaying && src.clip == clip;
+                    float t = playing ? src.time : Time.time - started;
+                    if (t >= knockTimes[i]) break;
+                    yield return null;
+                }
+                if (i < knockTimes.Length - 1) StartCoroutine(CameraShake(0.09f, 0.035f));   // the door shudders
+            }
+        }
+        // the door gets kicked in and slams onto the floor
         if (doorOpen != null) doorOpen.enabled = true;
         if (brokenDoor != null) brokenDoor.enabled = true;
         if (audioSource != null && kickClip != null) audioSource.PlayOneShot(kickClip);
+        GameAudio.Play(lib != null ? lib.doorSlam : null);
         StartCoroutine(CameraShake(0.35f, 0.12f));
 
         transform.position = doorOutside != null ? doorOutside.position : transform.position;
@@ -138,6 +174,10 @@ public class EntityAI : MonoBehaviour
 
     void FixedUpdate()
     {
+        // how fast he really moves (kinematic MovePosition while entering has no velocity)
+        footSpeed = rb.simulated ? (rb.position - lastFootPos).magnitude / Time.fixedDeltaTime : 0f;
+        lastFootPos = rb.position;
+
         switch (state)
         {
             case State.Entering:
@@ -172,8 +212,23 @@ public class EntityAI : MonoBehaviour
         }
     }
 
+    // His heavy steps: louder the closer he is to her, quicker while he chases.
+    void UpdateFootsteps()
+    {
+        var lib = GameAudio.Sounds;
+        if (lib == null) return;
+        if (footsteps == null) { footsteps = SoundLoop.Create(gameObject); footsteps.SetClip(GameAudio.Pick(lib.enemyWalk)); }
+        bool walking = state != State.Waiting && state != State.Grabbing && footSpeed > 0.1f;
+        footsteps.Playing = walking;
+        if (!walking) return;
+        float dist = girl != null ? Vector2.Distance(rb.position, girl.position) : 0f;
+        footsteps.Volume = Mathf.Lerp(1f, 0.1f, Mathf.Clamp01(dist / footstepHearingRange));
+        footsteps.Pitch = Mathf.Clamp(footSpeed / Mathf.Max(0.01f, walkSpeed), 0.9f, 1.35f);
+    }
+
     void Update()
     {
+        UpdateFootsteps();
         if (state == State.Waiting || state == State.Grabbing || girl == null) return;
 
         if (CanSeeGirl())
@@ -210,7 +265,12 @@ public class EntityAI : MonoBehaviour
         spottedWhileEntering = false;
         lostTimer = 0f;
         state = State.Chasing;
-        if (audioSource != null && spottedClip != null) audioSource.PlayOneShot(spottedClip);
+        if (Time.time - lastSpottedSound >= spottedSoundCooldown)
+        {
+            lastSpottedSound = Time.time;
+            if (audioSource != null && spottedClip != null) audioSource.PlayOneShot(spottedClip);
+            else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.girlNoticeEnemy : null, 1f, 0.04f, girl.gameObject);
+        }
         onSpotted.Invoke();
     }
 
@@ -310,6 +370,14 @@ public class EntityAI : MonoBehaviour
     {
         state = State.Grabbing;
         if (routine != null) StopCoroutine(routine);
+        if (footsteps != null) footsteps.StopNow();
+        // silence everything coming from her (breathing, scream, steps, box scrape...): only the kill is heard now
+        GameAudio.StopOwner(girl.gameObject);
+        foreach (var loop in girl.GetComponentsInChildren<SoundLoop>(true)) loop.StopNow();
+        foreach (var box in FindObjectsByType<PushableBox>(FindObjectsSortMode.None)) box.StopDragSound();
+        // The kill beats (grab, gasp, lift, knife raise, stab + duck) are animation events on
+        // Psycho_Grab_Left/Right, so they land on the frames. Without an animator, time them here.
+        if (anim == null) StartCoroutine(KillSoundsWithoutAnimator());
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
         if (col != null) col.enabled = false;
@@ -330,6 +398,21 @@ public class EntityAI : MonoBehaviour
         if (anim != null) { anim.FaceTowards(girl.position); anim.PlayGrab(); }
         onGrab.Invoke();
         StartCoroutine(ShowDeath());
+    }
+
+    // Same timings as the events on the grab clips (frames at 0 / 0.25 / 0.5 / 0.75 s).
+    IEnumerator KillSoundsWithoutAnimator()
+    {
+        string[] ids = { "KillGrab", "KillGasp", "KillLift", "KillKnifeRaise", "KillStab" };
+        float[] at = { 0f, 0.08f, 0.25f, 0.5f, 1.1f };
+        float t = 0f;
+        for (int i = 0; i < ids.Length; i++)
+        {
+            yield return new WaitForSeconds(at[i] - t);
+            t = at[i];
+            GameAudio.Play(ids[i]);
+            if (ids[i] == "KillStab") GameAudio.Duck();
+        }
     }
 
     IEnumerator ShowDeath()

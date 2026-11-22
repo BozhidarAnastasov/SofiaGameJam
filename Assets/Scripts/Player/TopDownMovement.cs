@@ -131,6 +131,8 @@ public class TopDownMovement : MonoBehaviour
         IsCrawling = false;
         IsRunning = false;
         moveInput = Vector2.zero;
+        if (footsteps != null) footsteps.StopNow();
+        GameAudio.StopOwner(gameObject);          // her breathing etc. stops with her (e.g. caught by the psycho)
     }
 
     void Update()
@@ -156,6 +158,40 @@ public class TopDownMovement : MonoBehaviour
         }
 
         if (staminaFill != null) staminaFill.localScale = new Vector3(stamina, 1f, 1f);
+
+        // out of breath the moment the stamina bar runs dry
+        if (exhausted && !wasExhausted) GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.girlExhaust : null, 0.8f, 0.04f, gameObject);
+        wasExhausted = exhausted;
+        UpdateFootsteps(hasInput);
+    }
+
+    [Header("Footsteps")]
+    [SerializeField, Range(0f, 1f)] private float walkStepVolume = 0.55f;
+    [SerializeField, Range(0f, 1f)] private float runStepVolume = 0.75f;
+    [SerializeField, Range(0f, 1f)] private float crawlVolume = 0.6f;
+    private SoundLoop footsteps;
+    private bool wasExhausted;
+    private int footstepMode = -1;          // 0 walk, 1 run, 2 crawl
+
+    // Walk / run / crawl loops, only while she actually moves (a crawler who stops is silent).
+    void UpdateFootsteps(bool hasInput)
+    {
+        var lib = GameAudio.Sounds;
+        if (lib == null) return;
+        if (footsteps == null) footsteps = SoundLoop.Create(gameObject);
+
+        bool moving = CanMove && hasInput;
+        footsteps.Playing = moving;
+        if (!moving) return;
+        int mode = IsCrawling ? 2 : IsRunning ? 1 : 0;
+        if (mode != footstepMode)
+        {
+            // random variation each time she switches between walking, running and crawling
+            footsteps.SetClip(GameAudio.Pick(mode == 2 ? lib.girlCrawl : mode == 1 ? lib.girlRun : lib.girlWalk));
+            footstepMode = mode;
+        }
+        footsteps.Volume = mode == 2 ? crawlVolume : mode == 1 ? runStepVolume : walkStepVolume;
+        footsteps.Pitch = Mathf.Lerp(0.85f, 1f, SpeedMultiplier);      // slower, heavier steps while dragging the box
     }
 
     void FixedUpdate()

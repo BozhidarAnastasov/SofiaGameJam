@@ -158,10 +158,12 @@ public class LeverSwitch : MonoBehaviour
         psr.sprite = leverRight ? idleRight : idleLeft;
         yield return Squash(1f, 1f, 0.97f, 1.07f, reachTime);          // stretch up on tiptoe
         yield return new WaitForSeconds(0.12f);                        // grab
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.leverPush : null);
         yield return PullLever();                                      // lever goes down step by step
         IsPulled = true;
         PowerRestored = true;
         onPulled.Invoke();
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.lightsStarting : null);   // power back: tubes flicker on
         if (globalLight != null) StartCoroutine(PowerFlicker());
         StartCoroutine(Shake(leverRenderer != null ? leverRenderer.transform : null, 0.15f, 0.02f));
         yield return Squash(1.05f, 0.92f, 1f, 1f, 0.15f);              // settle
@@ -282,6 +284,7 @@ public class LeverSwitch : MonoBehaviour
 
     IEnumerator PushBack(float time)
     {
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.leverPush : null, 1f, 0.1f);
         if (leverRenderer != null)
         {
             var lt = leverRenderer.transform;

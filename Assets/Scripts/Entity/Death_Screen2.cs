@@ -82,6 +82,7 @@ public class Death_Screen2 : MonoBehaviour
         {
             audioSource.PlayOneShot(stinger);
         }
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.youDied : null);
 
         onShown?.Invoke();
 

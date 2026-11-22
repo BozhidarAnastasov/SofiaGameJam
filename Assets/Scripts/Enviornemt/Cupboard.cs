@@ -25,6 +25,7 @@ public class Cupboard : MonoBehaviour, Interactable
     {
         if (!CanInteract()) return;
         SetOpened(true);
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.cupboardOpen : null);
 
         if (itemPrefab)
         {
