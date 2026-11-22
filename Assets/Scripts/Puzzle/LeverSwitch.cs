@@ -99,6 +99,30 @@ public class LeverSwitch : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // coming back after the power was restored: lever down, lights on, nothing replays
+        if (PowerRestored && !IsPulled) ShowPowered();
+    }
+
+    void ShowPowered()
+    {
+        IsPulled = true;
+        if (leverRenderer != null)
+        {
+            var lt = leverRenderer.transform;
+            if (pullFrames != null && pullFrames.Length >= 2) leverRenderer.sprite = pullFrames[pullFrames.Length - 1];
+            else if (rotateZOnly) { Vector3 e0 = upRot.eulerAngles; lt.localRotation = Quaternion.Euler(e0.x, e0.y, pulledZ); }
+            else { lt.localPosition = upPos + pulledOffset; lt.localRotation = Quaternion.Euler(pulledEuler); lt.localScale = Vector3.Scale(upScale, pulledScale); }
+        }
+        if (globalLight != null)
+        {
+            darkIntensity = globalLight.intensity; darkColor = globalLight.color;
+            globalLight.color = poweredColor; globalLight.intensity = poweredIntensity;
+        }
+        Debug.Log("[LeverSwitch] Power was already restored: lever down, lights on.", this);
+    }
+
     void OnEnable() { if (interactAction != null) interactAction.action.Enable(); }
 
     private InteractPrompt prompt;

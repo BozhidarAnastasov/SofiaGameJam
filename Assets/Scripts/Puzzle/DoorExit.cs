@@ -93,6 +93,13 @@ public class DoorExit : MonoBehaviour
         }
         Debug.Log($"[DoorExit] '{name}': A pressed at the door.", this);
 
+        var storyLock = GetComponent<DoorLock>();
+        if (storyLock != null && !storyLock.IsOpen)
+        {
+            Debug.Log($"[DoorExit] '{name}': story lock is closed ({storyLock.Message})", this);
+            if (ArcadeMessageService.Instance != null) ArcadeMessageService.Instance.ShowMessage(storyLock.Message);
+            return;
+        }
         if (!DoorIsOpen)
         {
             Debug.Log($"[DoorExit] '{name}': door is still locked - pull the lever first ({lockedMessage})", this);
