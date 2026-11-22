@@ -93,13 +93,16 @@ public class DoorExit : MonoBehaviour
         }
         Debug.Log($"[DoorExit] '{name}': A pressed at the door.", this);
 
+        var jam = GetComponent<JammedDoor>();
+        bool forcedOpen = jam != null && jam.IsOpen;             // once forced it opens like a normal door
         var storyLock = GetComponent<DoorLock>();
-        if (storyLock != null && !storyLock.IsOpen)
+        if (!forcedOpen && storyLock != null && !storyLock.IsOpen)
         {
             Debug.Log($"[DoorExit] '{name}': story lock is closed ({storyLock.Message})", this);
             if (ArcadeMessageService.Instance != null) ArcadeMessageService.Instance.ShowMessage(storyLock.Message);
             return;
         }
+        if (jam != null && !jam.IsOpen) { jam.Press(); return; }  // jammed: every A press shoves it
         if (!DoorIsOpen)
         {
             Debug.Log($"[DoorExit] '{name}': door is still locked - pull the lever first ({lockedMessage})", this);
@@ -108,6 +111,9 @@ public class DoorExit : MonoBehaviour
         }
         Exit();
     }
+
+    /// Go through the door now (used by JammedDoor when it finally gives way).
+    public void Leave() { if (!leaving) Exit(); }
 
     void Exit()
     {

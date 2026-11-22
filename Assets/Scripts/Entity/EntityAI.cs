@@ -141,6 +141,15 @@ public class EntityAI : MonoBehaviour
     private Vector2 scriptTarget;
     private bool hasScript;
 
+    /// Scripted moments where he must not notice her by sight (the office finale follows its own rules).
+    public bool VisionOff { get; set; }
+
+    /// Go after her right now (used by scripts, e.g. when he catches up with her).
+    public void ChaseNow() { if (state != State.Grabbing && state != State.Chasing && state != State.Waiting) StartChase(); }
+
+    /// Speed for scripted walks (0 = his normal walk speed). The finale uses it to time his approach.
+    public float ScriptSpeed { get; set; }
+
     /// True when he reached the point given to ScriptWalkTo (or got stuck on the way for a few seconds).
     public bool ScriptArrived { get; private set; } = true;
 
@@ -252,7 +261,7 @@ public class EntityAI : MonoBehaviour
                 break;
             case State.Scripted:
                 if (pausing || ScriptArrived) { Stop(); break; }
-                if (Steer(scriptTarget, walk)) ScriptArrived = true;
+                if (Steer(scriptTarget, ScriptSpeed > 0f ? ScriptSpeed * RoomPace.Factor : walk)) ScriptArrived = true;
                 break;
             case State.Patrolling:
                 if (pausing || patrolPoints == null || patrolPoints.Length == 0) { Stop(); break; }
@@ -277,6 +286,7 @@ public class EntityAI : MonoBehaviour
     {
         if (state == State.Waiting || state == State.Grabbing || girl == null) return;
         if (RoomTransition.IsBusy) return;                    // she's already going through the door
+        if (VisionOff && state != State.Chasing) { UpdateCone(); return; }
 
         if (CanSeeGirl())
         {
@@ -293,6 +303,11 @@ public class EntityAI : MonoBehaviour
             if (lostTimer >= loseSightTime) state = State.Searching;
         }
 
+        UpdateCone();
+    }
+
+    void UpdateCone()
+    {
         // the vision cone follows where he looks, starting just in front of him
         if (visionLight != null)
         {

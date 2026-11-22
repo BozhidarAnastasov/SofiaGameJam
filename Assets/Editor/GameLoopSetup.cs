@@ -865,4 +865,128 @@ public static class GameLoopSetup
         if (!string.IsNullOrEmpty(returnTo) && returnTo != SurgPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
         Debug.Log("[GameLoop] Operating room: lamp flickers hard (stutters, dips, blackouts), card reach 1.5 + interaction trigger. Saved.");
     }
+
+    // =====================================================================================
+    // 29. Finale: the office door is jammed - mash A 20 times while he comes from the stairs
+    // =====================================================================================
+    [MenuItem("Tools/Horror Room/29. Finale: Jammed Office Door (mash A, he comes)")]
+    public static void FinaleJammedDoor()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var scene = EditorSceneManager.OpenScene(LobbyPath, OpenSceneMode.Single);
+        var door = Find(scene, "Door_ToCorridorOffice");
+        var psycho = Object.FindFirstObjectByType<EntityAI>(FindObjectsInactive.Include);
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        var room = Find(scene, "Room_Lobby");
+        if (door == null || psycho == null) { Debug.LogWarning("[GameLoop] Lobby: need Door_ToCorridorOffice and the Psycho (run step 20 first)."); return; }
+
+        // the door picture (if there is one near the door) shakes with every shove
+        Transform art = null;
+        foreach (var r in Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (r.sprite != null && r.sprite.name.ToLowerInvariant().Contains("door") && Vector2.Distance(r.transform.position, door.transform.position) < 2.5f && r.transform != door.transform)
+            { art = r.transform; break; }
+
+        var root = Child(room != null ? room.transform : null, "PsychoFinale");
+        Transform P(string n, float x, float y) { var g = Child(root.transform, n); g.transform.position = new Vector3(x, y, 0f); return g.transform; }
+        var pts = new[]
+        {
+            P("A0_StairsFoot", -14.9f, 0.8f), P("A1", -11.8f, 1.5f), P("A2", -1.6f, 1.1f), P("A3", -1.3f, -1.0f),
+            P("A4", 5.0f, -3.2f), P("A5", 13.0f, -3.6f), P("A6_AtTheDoor", 14.6f, -2.4f),
+        };
+
+        var jam = Get<JammedDoor>(door);
+        var so = new SerializedObject(jam);
+        so.FindProperty("pressesNeeded").intValue = 20;
+        so.FindProperty("doorArt").objectReferenceValue = art;
+        so.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
+        so.FindProperty("psycho").objectReferenceValue = psycho;
+        var ap = so.FindProperty("approach"); ap.arraySize = pts.Length;
+        for (int i = 0; i < pts.Length; i++) ap.GetArrayElementAtIndex(i).objectReferenceValue = pts[i];
+        so.FindProperty("arriveAfter").floatValue = 11f;
+        so.ApplyModifiedProperties();
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != LobbyPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Finale: with the card selected the office door is jammed - 20 A presses to force it; the first shove brings him from the stairs (11 s to the door)" + (art != null ? $", door art '{art.name}' shakes." : ".") + " Lobby saved.");
+    }
+
+    // =====================================================================================
+    // 30. Office finale: he follows her down the corridor, throws his knife at the doorway, the window breaks, she escapes
+    // =====================================================================================
+    const string OfficePath = "Assets/Scenes/Rooms/CorridorOffice.unity";
+    const string WinPrefab = GenDir + "/WinScreen.prefab";
+
+    [MenuItem("Tools/Horror Room/30. Office Finale: Knife, Window, Escape")]
+    public static void OfficeFinaleSetup()
+    {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        string returnTo = EditorSceneManager.GetActiveScene().path;
+        var psychoAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PsychoPrefab);
+        var deathAsset = AssetDatabase.LoadAssetAtPath<GameObject>(DeathPrefab);
+        if (psychoAsset == null || deathAsset == null) { Debug.LogWarning("[GameLoop] Run step 20 first (it makes the psycho prefabs)."); return; }
+
+        // the team's win screen was built in Electrical: copy it once as a prefab for the office
+        // (Electrical is only opened if that prefab doesn't exist yet; it isn't changed or saved)
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(WinPrefab) == null)
+        {
+            EditorSceneManager.OpenScene(ElecPath, OpenSceneMode.Single);
+            var win = Object.FindFirstObjectByType<EscapeEndingScreen>(FindObjectsInactive.Include);
+            if (win == null) { Debug.LogWarning("[GameLoop] No EscapeEndingScreen (WinScreen) found in Electrical."); return; }
+            PrefabUtility.SaveAsPrefabAsset(win.gameObject, WinPrefab);
+            Debug.Log("[GameLoop] Copied the win screen from Electrical into " + WinPrefab + " (Electrical untouched).");
+        }
+
+        var sc = EditorSceneManager.OpenScene(OfficePath, OpenSceneMode.Single);
+        var player = Object.FindFirstObjectByType<TopDownMovement>();
+        var bgGo = Find(sc, "Background");
+        var bgSr = bgGo != null ? bgGo.GetComponent<SpriteRenderer>() : null;
+        foreach (var n in new[] { "Psycho", "PsychoDeathScreen", "WinScreen" }) { var o = Find(sc, n); if (o != null) Object.DestroyImmediate(o); }
+        var death = (GameObject)PrefabUtility.InstantiatePrefab(deathAsset, sc); death.name = "PsychoDeathScreen";
+        var winGo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(WinPrefab), sc); winGo.name = "WinScreen";
+        var psychoGo = (GameObject)PrefabUtility.InstantiatePrefab(psychoAsset, sc); psychoGo.name = "Psycho";
+        float girl = player != null ? player.transform.lossyScale.x / 1.15f : 1f;      // same size relation as in Electrical
+        psychoGo.transform.localScale = new Vector3(girl, girl, 1f);
+
+        var root = Find(sc, "OfficeFinale");
+        if (root == null) { root = new GameObject("OfficeFinale"); UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root, sc); }
+        Transform P(string n, float x, float y) { var g = Child(root.transform, n); g.transform.position = new Vector3(x, y, 0f); return g.transform; }
+        var entrance = P("Entrance_LobbyDoor", -18.0f, 0f);
+        var path = new[] { P("C0", -12.0f, -0.75f), P("C1_UnderRubble", -4.6f, -0.9f), P("C2", -0.8f, -0.9f) };
+        var throwSpot = P("ThrowSpot_OfficeDoorway", 7.6f, -0.2f);
+        var window = P("Window", 17.95f, 4.6f);
+        var stand = P("WindowStand", 17.3f, 4.3f);
+        psychoGo.transform.position = entrance.position;
+
+        var ai = psychoGo.GetComponent<EntityAI>();
+        var aso = new SerializedObject(ai);
+        aso.FindProperty("girl").objectReferenceValue = player != null ? player.transform : null;
+        aso.FindProperty("deathScreen").objectReferenceValue = death.GetComponent<DeathScreen>();
+        aso.FindProperty("lurksInElectrical").boolValue = false;
+        aso.FindProperty("standingAlwaysSeen").boolValue = true;       // once he's after her, he doesn't lose her
+        aso.FindProperty("patrolPoints").arraySize = 0;
+        foreach (var n in new[] { "lever", "leverStandPoint", "doorOutside", "doorInside", "doorOpen", "brokenDoor", "lurkPoint" })
+        { var pp = aso.FindProperty(n); if (pp != null) pp.objectReferenceValue = null; }
+        aso.ApplyModifiedProperties();
+
+        var fso = new SerializedObject(Get<OfficeFinale>(root));
+        fso.FindProperty("psycho").objectReferenceValue = ai;
+        fso.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
+        var a = ButtonA(); if (a != null) fso.FindProperty("interactAction").objectReferenceValue = a;
+        fso.FindProperty("entrance").objectReferenceValue = entrance;
+        var cp = fso.FindProperty("corridorPath"); cp.arraySize = path.Length;
+        for (int i = 0; i < path.Length; i++) cp.GetArrayElementAtIndex(i).objectReferenceValue = path[i];
+        fso.FindProperty("throwSpot").objectReferenceValue = throwSpot;
+        fso.FindProperty("window").objectReferenceValue = window;
+        fso.FindProperty("windowStand").objectReferenceValue = stand;
+        fso.FindProperty("winScreen").objectReferenceValue = winGo.GetComponent<EscapeEndingScreen>();
+        fso.FindProperty("roomArt").objectReferenceValue = bgSr;
+        fso.ApplyModifiedProperties();
+
+        EditorSceneManager.MarkSceneDirty(sc);
+        EditorSceneManager.SaveScene(sc);
+        if (!string.IsNullOrEmpty(returnTo) && returnTo != OfficePath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
+        Debug.Log("[GameLoop] Office finale set up: 2 s after she enters he follows her down the corridor, throws the knife at the doorway, the window on the right wall breaks, A at the window -> win screen. Saved.");
+    }
 }
