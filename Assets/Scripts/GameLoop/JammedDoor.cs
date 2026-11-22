@@ -10,7 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(DoorExit))]
 public class JammedDoor : MonoBehaviour
 {
-    [SerializeField] private int pressesNeeded = 20;
+    [SerializeField] private int pressesNeeded = 40;
     [Tooltip("Shaken on every shove (the door picture). Empty = only the camera shakes.")]
     [SerializeField] private Transform doorArt;
     [SerializeField] private Transform player;
@@ -19,8 +19,8 @@ public class JammedDoor : MonoBehaviour
     [SerializeField] private EntityAI psycho;
     [Tooltip("From the foot of the stairs to the door. He appears at the first point.")]
     [SerializeField] private Transform[] approach;
-    [Tooltip("Seconds he needs from the stairs to the door (steady mashing takes ~4-6 s).")]
-    [SerializeField] private float arriveAfter = 11f;
+    [Tooltip("Seconds he needs from the stairs to the door (steady mashing of 40 takes ~6-8 s).")]
+    [SerializeField] private float arriveAfter = 9f;
 
     [Header("Text")]
     [SerializeField] private string jammedMessage = "The lock clicks... but it's jammed! Mash A!";

@@ -897,19 +897,19 @@ public static class GameLoopSetup
 
         var jam = Get<JammedDoor>(door);
         var so = new SerializedObject(jam);
-        so.FindProperty("pressesNeeded").intValue = 20;
+        so.FindProperty("pressesNeeded").intValue = 40;
         so.FindProperty("doorArt").objectReferenceValue = art;
         so.FindProperty("player").objectReferenceValue = player != null ? player.transform : null;
         so.FindProperty("psycho").objectReferenceValue = psycho;
         var ap = so.FindProperty("approach"); ap.arraySize = pts.Length;
         for (int i = 0; i < pts.Length; i++) ap.GetArrayElementAtIndex(i).objectReferenceValue = pts[i];
-        so.FindProperty("arriveAfter").floatValue = 11f;
+        so.FindProperty("arriveAfter").floatValue = 9f;
         so.ApplyModifiedProperties();
 
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         if (!string.IsNullOrEmpty(returnTo) && returnTo != LobbyPath) EditorSceneManager.OpenScene(returnTo, OpenSceneMode.Single);
-        Debug.Log("[GameLoop] Finale: with the card selected the office door is jammed - 20 A presses to force it; the first shove brings him from the stairs (11 s to the door)" + (art != null ? $", door art '{art.name}' shakes." : ".") + " Lobby saved.");
+        Debug.Log("[GameLoop] Finale: with the card selected the office door is jammed - 40 A presses to force it; the first shove brings him from the stairs (9 s to the door)" + (art != null ? $", door art '{art.name}' shakes." : ".") + " Lobby saved.");
     }
 
     // =====================================================================================
@@ -927,24 +927,17 @@ public static class GameLoopSetup
         var deathAsset = AssetDatabase.LoadAssetAtPath<GameObject>(DeathPrefab);
         if (psychoAsset == null || deathAsset == null) { Debug.LogWarning("[GameLoop] Run step 20 first (it makes the psycho prefabs)."); return; }
 
-        // the team's win screen was built in Electrical: copy it once as a prefab for the office
-        // (Electrical is only opened if that prefab doesn't exist yet; it isn't changed or saved)
-        if (AssetDatabase.LoadAssetAtPath<GameObject>(WinPrefab) == null)
-        {
-            EditorSceneManager.OpenScene(ElecPath, OpenSceneMode.Single);
-            var win = Object.FindFirstObjectByType<EscapeEndingScreen>(FindObjectsInactive.Include);
-            if (win == null) { Debug.LogWarning("[GameLoop] No EscapeEndingScreen (WinScreen) found in Electrical."); return; }
-            PrefabUtility.SaveAsPrefabAsset(win.gameObject, WinPrefab);
-            Debug.Log("[GameLoop] Copied the win screen from Electrical into " + WinPrefab + " (Electrical untouched).");
-        }
-
+        // the escape ending: the team's EscapeEndingScreen if a prefab of it exists, otherwise OfficeFinale's own
+        // ("YOU ESCAPED" -> the arcade's Win screen). No other scene is opened.
+        var winAsset = AssetDatabase.LoadAssetAtPath<GameObject>(WinPrefab);
         var sc = EditorSceneManager.OpenScene(OfficePath, OpenSceneMode.Single);
         var player = Object.FindFirstObjectByType<TopDownMovement>();
         var bgGo = Find(sc, "Background");
         var bgSr = bgGo != null ? bgGo.GetComponent<SpriteRenderer>() : null;
         foreach (var n in new[] { "Psycho", "PsychoDeathScreen", "WinScreen" }) { var o = Find(sc, n); if (o != null) Object.DestroyImmediate(o); }
         var death = (GameObject)PrefabUtility.InstantiatePrefab(deathAsset, sc); death.name = "PsychoDeathScreen";
-        var winGo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(WinPrefab), sc); winGo.name = "WinScreen";
+        GameObject winGo = null;
+        if (winAsset != null) { winGo = (GameObject)PrefabUtility.InstantiatePrefab(winAsset, sc); winGo.name = "WinScreen"; }
         var psychoGo = (GameObject)PrefabUtility.InstantiatePrefab(psychoAsset, sc); psychoGo.name = "Psycho";
         float girl = player != null ? player.transform.lossyScale.x / 1.15f : 1f;      // same size relation as in Electrical
         psychoGo.transform.localScale = new Vector3(girl, girl, 1f);
@@ -980,8 +973,10 @@ public static class GameLoopSetup
         fso.FindProperty("throwSpot").objectReferenceValue = throwSpot;
         fso.FindProperty("window").objectReferenceValue = window;
         fso.FindProperty("windowStand").objectReferenceValue = stand;
-        fso.FindProperty("winScreen").objectReferenceValue = winGo.GetComponent<EscapeEndingScreen>();
+        fso.FindProperty("winScreen").objectReferenceValue = winGo != null ? winGo.GetComponent<EscapeEndingScreen>() : null;
         fso.FindProperty("roomArt").objectReferenceValue = bgSr;
+        fso.FindProperty("corridorSpeed").floatValue = 3.6f;
+        fso.FindProperty("afterThrowSpeed").floatValue = 3.4f;
         fso.ApplyModifiedProperties();
 
         EditorSceneManager.MarkSceneDirty(sc);

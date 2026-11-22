@@ -2207,7 +2207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27f3951c106549b48801a3452558bfe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JammedDoor
-  pressesNeeded: 20
+  pressesNeeded: 40
   doorArt: {fileID: 0}
   player: {fileID: 413216446}
   psycho: {fileID: 1642199176}
@@ -2219,7 +2219,7 @@ MonoBehaviour:
   - {fileID: 2032604178}
   - {fileID: 481354201}
   - {fileID: 1817111196}
-  arriveAfter: 11
+  arriveAfter: 9
   jammedMessage: The lock clicks... but it's jammed! Mash A!
   comingMessage: Footsteps on the stairs... HURRY!
   openMessage: It gives way!

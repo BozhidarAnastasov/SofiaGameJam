@@ -2,6 +2,8 @@ using System.Collections;
 using ArcadesTemplate.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// The ending, in the corridor and office. Two seconds after she comes in, he bursts out of the
 /// Lobby door behind her and comes down the corridor. If he catches up with her on the way, he
@@ -31,7 +33,9 @@ public class OfficeFinale : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float delayBehindHer = 2f;
     [Tooltip("His speed down the corridor (she walks 3, runs 5).")]
-    [SerializeField] private float corridorSpeed = 2.7f;
+    [SerializeField] private float corridorSpeed = 3.6f;
+    [Tooltip("After the throw he keeps coming at her at this speed.")]
+    [SerializeField] private float afterThrowSpeed = 3.4f;
     [Tooltip("If he gets this close on the way, he grabs her.")]
     [SerializeField] private float catchDistance = 1.3f;
     [SerializeField] private float windUp = 0.6f;
@@ -103,6 +107,23 @@ public class OfficeFinale : MonoBehaviour
         yield return new WaitForSeconds(windUp);
         yield return ThrowKnife();
         BreakWindow();
+
+        // the knife is gone, but he isn't: he comes at her with his bare hands
+        yield return new WaitForSeconds(0.4f);
+        psycho.ScriptSpeed = afterThrowSpeed;
+        while (!escaped && player != null)
+        {
+            if (psycho.Current == EntityAI.State.Grabbing) yield break;
+            if (psycho.Current != EntityAI.State.Chasing &&
+                Vector2.Distance(psycho.transform.position, player.position) <= catchDistance)
+            {
+                Debug.Log("[OfficeFinale] He reached her before she got out.", this);
+                psycho.ChaseNow();
+                yield break;
+            }
+            psycho.ScriptWalkTo(player.position);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     IEnumerator ThrowKnife()
@@ -162,7 +183,43 @@ public class OfficeFinale : MonoBehaviour
         var move = player.GetComponent<TopDownMovement>();
         if (move != null) move.CanMove = false;
         if (winScreen != null) winScreen.TriggerEnding();
-        else Debug.LogWarning("[OfficeFinale] No win screen assigned.", this);
+        else StartCoroutine(OwnEnding());
+    }
+
+    [Header("Ending (used when no EscapeEndingScreen is assigned)")]
+    [SerializeField] private string escapedText = "YOU ESCAPED";
+    [SerializeField] private float endingHold = 3f;
+
+    // she's outside: the screen fades to cold moonlight, "YOU ESCAPED", then the arcade's win screen
+    IEnumerator OwnEnding()
+    {
+        var go = new GameObject("EscapeEnding");
+        var canvas = go.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 2000;
+        var bg = new GameObject("Fade", typeof(RectTransform)).AddComponent<Image>();
+        bg.transform.SetParent(go.transform, false);
+        var rt = bg.rectTransform; rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
+        var textGo = new GameObject("Text", typeof(RectTransform));
+        textGo.transform.SetParent(go.transform, false);
+        var text = textGo.AddComponent<Text>();
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.text = escapedText; text.fontSize = 96; text.alignment = TextAnchor.MiddleCenter;
+        var trt = text.rectTransform; trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one; trt.offsetMin = trt.offsetMax = Vector2.zero;
+
+        Color moon = new Color(0.78f, 0.84f, 0.95f);
+        for (float e = 0f; e < 1.2f; e += Time.unscaledDeltaTime)
+        {
+            bg.color = new Color(moon.r, moon.g, moon.b, e / 1.2f);
+            text.color = new Color(0.08f, 0.1f, 0.16f, Mathf.Clamp01((e - 0.6f) / 0.6f));
+            yield return null;
+        }
+        bg.color = moon; text.color = new Color(0.08f, 0.1f, 0.16f, 1f);
+        yield return new WaitForSecondsRealtime(endingHold);
+
+        Time.timeScale = 1f;
+        if (ArcadesTemplate.Core.ArcadeSceneManager.Instance != null) ArcadesTemplate.Core.ArcadeSceneManager.Instance.LoadWinScreen(0);
+        else SceneManager.LoadScene(0);                               // the main menu (first scene in the build)
     }
 
     // ---------------------------------------------------------------- simple generated art
