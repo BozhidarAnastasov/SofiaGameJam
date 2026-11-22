@@ -82,7 +82,7 @@ public class DoorExit : MonoBehaviour
             Debug.Log($"[DoorExit] '{name}' -> '{sceneName}': she {(inRange ? "is at the door, press A" : "walked away")} (distance {dist:0.00}, reach {reachDistance}).", this);
             wasInRange = inRange;
         }
-        if (prompt != null) prompt.Request(this, inRange);
+        if (prompt != null) prompt.Request(this, inRange, Interact);
         if (Interact == null) { if (!warnedNoAction) { Debug.LogWarning($"[DoorExit] '{name}': no Interact input at all!", this); warnedNoAction = true; } return; }
         if (!Interact.WasPressedThisFrame()) return;
         if (!inRange)

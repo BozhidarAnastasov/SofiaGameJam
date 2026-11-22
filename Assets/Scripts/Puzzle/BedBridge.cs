@@ -116,7 +116,7 @@ public class BedBridge : MonoBehaviour
                                  : $"[BedBridge] She is at the bed's {zone} (bed-space {lp.x:0.00}, {lp.y:0.00}): press A.", this);
             lastZone = zone;
         }
-        if (prompt != null) prompt.Request(this, zone != "");
+        if (prompt != null) prompt.Request(this, zone != "", Interact);
         if (!Interact.WasPressedThisFrame()) return;
         if (zone == "")
         {
