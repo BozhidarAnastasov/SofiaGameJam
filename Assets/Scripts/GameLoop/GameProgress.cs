@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// Story flags for the whole game loop. They live in static memory, so they survive room changes,
 /// and they are cleared when a new game starts (Play in the editor / launching the build).
@@ -28,7 +30,38 @@ public static class GameProgress
     static readonly HashSet<StoryFlag> flags = new HashSet<StoryFlag>();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetOnGameStart() => flags.Clear();
+    static void ResetOnGameStart()
+    {
+        flags.Clear();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // back in the main menu (first scene in the build) = the next run is a brand-new game
+    static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.buildIndex == 0) NewGame();
+    }
+
+    /// Forget everything from the last run: story flags, power, flashlight, removed planks, the saved hotbar.
+    public static void NewGame()
+    {
+        flags.Clear();
+        Inventory.ClearRoomSave();
+        foreach (var t in new[] { typeof(LeverSwitch), typeof(PlayerFlashlight), typeof(BarricadedDoor) })
+        {
+            var m = t.GetMethod("ResetOnGameStart", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            if (m != null) m.Invoke(null, null);
+        }
+        Debug.Log("[GameProgress] New game: all progress cleared.");
+    }
+
+    /// Keep the hotbar (items + what was picked up) for a Retry of this room after she got caught.
+    public static void SaveHotbarForRetry()
+    {
+        var inv = Object.FindFirstObjectByType<Inventory>();
+        if (inv != null) inv.SaveForRoom(SceneManager.GetActiveScene().name);
+    }
 
     public static bool Get(StoryFlag flag)
     {
