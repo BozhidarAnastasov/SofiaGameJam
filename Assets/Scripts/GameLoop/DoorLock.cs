@@ -17,6 +17,9 @@ public class DoorLock : MonoBehaviour
     [Tooltip("Shown with Requirement = SelectedItem when she has the item but hasn't selected it.")]
     [SerializeField] private string selectItemMessage = "Maybe the card works here... (select it in the hotbar)";
 
+    public Requirement Needs => requirement;
+    public StoryFlag Flag => flag;
+
     public bool IsOpen
     {
         get

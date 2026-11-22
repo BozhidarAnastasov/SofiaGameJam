@@ -58,6 +58,16 @@ public class BarricadedDoor : MonoBehaviour
 
     void OnDisable() { if (fallback != null) { fallback.Disable(); fallback.Dispose(); fallback = null; } }
 
+    /// The right tool (crowbar) is selected in the hotbar right now.
+    public bool HasToolSelected
+    {
+        get
+        {
+            string held = GameProgress.SelectedItemName();
+            return !string.IsNullOrEmpty(held) && held.ToLowerInvariant().Contains(toolName.ToLowerInvariant());
+        }
+    }
+
     void Update()
     {
         if (open || busy || player == null) return;
@@ -65,7 +75,8 @@ public class BarricadedDoor : MonoBehaviour
         var move = player.GetComponent<TopDownMovement>();
         float distance = Vector2.Distance(player.position, transform.position);
         bool inRange = (move == null || (move.enabled && move.CanMove)) && distance <= reach;
-        if (prompt != null) prompt.Request(this, inRange, Interact);
+        // the "E" only when the crowbar is in hand - otherwise the thought bubble shows the crowbar
+        if (prompt != null) prompt.Request(this, inRange && HasToolSelected, Interact);
         if (!inRange || !Interact.WasPressedThisFrame()) return;
 
         var inventory = FindFirstObjectByType<Inventory>();
