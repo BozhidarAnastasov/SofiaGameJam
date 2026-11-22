@@ -474,6 +474,8 @@ public class EntityAI : MonoBehaviour
 
     void Grab()
     {
+        if (RoomTransition.IsBusy) return;                    // too late: she made it out
+        GameProgress.SaveHotbarForRetry();                    // Retry brings her items back with her
         state = State.Grabbing;
         if (routine != null) StopCoroutine(routine);
         if (footsteps != null) footsteps.StopNow();
