@@ -90,6 +90,9 @@ public class BarricadedDoor : MonoBehaviour
         var move = player.GetComponent<TopDownMovement>();
         if (move != null) move.CanMove = false;
         if (audioSource != null && pryClip != null) audioSource.PlayOneShot(pryClip);
+        // PryingPlanks: creaking, then the big crack at ~1.5 s. Start 0.6 s in, so the creaks go with
+        // the three tugs and the crack lands when the planks come off (0.9 s into this sequence).
+        else GameAudio.PlayFrom(GameAudio.Sounds != null ? GameAudio.Sounds.pryPlanks : null, 0.6f, 1f, player.gameObject);
 
         if (planks != null)
         {

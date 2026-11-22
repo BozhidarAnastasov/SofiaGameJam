@@ -19,10 +19,13 @@ public class ItemPickup : MonoBehaviour
         if (!InventoryController.AddItem(item.gameObject)) return;
         InventoryController.MarkCollected(item.PickupId);
 
-        if (TryGetComponent(out DirectionalSpriteAnimator animationDriver))
+        // The pick-up sound is an animation event on Girl_PickUp_Left/Right, on the frame her hand
+        // reaches the floor. Without that animation, play it straight away.
+        if (TryGetComponent(out DirectionalSpriteAnimator animationDriver) && animationDriver.isActiveAndEnabled)
         {
             animationDriver.PlayPickUp();
         }
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.pickUpItem : null, 1f, 0.04f, gameObject);
         item.gameObject.SetActive(false);
         Destroy(item.gameObject);
     }

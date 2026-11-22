@@ -75,6 +75,7 @@ public class FlashlightPickup : MonoBehaviour, Interactable
         if (!CanInteract()) return;
         taken = true;
         if (prompt != null) prompt.Request(this, false);
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.pickUpItem : null);
 
         var flash = player != null ? player.GetComponentInChildren<PlayerFlashlight>() : FindFirstObjectByType<PlayerFlashlight>();
         if (flash != null) flash.Give();

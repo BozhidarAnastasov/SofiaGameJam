@@ -103,11 +103,14 @@ public class Inventory : MonoBehaviour
 
     private void Update()
     {
+        int before = SelectedSlotIndex;
         float scroll = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
         if (scroll != 0f) SelectSlot(SelectedSlotIndex + (scroll > 0f ? -1 : 1));
         if (nextSlotAction != null && nextSlotAction.action != null
             && nextSlotAction.action.WasPressedThisFrame())
             SelectSlot(SelectedSlotIndex + 1);
+        if (SelectedSlotIndex != before)
+            GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.switchItem : null, 0.8f);
     }
 
     public void SelectSlot(int index)

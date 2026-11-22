@@ -134,6 +134,7 @@ public class BedBridge : MonoBehaviour
     IEnumerator GoUp()
     {
         var c = Begin();
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.bedFirstUse : null, 1f, 0f, player.gameObject);   // lobby side: up and over
         Pose(c, stepUpPose);
         yield return Hop(Bed(bedFootY), 0.28f, 0.3f, true);
         Unpose(c);                                                   // normal walk cycle up the bed
@@ -157,6 +158,7 @@ public class BedBridge : MonoBehaviour
     IEnumerator GoDown()
     {
         var c = Begin();
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.bedSecondUse : null, 1f, 0f, player.gameObject);   // desk side: metal headboard, slide down
         if (c.anim != null) c.anim.FaceTowards((Vector2)player.position + Vector2.down);
         if (!IsTipped)
         {

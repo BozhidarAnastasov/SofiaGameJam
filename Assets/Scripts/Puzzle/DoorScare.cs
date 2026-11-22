@@ -69,10 +69,12 @@ public class DoorScare : MonoBehaviour
         SetLamp(true, lastFlashBoost);
         if (face != null) face.enabled = true;
         if (audioSource != null && scareClip != null) audioSource.PlayOneShot(scareClip);
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.killGasp : null);   // she gasps at the face
         onFaceShown.Invoke();
         yield return new WaitForSeconds(faceHold);
 
         // the bulb dies, and the window is empty again
+        GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.lightsExploding : null);
         SetLamp(false, 1f);
         if (face != null) face.enabled = false;
         onFinished.Invoke();

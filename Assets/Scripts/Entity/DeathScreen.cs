@@ -115,7 +115,10 @@ public class DeathScreen : MonoBehaviour
             DisableBlockingRaycasts(rootCanvas.transform);
         }
 
-        if (group != null)
+        if (audioSource != null && stinger != null) audioSource.PlayOneShot(stinger);
+        else GameAudio.Play(GameAudio.Sounds != null ? GameAudio.Sounds.youDied : null);
+        onShown.Invoke();
+        if (face != null && frames != null && frames.Length > 0)
         {
             ActivateWithParents(group.gameObject);
             group.alpha = 1f;
@@ -227,6 +230,7 @@ public class DeathScreen : MonoBehaviour
 
     public void Retry()
     {
+        GameAudio.UiClick();
         Time.timeScale = 1f;
         Scene scene = SceneManager.GetActiveScene();
         if (scene.buildIndex >= 0) SceneManager.LoadScene(scene.buildIndex);
@@ -237,6 +241,7 @@ public class DeathScreen : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        GameAudio.UiClick();
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }
@@ -425,6 +430,7 @@ public class DeathScreen : MonoBehaviour
         AddTriggerEvent(trigger, EventTriggerType.PointerEnter, () =>
         {
             if (!btn.interactable) return;
+            GameAudio.UiHover();
             btn.transform.localScale = baseScale * hoverScale;
             if (colorTarget != null) colorTarget.color = buttonHoverColor;
         });

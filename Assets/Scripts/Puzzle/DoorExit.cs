@@ -31,7 +31,24 @@ public class DoorExit : MonoBehaviour
     [SerializeField] private SpriteRenderer doorOpen;
     [SerializeField] private string lockedMessage = "It won't open... the lock has no power.";
 
+    public enum Passage { Auto, Door, ElectricDoor, Stairs }
+    [Header("Sound")]
+    [Tooltip("What she goes through. Auto: stairs between the Lobby and Floor2, an electric lock when the door " +
+             "needs power or has a DoorLock, otherwise a normal door.")]
+    [SerializeField] private Passage passage = Passage.Auto;
+    [Tooltip("Stairs: how long her footsteps play while the screen fades between the rooms.")]
+    [SerializeField] private float stairsStepsTime = 2.4f;
+
     public UnityEvent onExit;
+
+    Passage ResolvePassage()
+    {
+        if (passage != Passage.Auto) return passage;
+        string here = gameObject.scene.name;
+        bool stairs = (here == "Lobby" && sceneName == "Floor2") || (here == "Floor2" && sceneName == "Lobby");
+        if (stairs) return Passage.Stairs;
+        return requireLeverPulled || GetComponent<DoorLock>() != null ? Passage.ElectricDoor : Passage.Door;
+    }
 
     private TopDownMovement move;
     private InteractPrompt prompt;
@@ -125,6 +142,16 @@ public class DoorExit : MonoBehaviour
 
         if (Application.CanStreamedLevelBeLoaded(sceneName))
         {
+            // powered / key-card locks buzz open, ordinary doors creak (the close plays as the next room
+            // fades in), and on the stairs we just hear her steps through the fade
+            var lib = GameAudio.Sounds;
+            var kind = ResolvePassage();
+            RoomTransition.SilentArrival = kind == Passage.Stairs;
+            if (lib != null)
+            {
+                if (kind == Passage.Stairs) GameAudio.PlayFor(lib.girlWalk, stairsStepsTime, 0.6f);
+                else GameAudio.Play(kind == Passage.ElectricDoor ? lib.electricalDoor : lib.doorOpen);
+            }
             RoomSpawnPoint.NextEntry = entryId;
             Debug.Log($"[DoorExit] She left the room -> loading scene '{sceneName}' (arrives at '{entryId}').", this);
             if (fainting) RoomTransition.FaintAndLoad(sceneName, player);   // fade out, load, fade in

@@ -171,4 +171,12 @@ public class DirectionalSpriteAnimator : MonoBehaviour
 
     public void PlayPickUp() => animator.SetTrigger(PickUpId);   // girl
     public void PlayGrab() => animator.SetTrigger(GrabId);       // psycho
+
+    /// Animation event receiver: plays a sound from GameSounds on the exact frame it is placed on
+    /// (e.g. "KillStab" on the psycho's grab clips, "PickUpItem" when her hand reaches the floor).
+    public void PlaySound(string id)
+    {
+        GameAudio.Play(id);
+        if (id == "KillStab") GameAudio.Duck();                    // everything else drops out under the stab
+    }
 }

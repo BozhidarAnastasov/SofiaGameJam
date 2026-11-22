@@ -158,6 +158,7 @@ public class MainMenuController : MonoBehaviour
         {
             uiAudioSource.PlayOneShot(hoverClip);
         }
+        else GameAudio.UiHover();
     }
 
     private void PlayClickSound()
@@ -166,5 +167,6 @@ public class MainMenuController : MonoBehaviour
         {
             uiAudioSource.PlayOneShot(clickClip);
         }
+        else GameAudio.UiClick();
     }
 }
