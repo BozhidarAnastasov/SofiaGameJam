@@ -53,8 +53,8 @@ public class DoorHintBubble : MonoBehaviour
         tip = tp != null ? tp.GetComponent<TMPro.TMP_Text>() : null;
 
         // the team's older hint script would fight over the same bubble: we drive it now
-        var old = popup.GetComponent<PlayerItemPopupHint>();
-        if (old != null) old.enabled = false;
+        foreach (var mb in popup.GetComponents<MonoBehaviour>())
+            if (mb != null && mb.GetType().Name == "PlayerItemPopupHint") mb.enabled = false;
         var ip = GetComponentInChildren<InteractPrompt>(true);
         if (ip != null) ePrompt = ip.GetComponent<SpriteRenderer>();
         if (popup.gameObject.activeSelf == false) popup.gameObject.SetActive(true);
