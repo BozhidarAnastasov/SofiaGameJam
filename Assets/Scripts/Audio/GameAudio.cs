@@ -93,6 +93,14 @@ public class GameAudio : MonoBehaviour
         return clip == null ? null : Instance.PlayClip(clip, volume, 1f, owner);
     }
 
+    /// Play starting partway into the clip, to skip a quiet lead-in so its main hit lands on the action.
+    public static AudioSource PlayFrom(AudioClip[] slot, float startTime, float volume = 1f, GameObject owner = null)
+    {
+        var s = PlayTracked(slot, volume, owner);
+        if (s != null && startTime > 0f && startTime < s.clip.length) s.time = startTime;
+        return s;
+    }
+
     /// Play only a stretch of a (long) clip, from a random point, fading out after 'seconds'.
     /// E.g. a few seconds of her steps while she goes up/down the stairs between rooms.
     public static void PlayFor(AudioClip[] slot, float seconds, float volume = 1f, float fadeOut = 0.5f)

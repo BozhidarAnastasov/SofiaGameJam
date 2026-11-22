@@ -104,5 +104,32 @@ public class SurgeryLamp : MonoBehaviour
         if (ring != null) ring.color = new Color(1, 1, 1, ringDarkness);
         if (disc != null) disc.color = new Color(1, 1, 1, (1f - Mathf.Clamp01(level)) * dipDarkness);
         if (buzz != null) buzz.volume = 0.25f * level;
+        else UpdateHum(level);
+    }
+
+    [Header("Hum (GameSounds.surgicalLamp, used when no Buzz source is assigned)")]
+    [SerializeField, Range(0f, 1f)] private float humVolume = 1f;
+    [Tooltip("Full volume within this distance of the lamp, fading out to 'humFar'.")]
+    [SerializeField] private float humNear = 3f;
+    [SerializeField] private float humFar = 12f;
+    private SoundLoop hum;
+    private Transform listener;
+
+    // the lamp's buzz follows its flicker: dips get quieter, blackouts go silent
+    void UpdateHum(float level)
+    {
+        var lib = GameAudio.Sounds;
+        if (lib == null) return;
+        if (hum == null)
+        {
+            hum = SoundLoop.Create(gameObject);
+            hum.fadeTime = 0.03f;                    // quick, so the buzz cuts with the light
+            hum.SetClip(GameAudio.Pick(lib.surgicalLamp));
+            hum.Playing = true;
+        }
+        if (listener == null) { var p = FindFirstObjectByType<TopDownMovement>(); if (p != null) listener = p.transform; }
+        float dist = listener != null ? Vector2.Distance(listener.position, transform.position) : 0f;
+        float near = 1f - Mathf.Clamp01(Mathf.InverseLerp(humNear, humFar, dist));
+        hum.Volume = humVolume * Mathf.Clamp01(level) * near;
     }
 }

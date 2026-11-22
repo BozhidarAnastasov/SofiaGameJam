@@ -21,6 +21,8 @@ public class GameSounds : ScriptableObject
     public AudioClip[] switchItem;
     public AudioClip[] flashlightOn;
     public AudioClip[] flashlightOff;
+    [Tooltip("Pulling the coat over herself / throwing it off.")]
+    public AudioClip[] coatUse;
     [Tooltip("Looped while she drags the box.")]
     public AudioClip[] boxDrag;
 
@@ -47,11 +49,15 @@ public class GameSounds : ScriptableObject
     public AudioClip[] cupboardOpen;
     public AudioClip[] cupboardClose;
     public AudioClip[] breakWindow;
+    [Tooltip("Prying the planks off the barricaded door with the crowbar.")]
+    public AudioClip[] pryPlanks;
 
     [Header("Lights and electricity")]
     public AudioClip[] leverPush;
     public AudioClip[] lightsStarting;
     public AudioClip[] lightsExploding;
+    [Tooltip("Looping buzz of the flickering operating-room lamp (follows its flicker).")]
+    public AudioClip[] surgicalLamp;
 
     [Header("Kill sequence (beats are fired by animation events on Psycho_Grab_Left/Right)")]
     public AudioClip[] killGrab;
@@ -82,6 +88,9 @@ public class GameSounds : ScriptableObject
             case "EnemyWalk": return enemyWalk;
             case "EnemyHitDoor": return enemyHitDoor;
             case "DoorSlam": return doorSlam;
+            case "CoatUse": return coatUse;
+            case "PryPlanks": return pryPlanks;
+            case "SurgicalLamp": return surgicalLamp;
             case "KnifeGrinding": return knifeGrinding;
             case "RocksPilingUp": return rocksPilingUp;
             case "UIClick": return uiClick;

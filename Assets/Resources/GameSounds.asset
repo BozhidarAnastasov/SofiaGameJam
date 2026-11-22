@@ -48,6 +48,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 82f5e5d86abc38f4c9503cb4ee8b4a10, type: 3}
   uiClick:
   - {fileID: 8300000, guid: 98f4c76566ea22f4696d02de9c39ba8a, type: 3}
+  coatUse:
+  - {fileID: 8300000, guid: b010909f8b776ac478f6d929d0092539, type: 3}
+  pryPlanks:
+  - {fileID: 8300000, guid: 0833f42a1fd082a4fb0d766724f3cfa4, type: 3}
+  surgicalLamp:
+  - {fileID: 8300000, guid: 661c002e403fcc34c99e38a930ef58f7, type: 3}
   doorOpen:
   - {fileID: 8300000, guid: 6e22709f3ee4f3f4b8a4536654635744, type: 3}
   doorClose:
