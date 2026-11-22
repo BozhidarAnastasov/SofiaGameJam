@@ -75,7 +75,7 @@ public class LeverSwitch : MonoBehaviour
                        Vector2.Distance(box.transform.position, boxSpot.position) <= boxTolerance;
 
     /// True when pressing Interact right now would pull the lever (the box then won't grab).
-    public bool CanPullNow => !IsPulled && !busy && InReach && BoxInPlace;
+    public bool CanPullNow => isActiveAndEnabled && !IsPulled && !busy && InReach && BoxInPlace;
     private bool busy;
 
     // player parts, cached for the sequence
@@ -92,6 +92,7 @@ public class LeverSwitch : MonoBehaviour
 
     void Awake()
     {
+        if (player != null) pmove = player.GetComponent<TopDownMovement>();
         if (leverRenderer != null)
         {
             var lt = leverRenderer.transform;
@@ -108,16 +109,15 @@ public class LeverSwitch : MonoBehaviour
         if (player == null) return;
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
 
-        // show the "U" over her head while pressing it would do something here
-        bool inRange = InReach;
+        bool canMove = pmove == null || (pmove.enabled && pmove.CanMove);
         bool holdingBox = box != null && box.IsGrabbed;
-        if (prompt != null) prompt.Request(this, inRange && !IsPulled && !busy && !holdingBox);
-
-        if (IsPulled || busy || interactAction == null || !inRange || holdingBox) return;
-        if (!interactAction.action.WasPressedThisFrame()) return;
+        bool boxHasPriority = !BoxInPlace && box != null && box.PlayerInGrabRange;
+        bool canInteract = canMove && InReach && !IsPulled && !busy && !holdingBox && !boxHasPriority;
+        InputAction action = interactAction?.action;
+        if (prompt != null) prompt.Request(this, canInteract, action);
+        if (!canInteract || action == null || !action.WasPressedThisFrame()) return;
 
         if (BoxInPlace) StartCoroutine(PullSequence());
-        else if (box != null && box.PlayerInGrabRange) { /* U grabs the box instead */ }
         else
         {
             onTooHigh.Invoke();
@@ -129,11 +129,11 @@ public class LeverSwitch : MonoBehaviour
     IEnumerator PullSequence()
     {
         busy = true;
+        if (prompt != null) prompt.Request(this, false);
         prb = player.GetComponent<Rigidbody2D>();
         psr = player.GetComponentInChildren<SpriteRenderer>();
         panim = player.GetComponentInChildren<Animator>();
         pdir = player.GetComponentInChildren<DirectionalSpriteAnimator>();
-        pmove = player.GetComponent<TopDownMovement>();
         baseScale = psr.transform.localScale;
 
         // take over from the Animator: she is posed by hand for the whole sequence

@@ -63,7 +63,7 @@ public class FlashlightPickup : MonoBehaviour, Interactable
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
         var move = player.GetComponent<TopDownMovement>();
         bool inRange = (move == null || (move.enabled && move.CanMove)) && Vector2.Distance(player.position, transform.position) <= reach;
-        if (prompt != null) prompt.Request(this, inRange);
+        if (prompt != null) prompt.Request(this, inRange, Interact_);
         if (inRange && Interact_.WasPressedThisFrame()) Interact();
     }
 

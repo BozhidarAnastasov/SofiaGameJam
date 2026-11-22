@@ -76,8 +76,9 @@ public class PushableBox : MonoBehaviour
         if (prompt == null) prompt = player.GetComponentInChildren<InteractPrompt>(true);
 
         bool leverWantsU = lever != null && lever.CanPullNow;
-        bool canGrab = !locked && !IsGrabbed && !leverWantsU && (playerMove == null || playerMove.CanMove) && PlayerInGrabRange;
-        if (prompt != null) prompt.Request(this, canGrab);
+        bool canGrab = !locked && !IsGrabbed && !leverWantsU
+            && (playerMove == null || (playerMove.enabled && playerMove.CanMove)) && PlayerInGrabRange;
+        if (prompt != null) prompt.Request(this, canGrab, interactAction.action);
 
         if (!IsGrabbed && canGrab && interactAction.action.WasPressedThisFrame()) Grab();
         else if (IsGrabbed && !interactAction.action.IsPressed()) Release();
@@ -95,6 +96,7 @@ public class PushableBox : MonoBehaviour
 
     void Grab()
     {
+        if (prompt != null) prompt.Request(this, false);
         IsGrabbed = true;
         grabOffset = rb.position - (playerRb != null ? playerRb.position : (Vector2)player.position);
         rb.bodyType = RigidbodyType2D.Dynamic;          // dynamic so walls stop it
