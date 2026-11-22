@@ -1,100 +1,122 @@
 using UnityEngine;
 
-public class HintAreas : MonoBehaviour
+public enum HintItemType
 {
-    [Header("Which Popup Child Should Appear?")]
-    [SerializeField] private HintItemType neededItem = HintItemType.Keycard;
+    Crowbar,
+    Keycard,
+    Cloak,
+    Light,
+    HeightTip
+}
 
-    [Header("Proximity Settings")]
-    [Tooltip("How close the player needs to walk before the thought bubble pops up.")]
-    [SerializeField] private float triggerRadius = 2.0f;
+public class PlayerItemHintPopup : MonoBehaviour
+{
+    public static PlayerItemHintPopup Instance { get; private set; }
 
-    [Tooltip("Optional: Drag Player here, or leave empty to auto-find Player automatically.")]
-    [SerializeField] private Transform player;
+    [Header("Auto-Wired Hierarchy Children")]
+    [SerializeField] private GameObject bubbleBackground;
+    [SerializeField] private GameObject crowbarObj;
+    [SerializeField] private GameObject keycardObj;
+    [SerializeField] private GameObject cloakObj;
+    [SerializeField] private GameObject lightObj;
+    [SerializeField] private GameObject heightTipObj;
 
-    [Header("State")]
-    [Tooltip("Check this or call DisableHintPermanently() once the player unlocks/solves this obstacle.")]
-    [SerializeField] private bool hintSolvedOrDisabled = false;
+    [Header("Floating Animation")]
+    [SerializeField] private float bobSpeed = 3.5f;
+    [SerializeField] private float bobAmount = 0.05f;
 
-    private bool playerInside;
+    private Vector3 initialLocalPos;
+    private Vector3 initialLocalScale;
+    private Object activeSource;
 
-    private void Start()
+    private void Awake()
     {
-        FindPlayerIfMissing();
+        Instance = this;
+        initialLocalPos = transform.localPosition;
+        initialLocalScale = transform.localScale;
+
+        if (bubbleBackground == null) bubbleBackground = FindChildSafe("BubbleBackground");
+        if (crowbarObj == null) crowbarObj = FindChildSafe("Crowbar");
+        if (keycardObj == null) keycardObj = FindChildSafe("Keycard");
+        if (cloakObj == null) cloakObj = FindChildSafe("Cloak");
+        if (lightObj == null) lightObj = FindChildSafe("light");
+        if (heightTipObj == null) heightTipObj = FindChildSafe("HeightTip");
+
+        HideAllImmediate();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (hintSolvedOrDisabled)
+        if (activeSource == null) return;
+
+        float bob = Mathf.Sin(Time.time * bobSpeed) * bobAmount;
+        transform.localPosition = initialLocalPos + new Vector3(0f, bob, 0f);
+
+        if (transform.parent != null)
         {
-            if (playerInside) ExitArea();
+            float parentSign = Mathf.Sign(transform.parent.lossyScale.x);
+            transform.localScale = new Vector3(
+                Mathf.Abs(initialLocalScale.x) * parentSign,
+                initialLocalScale.y,
+                initialLocalScale.z
+            );
+        }
+    }
+
+    public void ShowHint(HintItemType itemType, Object source)
+    {
+        if (activeSource == source && bubbleBackground != null && bubbleBackground.activeSelf)
             return;
-        }
 
-        if (player == null)
-        {
-            FindPlayerIfMissing();
-            if (player == null) return;
-        }
+        activeSource = source;
+        HideAllIconsOnly();
 
-        float sqrDist = ((Vector2)player.position - (Vector2)transform.position).sqrMagnitude;
-        bool isNear = sqrDist <= (triggerRadius * triggerRadius);
+        if (bubbleBackground != null) bubbleBackground.SetActive(true);
 
-        if (isNear && !playerInside)
+        GameObject targetIcon = GetItemObject(itemType);
+        if (targetIcon != null) targetIcon.SetActive(true);
+    }
+
+    public void HideHint(Object source)
+    {
+        if (activeSource == source || source == null)
         {
-            playerInside = true;
-            if (PlayerItemPopupHint.Instance != null)
-            {
-                PlayerItemPopupHint.Instance.ShowHint(neededItem, this);
-            }
-        }
-        else if (!isNear && playerInside)
-        {
-            ExitArea();
+            activeSource = null;
+            HideAllImmediate();
         }
     }
 
-    private void OnDisable()
+    private GameObject GetItemObject(HintItemType type)
     {
-        if (playerInside) ExitArea();
-    }
-
-    private void ExitArea()
-    {
-        playerInside = false;
-        if (PlayerItemPopupHint.Instance != null)
+        switch (type)
         {
-            PlayerItemPopupHint.Instance.HideHint(this);
+            case HintItemType.Crowbar:   return crowbarObj;
+            case HintItemType.Keycard:   return keycardObj;
+            case HintItemType.Cloak:     return cloakObj;
+            case HintItemType.Light:     return lightObj;
+            case HintItemType.HeightTip: return heightTipObj;
+            default:                     return null;
         }
     }
 
-    /// Hook this up to a UnityEvent (e.g., when door unlocks, rubble breaks, or item is used) so the '?' stops appearing!
-    public void DisableHintPermanently()
+    private void HideAllIconsOnly()
     {
-        hintSolvedOrDisabled = true;
-        if (playerInside) ExitArea();
+        if (crowbarObj != null) crowbarObj.SetActive(false);
+        if (keycardObj != null) keycardObj.SetActive(false);
+        if (cloakObj != null) cloakObj.SetActive(false);
+        if (lightObj != null) lightObj.SetActive(false);
+        if (heightTipObj != null) heightTipObj.SetActive(false);
     }
 
-    private void FindPlayerIfMissing()
+    private void HideAllImmediate()
     {
-        if (player != null) return;
-
-        // Grab player straight from the popup's parent if present
-        if (PlayerItemPopupHint.Instance != null && PlayerItemPopupHint.Instance.transform.parent != null)
-        {
-            player = PlayerItemPopupHint.Instance.transform.parent;
-            return;
-        }
-
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj == null) playerObj = GameObject.Find("Player");
-        if (playerObj != null) player = playerObj.transform;
+        if (bubbleBackground != null) bubbleBackground.SetActive(false);
+        HideAllIconsOnly();
     }
 
-    // Draws the activation circle in Unity's Scene View so you can size each room trigger visually!
-    private void OnDrawGizmosSelected()
+    private GameObject FindChildSafe(string childName)
     {
-        Gizmos.color = new Color(1f, 0.85f, 0.2f, 0.75f);
-        Gizmos.DrawWireSphere(transform.position, triggerRadius);
+        Transform t = transform.Find(childName);
+        return t != null ? t.gameObject : null;
     }
 }
