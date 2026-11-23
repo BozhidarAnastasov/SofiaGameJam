@@ -39,7 +39,8 @@ public class DoorHintBubble : MonoBehaviour
 
     void Start()
     {
-        popup = GetComponentInChildren<PlayerItemHintPopup>(true);
+        if (!PlayerItemHintPopup.HintsEnabled) { enabled = false; return; }   // hints are off game-wide
+        popup =GetComponentInChildren<PlayerItemHintPopup>(true);
         if (popup == null)
         {
             Debug.LogWarning("[DoorHintBubble] The player has no ItemHintPopup bubble - run Tools > Horror Room > 31 once.", this);

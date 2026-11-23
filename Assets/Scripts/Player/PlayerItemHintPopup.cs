@@ -14,6 +14,9 @@ public class PlayerItemHintPopup : MonoBehaviour
 {
     public static PlayerItemHintPopup Instance { get; private set; }
 
+    /// Hint bubbles are turned off for the whole game. Flip to true to bring them back.
+    public static bool HintsEnabled = false;
+
     [Header("Auto-Wired Hierarchy Children")]
     [SerializeField] private GameObject bubbleBackground;
     [SerializeField] private GameObject crowbarObj;
@@ -68,6 +71,13 @@ public class PlayerItemHintPopup : MonoBehaviour
 
     public void ShowHint(HintItemType itemType, Object source)
     {
+        if (!HintsEnabled)
+        {
+            activeSource = null;
+            HideAllImmediate();
+            return;
+        }
+
         if (activeSource == source && bubbleBackground != null && bubbleBackground.activeSelf)
             return;
 
