@@ -165,6 +165,9 @@ public class Death_Screen2 : MonoBehaviour
         if (deadBtnCanvas != null) deadBtnCanvas.SetActive(true);
 
         onFinished?.Invoke();
+
+        // no mouse needed: arcade A/Start = Retry, B/Exit = Main Menu
+        yield return DeathScreenArcadeInput.WaitForChoice(RetryLevel, GoToMainMenu);
     }
 
     public void RetryLevel()
@@ -179,7 +182,8 @@ public class Death_Screen2 : MonoBehaviour
     {
         GameAudio.UiClick();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        if (Application.CanStreamedLevelBeLoaded(mainMenuSceneName)) SceneManager.LoadScene(mainMenuSceneName);
+        else SceneManager.LoadScene(0);
     }
 
     private void BindButton(Button btn, UnityAction action)

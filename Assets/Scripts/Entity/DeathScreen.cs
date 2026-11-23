@@ -210,6 +210,10 @@ public class DeathScreen : MonoBehaviour
             RevealButtonSafe(retryButton);
             RevealButtonSafe(mainMenuButton);
             SeparateOverlappingButtons(retryButton, mainMenuButton);
+            // no mouse needed: arcade A/Start = Retry, B/Exit = Main Menu
+            StartCoroutine(DeathScreenArcadeInput.WaitForChoice(
+                retryButton != null ? Retry : (System.Action)null,
+                mainMenuButton != null ? ReturnToMainMenu : (System.Action)null));
             yield break;
         }
 
@@ -243,7 +247,9 @@ public class DeathScreen : MonoBehaviour
     {
         GameAudio.UiClick();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        // some rooms still say "MainMenu", which isn't in the build: fall back to the first scene (the menu)
+        if (Application.CanStreamedLevelBeLoaded(mainMenuSceneName)) SceneManager.LoadScene(mainMenuSceneName);
+        else SceneManager.LoadScene(0);
     }
 
     private void EnsureWorkingEventSystem()
