@@ -6,7 +6,8 @@ public enum HintItemType
     Keycard,
     Cloak,
     Light,
-    HeightTip
+    HeightTip,
+    Power
 }
 
 public class PlayerItemHintPopup : MonoBehaviour
@@ -20,6 +21,7 @@ public class PlayerItemHintPopup : MonoBehaviour
     [SerializeField] private GameObject cloakObj;
     [SerializeField] private GameObject lightObj;
     [SerializeField] private GameObject heightTipObj;
+    [SerializeField] public static bool HintsEnabled;
 
     [Header("Floating Animation")]
     [SerializeField] private float bobSpeed = 3.5f;
@@ -90,12 +92,12 @@ public class PlayerItemHintPopup : MonoBehaviour
     {
         switch (type)
         {
-            case HintItemType.Crowbar:   return crowbarObj;
-            case HintItemType.Keycard:   return keycardObj;
-            case HintItemType.Cloak:     return cloakObj;
-            case HintItemType.Light:     return lightObj;
+            case HintItemType.Crowbar: return crowbarObj;
+            case HintItemType.Keycard: return keycardObj;
+            case HintItemType.Cloak: return cloakObj;
+            case HintItemType.Light: return lightObj;
             case HintItemType.HeightTip: return heightTipObj;
-            default:                     return null;
+            default: return null;
         }
     }
 

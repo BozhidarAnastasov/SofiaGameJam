@@ -620,7 +620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4283395764535818456, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.95
+      value: -0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4283395764535818456, guid: 177fa935239e88e40b50b4130980bb4e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1767,6 +1767,8 @@ MonoBehaviour:
   requireKickedOpen: 0
   doorOpen: {fileID: 0}
   lockedMessage: It won't open... the lock has no power.
+  passage: 0
+  stairsStepsTime: 2.4
   onExit:
     m_PersistentCalls:
       m_Calls: []
@@ -4015,12 +4017,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 929258eb75f3d32468b30668b060d225, type: 3}
+  m_Sprite: {fileID: 6393625202743233467, guid: 56f93870bc9480b49a77928630a2c46c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.7, y: 0.35}
+  m_Size: {x: 0.28, y: 0.14}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4184,6 +4186,9 @@ MonoBehaviour:
   ringDarkness: 0.5
   dipDarkness: 0.85
   buzz: {fileID: 0}
+  humVolume: 1
+  humNear: 3
+  humFar: 12
 --- !u!114 &1778338734
 MonoBehaviour:
   m_ObjectHideFlags: 0
