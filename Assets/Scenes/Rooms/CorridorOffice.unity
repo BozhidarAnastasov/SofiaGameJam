@@ -2225,8 +2225,10 @@ MonoBehaviour:
   catchDistance: 1.3
   windUp: 0.6
   knifeSpeed: 14
-  throwMessage: He throws his knife...!
-  brokenMessage: The window shattered! Get out! (A)
+  enterMessage: "The back office corridor... there has to be a window or way outside ahead!"
+  chaseMessage: "He broke through the door behind me\u2014don't look back, RUN!"
+  throwMessage: "It's a dead end\u2014watch out, he's throwing his knife!"
+  brokenMessage: "The glass shattered\u2014that's my chance! Jump out the window (<color=#E8C874>A</color>)!"
   psychoFrames:
   - {fileID: -590098207, guid: 838251695a722514db5bfb5ebd3d475e, type: 3}
   - {fileID: 205874806, guid: 838251695a722514db5bfb5ebd3d475e, type: 3}

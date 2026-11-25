@@ -88,6 +88,18 @@ public class Inventory : MonoBehaviour
 
     internal void MarkCollected(string id) => collectedItems.Add(id);
 
+    public bool HasItemContaining(string keyword)
+    {
+        if (string.IsNullOrEmpty(keyword)) return false;
+        for (int i = 0; i < slots.Count; i++)
+        {
+            GameObject item = slots[i] != null ? slots[i].currentItem : null;
+            if (item != null && item.name.IndexOf(keyword, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                return true;
+        }
+        return false;
+    }
+
     private void OnEnable()
     {
         if (nextSlotAction == null || nextSlotAction.action == null) return;

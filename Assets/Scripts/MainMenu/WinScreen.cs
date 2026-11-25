@@ -284,7 +284,12 @@ public class WinScreen : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.15f);
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        if (!string.IsNullOrEmpty(mainMenuSceneName) && Application.CanStreamedLevelBeLoaded(mainMenuSceneName))
+            SceneManager.LoadScene(mainMenuSceneName);
+        else if (Application.CanStreamedLevelBeLoaded("Main_scene 1"))
+            SceneManager.LoadScene("Main_scene 1");
+        else
+            SceneManager.LoadScene(0);
     }
 
     private void RevealButtonWithFade(Button btn)
@@ -472,7 +477,12 @@ public class WinScreen : MonoBehaviour
         tmp.colorGradient = new VertexGradient(bloodTopColor, bloodTopColor, bloodBottomColor, bloodBottomColor);
         tmp.raycastTarget = false;
 
-        // Subtle dark crimson drop-shadow for depth over pure black
+        // Crisp outline + dark crimson drop-shadow for readability
+        Outline outline = tmp.GetComponent<Outline>();
+        if (outline == null) outline = tmp.gameObject.AddComponent<Outline>();
+        outline.effectColor = new Color(0f, 0f, 0f, 0.92f);
+        outline.effectDistance = new Vector2(2f, -2f);
+
         Shadow bloodShadow = tmp.GetComponent<Shadow>();
         if (bloodShadow == null) bloodShadow = tmp.gameObject.AddComponent<Shadow>();
         bloodShadow.effectColor = new Color(0.22f, 0f, 0f, 0.9f);

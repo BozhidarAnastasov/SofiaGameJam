@@ -13,8 +13,8 @@ public class DoorHintBubble : MonoBehaviour
 {
     public enum Need { None, Crowbar, Keycard, Power, Flashlight }
 
-    [SerializeField] private float showDistance = 2.2f;
-    [SerializeField] private float scanInterval = 0.2f;
+    [SerializeField] private float showDistance = 2.35f;
+    [SerializeField] private float scanInterval = 0.12f;
 
     private PlayerItemHintPopup popup;
     private SpriteRenderer ePrompt;       // the "E" key prompt's circle (visible = it's the E's turn)
@@ -37,10 +37,16 @@ public class DoorHintBubble : MonoBehaviour
         if (p != null && p.GetComponent<DoorHintBubble>() == null) p.gameObject.AddComponent<DoorHintBubble>();
     }
 
+    void Awake()
+    {
+        popup = GetComponentInChildren<PlayerItemHintPopup>(true);
+        if (popup != null && !popup.gameObject.activeSelf) popup.gameObject.SetActive(true);
+    }
+
     void Start()
     {
         if (!PlayerItemHintPopup.HintsEnabled) { enabled = false; return; }   // hints are off game-wide
-        popup =GetComponentInChildren<PlayerItemHintPopup>(true);
+        if (popup == null) popup = GetComponentInChildren<PlayerItemHintPopup>(true);
         if (popup == null)
         {
             Debug.LogWarning("[DoorHintBubble] The player has no ItemHintPopup bubble - run Tools > Horror Room > 31 once.", this);
@@ -56,9 +62,9 @@ public class DoorHintBubble : MonoBehaviour
     {
         if (popup == null || Time.time < nextScan) return;
         nextScan = Time.time + scanInterval;
-        // whenever the "E" is up (she can use something right here) the bubble steps aside
+        // whenever the "E" is up (she can use something right here) or she's hiding, the bubble steps aside
         bool eShowing = ePrompt != null && ePrompt.enabled && ePrompt.color.a > 0.05f;
-        Need need = eShowing ? Need.None : NearestLockedDoor();
+        Need need = (eShowing || CoatHide.IsHidden) ? Need.None : NearestLockedDoor();
 
         if (need == Need.None) popup.HideHint(this);              // only hides it if the bubble is ours
         else popup.ShowHint(ToItem(need), this);                   // no-op while it's already showing ours

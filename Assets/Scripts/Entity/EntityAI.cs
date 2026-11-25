@@ -557,6 +557,7 @@ public class EntityAI : MonoBehaviour
     {
         yield return new WaitForSeconds(deathScreenDelay);
         if (RoomTransition.IsBusy) yield break;               // the room is changing: no death screen
+        if (deathScreen == null) deathScreen = FindFirstObjectByType<DeathScreen>(FindObjectsInactive.Include);
         if (deathScreen != null) { deathScreen.gameObject.SetActive(true); deathScreen.Show(); }
     }
 

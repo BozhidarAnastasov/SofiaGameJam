@@ -3539,15 +3539,27 @@ MonoBehaviour:
   - 0.35
   - 0.18
   - 0.12
-  holdTime: 2.5
+  - 0.1
+  holdTime: 1.8
+  youDiedText: {fileID: 0}
+  youDiedFont: {fileID: 11400000, guid: b494bd60d6409e641adf97db27170a47, type: 2}
+  youDiedMessage: YOU DIED
+  youDiedFontSize: 125
+  youDiedColor: {r: 0.95, g: 0.12, b: 0.14, a: 1}
+  youDiedBottomColor: {r: 0.42, g: 0.02, b: 0.04, a: 1}
+  youDiedOffset: {x: 0, y: 0}
+  endDimmerAlpha: 0.74
+  endFaceAlpha: 0.26
+  maxButtonFontSize: 48
   retryButton: {fileID: 217092613}
   mainMenuButton: {fileID: 1672168046}
+  autoCreateButtonsIfMissing: 1
   mainMenuSceneName: Main_scene 1
-  buttonNormalColor: {r: 0.65, g: 0.7, b: 0.75, a: 1}
-  buttonHoverColor: {r: 1, g: 0.25, b: 0.25, a: 1}
-  buttonPressedColor: {r: 0.5, g: 0.1, b: 0.1, a: 1}
+  buttonNormalColor: {r: 0.9, g: 0.92, b: 0.94, a: 1}
+  buttonHoverColor: {r: 1, g: 0.28, b: 0.28, a: 1}
+  buttonPressedColor: {r: 0.55, g: 0.1, b: 0.1, a: 1}
   hoverScale: 1.08
-  goToLoseScreen: 1
+  goToLoseScreen: 0
   retryAction: {fileID: -165901652692317190, guid: 8d669ea17758c8d4f816ef1fcc747252, type: 3}
   audioSource: {fileID: 1044422445}
   stinger: {fileID: 0}

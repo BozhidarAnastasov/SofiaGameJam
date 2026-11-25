@@ -36,6 +36,8 @@ namespace ArcadesTemplate.Core
                 Instance = null;
         }
 
+        public static System.Action<string> FallbackHandler;
+
         /// <summary>
         /// Shows a short message using the popup UI (falls back to the Console).
         /// </summary>
@@ -43,6 +45,8 @@ namespace ArcadesTemplate.Core
         {
             if (popupUI != null)
                 popupUI.ShowMessage(message);
+            else if (FallbackHandler != null)
+                FallbackHandler.Invoke(message);
             else
                 Debug.Log($"[ArcadeMessageService] {message}");
         }

@@ -21,20 +21,25 @@ public class HintTriggerZone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isSolved) return;
-
-        if (IsPlayer(other) && PlayerItemHintPopup.Instance != null)
-        {
-            PlayerItemHintPopup.Instance.ShowHint(itemToDisplay, this);
-        }
+        if (isSolved || !IsPlayer(other)) return;
+        PlayerItemHintPopup popup = ResolvePopup(other);
+        if (popup != null) popup.ShowHint(itemToDisplay, this);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (IsPlayer(other) && PlayerItemHintPopup.Instance != null)
-        {
+        if (!IsPlayer(other)) return;
+        if (PlayerItemHintPopup.Instance != null)
             PlayerItemHintPopup.Instance.HideHint(this);
-        }
+    }
+
+    private static PlayerItemHintPopup ResolvePopup(Collider2D playerCol)
+    {
+        if (PlayerItemHintPopup.Instance != null) return PlayerItemHintPopup.Instance;
+        Transform root = playerCol.transform.root;
+        var found = root != null ? root.GetComponentInChildren<PlayerItemHintPopup>(true) : null;
+        if (found != null && !found.gameObject.activeSelf) found.gameObject.SetActive(true);
+        return found != null ? found : PlayerItemHintPopup.Instance;
     }
 
     private void OnDisable()
